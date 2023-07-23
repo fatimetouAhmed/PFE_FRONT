@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:pfe_front_flutter/bar/masterpage.dart';
+import '../../bar/masterpageadmin.dart';
 import '../../models/filliere.dart';
 import '../lists/listfiliere.dart';
 

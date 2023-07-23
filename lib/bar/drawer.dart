@@ -8,7 +8,7 @@ import '../screens/lists/listmatiere.dart';
 import '../screens/lists/listdepartement.dart';
 import '../screens/lists/listfiliere.dart';
 import '../screens/lists/listsalle.dart';
-import 'masterpage.dart';
+import 'masterpageadmin.dart';
 
 class NavBar extends StatelessWidget{
   const NavBar({super.key});

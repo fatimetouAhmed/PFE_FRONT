@@ -447,41 +447,69 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
+import 'package:pfe_front_flutter/bar/masterpagesuperviseur.dart';
+import 'package:pfe_front_flutter/models/surveillance.dart';
 import 'package:pfe_front_flutter/screens/forms/departementform.dart';
 import '../../../constants.dart';
 import '../../models/departement.dart';
+import '../forms/surveillanceform.dart';
 
-class ListDepartement extends StatefulWidget {
-  ListDepartement({Key? key}) : super(key: key);
+class ListSurveillance extends StatefulWidget {
+  ListSurveillance({Key? key}) : super(key: key);
 
   @override
-  State<ListDepartement> createState() => _ListDepartementState();
+  State<ListSurveillance> createState() => _ListSurveillanceState();
 }
 
-class _ListDepartementState extends State<ListDepartement> {
-  List<Departement> departementsList = [];
+class _ListSurveillanceState extends State<ListSurveillance> {
+  List<Surveillance> surveillancetsList = [];
+  Future<int?> fetch_User_current_Id() async {
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/current_user_id/'));
 
-  Future<List<Departement>> fetchDepartements() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/departements/'));
-    var departements = <Departement>[];
-    for (var u in jsonDecode(response.body)) {
-      departements.add(Departement(u['id'], u['nom']));
+    if (response.statusCode == 200) {
+      dynamic jsonData = json.decode(response.body);
+      print(jsonData);
+      return jsonData;
     }
-   // print(departements);
-    return departements;
+
+    return null;
+  }
+  Future<List<Surveillance>> fetchSurveillances() async {
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/surveillances/surveillance/'));
+
+    if (response.statusCode != 200) {
+      // Handle the error when the API request is not successful (e.g., status code is not 200 OK).
+      throw Exception('Failed to fetch surveillances.');
+    }
+
+    var jsonList = jsonDecode(response.body);
+
+    if (jsonList is List) {
+      var surveillances = <Surveillance>[];
+      for (var u in jsonList) {
+        var DateDeb = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['date_debut']);
+        var DateFin = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['date_fin']);
+        surveillances.add(Surveillance(u['id'], DateDeb, DateFin, u['surveillant_id'], u['salle_id']));
+      }
+      return surveillances;
+    } else {
+      // Handle the case when the JSON response is not a list.
+      throw Exception('Invalid JSON format: Expected a list of surveillances.');
+    }
   }
 
   Future delete(id) async {
-    await http.delete(Uri.parse('http://127.0.0.1:8000/departements/' + id));
+    await http.delete(Uri.parse('http://127.0.0.1:8000/surveillances/' + id));
   }
 
   @override
   void initState() {
     super.initState();
-    fetchDepartements().then((departements) {
+    fetchSurveillances().then((surveillances) {
       setState(() {
-        departementsList = departements;
+        surveillancetsList = surveillances;
       });
     });
   }
@@ -508,7 +536,7 @@ class _ListDepartementState extends State<ListDepartement> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Departements',
+                            'Surveillances',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 19,
@@ -550,21 +578,21 @@ class _ListDepartementState extends State<ListDepartement> {
                             horizontal: kDefaultPadding,
                             vertical: kDefaultPadding / 2,
                           ),
-                          child: FutureBuilder<List<Departement>>(
-                            future: fetchDepartements(),
-                            builder: (BuildContext context, AsyncSnapshot<List<Departement>> snapshot) {
+                          child: FutureBuilder<List<Surveillance>>(
+                            future: fetchSurveillances(),
+                            builder: (BuildContext context, AsyncSnapshot<List<Surveillance>> snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
                                 return Center(child: CircularProgressIndicator());
                               } else if (snapshot.hasError) {
                                 return Center(child: Text('Error: ${snapshot.error}'));
                               } else {
-                                var departements = snapshot.data!;
+                                var surveillances = snapshot.data!;
                                 return ListView.separated(
-                                  itemCount: departements.length,
+                                  itemCount: surveillances.length,
                                   separatorBuilder: (BuildContext context, int index) =>
                                       SizedBox(height: 16), // Spacing of 16 pixels between each item
                                   itemBuilder: (BuildContext context, int index) {
-                                    var departement = departements[index];
+                                    var surveillance = surveillances[index];
                                     return InkWell(
                                       child: Stack(
                                         alignment: Alignment.bottomCenter,
@@ -600,7 +628,22 @@ class _ListDepartementState extends State<ListDepartement> {
                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
                                                         Text(
-                                                          departement.nom,
+                                                        DateFormat('yyyy-MM-dd HH:mm:ss').format(surveillance.date_debut),
+                                                          style: Theme.of(context).textTheme.button,
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Text(
+                                                          DateFormat('yyyy-MM-dd HH:mm:ss').format(surveillance.date_fin),
+                                                          style: Theme.of(context).textTheme.button,
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Text(
+                                                            surveillance.surveillant_id.toString(),
+                                                          style: Theme.of(context).textTheme.button,
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Text(
+                                                          surveillance.salle_id.toString(),
                                                           style: Theme.of(context).textTheme.button,
                                                         ),
                                                         SizedBox(width: 8),
@@ -609,9 +652,9 @@ class _ListDepartementState extends State<ListDepartement> {
                                                             Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
-                                                                builder: (context) => MasterPage(child:
-                                                                DepartementForm(
-                                                                  departement: departement,
+                                                                builder: (context) => MasterPageSupeurviseur(child:
+                                                                SurveillanceForm(
+                                                                  surveillance: surveillance,
                                                                 ),
                                                                 ),),
                                                             );
@@ -650,13 +693,13 @@ class _ListDepartementState extends State<ListDepartement> {
                                                             );
 
                                                             if (confirmed != null && confirmed) {
-                                                              await delete(departement.id.toString());
+                                                              await delete(surveillance.id.toString());
                                                               setState(() {});
                                                               Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
-                                                                  builder: (context) => MasterPage(
-                                                                    child: ListDepartement(),
+                                                                  builder: (context) => MasterPageSupeurviseur(
+                                                                    child: ListSurveillance(),
                                                                   ),
                                                                 ),
                                                               );
@@ -687,7 +730,7 @@ class _ListDepartementState extends State<ListDepartement> {
                                                       ),
                                                     ),
                                                     child: Text(
-                                                      departement.id.toString(),
+                                                      surveillance.id.toString(),
                                                       style: Theme.of(context).textTheme.button,
                                                     ),
                                                   ),
@@ -759,7 +802,7 @@ Widget _head() {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Gestion des Departements',
+                        'Gestion des Surveillances',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
@@ -801,7 +844,7 @@ Widget _head() {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Total des Departements',
+                      'Total des Surveillances',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,

@@ -17,6 +17,7 @@ class _NotificationsState extends State<Notifications> {
   Future<List<NotificationModel>> fetchNotifications() async {
     var headers = {"Content-Type": "application/json; charset=utf-8"};
     var response = await http.get(Uri.parse('http://127.0.0.1:8000/notifications/notifications/'),headers: headers);
+   // response.headers['Authorization'] = 'Bearer ${widget.accessToken}';
     var data = utf8.decode(response.bodyBytes);
     var notifications = <NotificationModel>[];
     for (var u in jsonDecode(data)) {

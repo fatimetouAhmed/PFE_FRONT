@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:pfe_front_flutter/bar/masterpage.dart';
+import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import 'package:pfe_front_flutter/screens/forms/addmatiereform.dart';
 import '../../../constants.dart';
 import '../../models/matiere.dart';

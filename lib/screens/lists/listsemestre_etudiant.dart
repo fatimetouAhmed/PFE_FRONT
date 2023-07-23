@@ -5,7 +5,7 @@ import 'package:pfe_front_flutter/screens/forms/semestre_etudiant.dart';
 import '../../../constants.dart';
 import 'package:quickalert/quickalert.dart';
 
-import '../../bar/masterpage.dart';
+import '../../bar/masterpageadmin.dart';
 import '../../models/semestre_etudiant.dart';
 
 class ListSemestre_Etudiant extends StatefulWidget {

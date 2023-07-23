@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:pfe_front_flutter/bar/masterpage.dart';
 import 'package:pfe_front_flutter/models/departement.dart';
 import 'package:pfe_front_flutter/screens/lists/listdepartement.dart';
+
+import '../../bar/masterpageadmin.dart';
 
 
 class DepartementForm extends StatefulWidget {

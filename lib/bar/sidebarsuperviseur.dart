@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:pfe_front_flutter/screens/lists/listsurveillant.dart';
+import 'package:pfe_front_flutter/screens/login_screen.dart';
 
 import '../screens/lists/historiques.dart';
 import '../screens/lists/notifications.dart';
-import 'masterpage.dart';
+import 'masterpagesuperviseur.dart';
 
-class SideBar extends StatefulWidget {
+class SideBarSuperviseur extends StatefulWidget {
   @override
-  _SideBarState createState() => _SideBarState();
+  _SideBarSuperviseurState createState() => _SideBarSuperviseurState();
 }
 Color indicatorColor = Colors.blue.shade300;
-class _SideBarState extends State<SideBar> {
+class _SideBarSuperviseurState extends State<SideBarSuperviseur> {
   int index = 0;
 
   void handleDestinationTap(int selectedIndex) {
@@ -24,7 +26,7 @@ class _SideBarState extends State<SideBar> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MasterPage(
+            builder: (context) => MasterPageSupeurviseur(
               child: Notifications(),
             ),
           ),
@@ -35,8 +37,8 @@ class _SideBarState extends State<SideBar> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MasterPage(
-              child: Notifications(),
+            builder: (context) => MasterPageSupeurviseur(
+              child: ListSurveillance(),
             ),
           ),
         );
@@ -46,23 +48,11 @@ class _SideBarState extends State<SideBar> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MasterPage(
-              child: Historiques(),
-            ),
+            builder: (context) => LoginScreen()
           ),
         );
         break;
-      case 3:
-        indicatorColor = Colors.blue.shade300;
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MasterPage(
-              child: Notifications(),
-            ),
-          ),
-        );
-        break;
+
     }
   }
 
@@ -83,21 +73,18 @@ class _SideBarState extends State<SideBar> {
             selectedIndex: index,
             onDestinationSelected: handleDestinationTap,
             destinations: [
-              NavigationDestination(
-                icon: Icon(Icons.home),
-                label: 'home',
-              ),
+
               NavigationDestination(
                 icon: Icon(Icons.notification_important),
                 label: 'Notifications',
               ),
               NavigationDestination(
-                icon: Icon(Icons.history),
-                label: 'Historiques',
+                icon: Icon(Icons.person_2),
+                label: 'Surveillants',
               ),
               NavigationDestination(
-                icon: Icon(Icons.settings),
-                label: 'Settings',
+                icon: Icon(Icons.logout),
+                label: 'Déconnection',
               ),
             ],
           ),

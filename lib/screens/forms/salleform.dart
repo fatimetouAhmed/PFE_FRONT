@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:pfe_front_flutter/bar/masterpage.dart';
+import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import '../../models/salle.dart';
 import '../lists/listsalle.dart';
 

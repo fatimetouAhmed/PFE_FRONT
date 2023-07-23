@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pfe_front_flutter/screens/lists/listdepartement.dart';
-import 'bar/masterpage.dart';
+import 'package:pfe_front_flutter/screens/login_screen.dart';
+import 'bar/masterpageadmin.dart';
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent
@@ -46,11 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
       debugShowCheckedModeBanner: false,
       // debugShowMaterialGrid: false,
 
-      home: MasterPage(child:
-          ListDepartement(),
-       ),
-
-
+      home:
+      LoginScreen(),
     );
   }
 }

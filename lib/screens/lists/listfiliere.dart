@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import '../../../constants.dart';
 import 'package:quickalert/quickalert.dart';
 
-import '../../bar/masterpage.dart';
+import '../../bar/masterpageadmin.dart';
 import '../../models/filliere.dart';
 import '../forms/filiereform.dart';
 
