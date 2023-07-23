@@ -5,7 +5,10 @@ import 'dart:convert';
 import '../../models/notification.dart';
 
 class Notifications extends StatefulWidget {
-  Notifications({Key? key}) : super(key: key);
+  final String accessToken;
+
+  Notifications({Key? key, required this.accessToken}) : super(key: key);
+  //Notifications({Key? key}) : super(key: key);
 
   @override
   _NotificationsState createState() => _NotificationsState();
@@ -15,9 +18,11 @@ class _NotificationsState extends State<Notifications> {
   List<NotificationModel> notificationsList = [];
 
   Future<List<NotificationModel>> fetchNotifications() async {
-    var headers = {"Content-Type": "application/json; charset=utf-8"};
+    var headers = {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
     var response = await http.get(Uri.parse('http://127.0.0.1:8000/notifications/notifications/'),headers: headers);
-   // response.headers['Authorization'] = 'Bearer ${widget.accessToken}';
     var data = utf8.decode(response.bodyBytes);
     var notifications = <NotificationModel>[];
     for (var u in jsonDecode(data)) {

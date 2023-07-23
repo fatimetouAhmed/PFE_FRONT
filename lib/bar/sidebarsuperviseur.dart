@@ -7,6 +7,8 @@ import '../screens/lists/notifications.dart';
 import 'masterpagesuperviseur.dart';
 
 class SideBarSuperviseur extends StatefulWidget {
+  String accessToken = '';
+
   @override
   _SideBarSuperviseurState createState() => _SideBarSuperviseurState();
 }
@@ -27,7 +29,7 @@ class _SideBarSuperviseurState extends State<SideBarSuperviseur> {
           context,
           MaterialPageRoute(
             builder: (context) => MasterPageSupeurviseur(
-              child: Notifications(),
+              child: Notifications(accessToken: widget.accessToken),
             ),
           ),
         );

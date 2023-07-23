@@ -5,11 +5,11 @@ import '../bar/masterpagesuperviseur.dart';
 
 class SupervisorScreen extends StatelessWidget {
   final String accessToken;
-  const SupervisorScreen({Key? key, required this.accessToken}) : super(key: key);
+   SupervisorScreen({Key? key, required this.accessToken}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MasterPageSupeurviseur(child:Notifications())
+    return MasterPageSupeurviseur(child:Notifications(accessToken: accessToken))
     ;
   }
 }

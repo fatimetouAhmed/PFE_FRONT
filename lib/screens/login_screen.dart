@@ -9,6 +9,8 @@ import 'package:pfe_front_flutter/screens/Admin_screen.dart';
 import 'package:pfe_front_flutter/screens/Screen_superv.dart';
 
 import '../bar/masterpageadmin.dart';
+import '../bar/masterpagesuperviseur.dart';
+import 'lists/notifications.dart';
 
 class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -73,7 +75,7 @@ class LoginScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SupervisorScreen(accessToken: accessToken),
+            builder: (context) => MasterPageSupeurviseur(child:Notifications(accessToken: accessToken)),
           ),
         );
       } else if (validUrl == 'http://127.0.0.1:8000/admin') {

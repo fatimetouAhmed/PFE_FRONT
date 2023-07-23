@@ -5,7 +5,7 @@ import '../screens/lists/notifications.dart';
 import 'masterpageadmin.dart';
 
 class SideBar extends StatefulWidget {
- 
+  String accessToken = '';
   @override
   _SideBarState createState() => _SideBarState();
 }
@@ -26,7 +26,7 @@ class _SideBarState extends State<SideBar> {
           context,
           MaterialPageRoute(
             builder: (context) => MasterPage(
-              child: Notifications(),
+              child: Notifications(accessToken: widget.accessToken),
             ),
           ),
         );
@@ -37,7 +37,7 @@ class _SideBarState extends State<SideBar> {
           context,
           MaterialPageRoute(
             builder: (context) => MasterPage(
-              child: Notifications(),
+              child: Notifications(accessToken: widget.accessToken),
             ),
           ),
         );
@@ -59,7 +59,7 @@ class _SideBarState extends State<SideBar> {
           context,
           MaterialPageRoute(
             builder: (context) => MasterPage(
-              child: Notifications(),
+              child: Notifications(accessToken: widget.accessToken),
             ),
           ),
         );

@@ -7,6 +7,7 @@ import 'drawer.dart';
 
 class MasterPage extends StatelessWidget {
   final Widget child; // Ajout du paramètre 'child'
+  //String accessToken = '';
 
   MasterPage({required this.child});
   @override
