@@ -8,6 +8,7 @@ const kTextColor = Color(0xFF000839);
 const kTextLightColor = Color(0xFF747474);
 const kBlueColor = Color(0xFF40BAD5);
 const double kDefaultPadding = 20.0;
+const kPrimaryLightColor = Color(0xfffeeeee4);
 
 // our default Shadow
 const kDefaultShadow = BoxShadow(
