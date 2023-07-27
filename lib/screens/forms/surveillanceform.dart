@@ -1,21 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import 'package:pfe_front_flutter/bar/masterpagesuperviseur.dart';
 import 'package:pfe_front_flutter/screens/lists/listsurveillant.dart';
-import '../../models/examun.dart';
-import '../../models/filliere.dart';
-import '../../models/semestre_etudiant.dart';
 import '../../models/surveillance.dart';
-import '../lists/listexamun.dart';
-import '../lists/listfiliere.dart';
-import '../lists/listsemestre_etudiant.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:intl/intl.dart';
 class SurveillanceForm extends StatefulWidget {
   final Surveillance surveillance;
-
-  SurveillanceForm({Key? key, required this.surveillance}) : super(key: key);
+  final String accessToken;
+  SurveillanceForm({Key? key, required this.surveillance,required this.accessToken}) : super(key: key);
 
   @override
   _SurveillanceFormState createState() => _SurveillanceFormState();
@@ -31,11 +25,28 @@ class _SurveillanceFormState extends State<SurveillanceForm> {
   String? selectedOption2;
   List<String> surveillantList = [];
   List<String> salleList = [];
+int id=0;
+
+
+  Future<void> fetchData() async {
+    id=await fetchSuperviseurId(widget.accessToken) as int;
+    print(id);
+    fetchSurveillances(id).then((_) {
+      setState(() {
+        idController.text = this.widget.surveillance.id.toString();
+        date_debController.text = this.widget.surveillance.date_debut.toString();
+        date_finController.text = this.widget.surveillance.date_fin.toString();
+        surveillant_idController.text = this.widget.surveillance.surveillant_id.toString();
+        salle_idController.text = this.widget.surveillance.salle_id.toString();
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    fetchSurveillances().then((_) {
+    fetchData();
+    fetchNomSurveillances().then((_) {
       setState(() {
         idController.text = this.widget.surveillance.id.toString();
         date_debController.text = this.widget.surveillance.date_debut.toString();
@@ -54,10 +65,28 @@ class _SurveillanceFormState extends State<SurveillanceForm> {
       });
     });
   }
+  Future<int?> fetchSuperviseurId(String token) async {
+    var response = await http.get(
+      Uri.parse('http://127.0.0.1:8000/current_user_id/'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      dynamic jsonData = json.decode(response.body);
+      print(jsonData);
+      return jsonData;
+    }
 
-  Future<List<Surveillance>> fetchSurveillances() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/surveillances/surveillance/'));
-
+    return null;
+  }
+  Future<List<Surveillance>> fetchSurveillances(int id) async {
+    var response = await http.get(
+      Uri.parse('http://127.0.0.1:8000/surveillances/surveillance/'),
+      headers: {
+        'Authorization': 'Bearer ${widget.accessToken}', // Add the authorization token to the headers
+      },
+    );
     if (response.statusCode != 200) {
       // Handle the error when the API request is not successful (e.g., status code is not 200 OK).
       throw Exception('Failed to fetch surveillances.');
@@ -80,8 +109,12 @@ class _SurveillanceFormState extends State<SurveillanceForm> {
   }
 
   Future<void> fetchNomSurveillances() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/surveillances/surveillances/nom'));
-
+    var response = await http.get(
+      Uri.parse('http://127.0.0.1:8000/surveillances/surveillances/nom/'),
+      headers: {
+        'Authorization': 'Bearer ${widget.accessToken}', // Add the authorization token to the headers
+      },
+    );
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
       for (var surveillance in data) {
@@ -102,8 +135,12 @@ class _SurveillanceFormState extends State<SurveillanceForm> {
     print(salleList);
   }
   Future<int?> fetchSurveillanceId(String nom) async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/surveillances/surveillances/$nom'));
-
+    var response = await http.get(
+      Uri.parse('http://127.0.0.1:8000/surveillances/surveillances/$nom'),
+      headers: {
+        'Authorization': 'Bearer ${widget.accessToken}', // Add the authorization token to the headers
+      },
+    );
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
       print(jsonData);
@@ -113,7 +150,10 @@ class _SurveillanceFormState extends State<SurveillanceForm> {
     return null;
   }
   Future<int?> fetchSallesId(String nom) async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/salle/$nom'));
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/salle/$nom'),
+      headers: {
+        'Authorization': 'Bearer ${widget.accessToken}', // Add the authorization token to the headers
+      },);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -130,7 +170,9 @@ class _SurveillanceFormState extends State<SurveillanceForm> {
         Uri.parse('http://127.0.0.1:8000/surveillances/'),
         headers: <String, String>{
           'Content-Type': 'application/json;charset=UTF-8',
+          'Authorization': 'Bearer ${widget.accessToken}',
         },
+
         body: jsonEncode(<String, dynamic>{
           'date_deb': surveillance.date_debut.toIso8601String(),
           'date_fin': surveillance.date_fin.toIso8601String(),
@@ -191,6 +233,7 @@ class _SurveillanceFormState extends State<SurveillanceForm> {
                             //  print(selectedOption1);
                             if (selectedOption1 != null) {
                               int? id = await fetchSurveillanceId(selectedOption1!);
+                              print('hhh');
                               surveillant_idController.text = id.toString();
                               print(surveillant_idController.text);
                             }
@@ -322,48 +365,61 @@ class _SurveillanceFormState extends State<SurveillanceForm> {
                           foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                         ),
                         child: Text("Submit"),
-                        onPressed: () async {
-                          int? id = int.tryParse(idController.text);
-                          int? idSur = int.tryParse(surveillant_idController.text);
-                          int? idSal = int.tryParse(salle_idController.text);
+                        onPressed: ()  async {
+                          await QuickAlert.show(
+                            context: context,
+                            type: QuickAlertType.success,
+                            text: 'Operation Completed Successfully!',
+                            confirmBtnColor: Colors.blue,
+                          ).then((value) async {
+                            if (value == null) {
+                              int? id = int.tryParse(idController.text);
+                              int? idSur = int.tryParse(surveillant_idController.text);
+                              int? idSal = int.tryParse(salle_idController.text);
 
-                          if (id != null && idSur != null && idSal != null) {
-                            await save(
-                             Surveillance(
-                                id,
-                                DateTime.parse(date_debController.text),
-                                DateTime.parse(date_finController.text),
-                                idSur,
-                                idSal,
-                              ),
-                            );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>MasterPageSupeurviseur(child:  ListSurveillance(),)
-                              ),
-                            );
-
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text("Error"),
-                                  content: Text("Invalid ID or Surveillance ID or Salle ID"),
-                                  actions: [
-                                    TextButton(
-                                      child: Text("OK"),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
+                              if (id != null && idSur != null && idSal != null) {
+                                await save(
+                                  Surveillance(
+                                    id,
+                                    DateTime.parse(date_debController.text),
+                                    DateTime.parse(date_finController.text),
+                                    idSur,
+                                    idSal,
+                                  ),
                                 );
-                              },
-                            );
-                          }
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>MasterPageSupeurviseur(child:
+                                      ListSurveillance(accessToken: widget.accessToken,),accessToken: widget.accessToken,)
+                                  ),
+                                );
+
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Error"),
+                                      content: Text("Invalid ID or Surveillance ID or Salle ID"),
+                                      actions: [
+                                        TextButton(
+                                          child: Text("OK"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            }
+                          });
+
+
                         },
+
                       ),
                     ],
                   ),

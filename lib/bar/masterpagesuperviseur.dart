@@ -7,8 +7,8 @@ import 'appbarsuperviseur.dart';
 
 class MasterPageSupeurviseur extends StatelessWidget {
   final Widget child; // Ajout du paramètre 'child'
-
-  MasterPageSupeurviseur({required this.child});
+  final String accessToken;
+  MasterPageSupeurviseur({Key? key,required this.child, required this.accessToken}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +17,7 @@ class MasterPageSupeurviseur extends StatelessWidget {
       body:Container(
         child: child, // Affichez le widget enfant passé en paramètre
       ),
-      bottomNavigationBar: SideBarSuperviseur(),
+      bottomNavigationBar: SideBarSuperviseur(accessToken: accessToken),
     );
   }
 }

@@ -1,448 +1,4 @@
-// // import 'dart:convert';
-// //
-// // import 'package:flutter/material.dart';
-// // import 'package:http/http.dart' as http;
-// // import 'package:pfe_front/screens/forms/departementform.dart';
-// // import 'package:pfe_front/screens/homes/homedepartement.dart';
-// //
-// // import '../../../constants.dart';
-// // import 'package:pfe_front/models/departement.dart';
-// // import 'package:quickalert/quickalert.dart';
-// // class ListDepartement extends StatefulWidget {
-// //   ListDepartement({Key? key}) : super(key: key);
-// //
-// //   @override
-// //   _ListDepartementState createState() => _ListDepartementState();
-// // }
-// //
-// // class _ListDepartementState extends State<ListDepartement> {
-// //   List<Departement> departementsList = [];
-// //
-// //   Future<List<Departement>> fetch_departements() async {
-// //     var response =
-// //     await http.get(Uri.parse('http://127.0.0.1:8000/departements/'));
-// //     var departements = <Departement>[];
-// //     for (var u in jsonDecode(response.body)) {
-// //       departements.add(Departement(u['id'], u['nom']));
-// //     }
-// //     print(departements);
-// //     return departements;
-// //   }
-// //   Future delete(id) async {
-// //     await http.delete(Uri.parse('http://127.0.0.1:8000/departements/' + id));
-// //   }
-// //   @override
-// //   void initState() {
-// //     super.initState();
-// //     fetch_departements().then((departements) {
-// //       setState(() {
-// //         departementsList = departements;
-// //       });
-// //     });
-// //   }
-// //
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     Size size = MediaQuery.of(context).size;
-// //     return Material(
-// //       child: Container(
-// //         margin: EdgeInsets.symmetric(
-// //           horizontal: kDefaultPadding,
-// //           vertical: kDefaultPadding / 2,
-// //         ),
-// //         child: FutureBuilder<List<Departement>>(
-// //           future: fetch_departements(),
-// //           builder: (BuildContext context,
-// //               AsyncSnapshot<List<Departement>> snapshot) {
-// //             if (snapshot.connectionState == ConnectionState.waiting) {
-// //               return Center(child: CircularProgressIndicator());
-// //             } else if (snapshot.hasError) {
-// //               return Center(child: Text('Error: ${snapshot.error}'));
-// //             } else {
-// //               var departements = snapshot.data!;
-// //               return ListView.separated(
-// //                 itemCount: departements.length,
-// //                 separatorBuilder: (BuildContext context, int index) =>
-// //                     SizedBox(height: 16), // Espacement de 16 pixels entre chaque élément
-// //                 itemBuilder: (BuildContext context, int index) {
-// //                   var departement = departements[index];
-// //                   return InkWell(
-// //                     child: Stack(
-// //                       alignment: Alignment.bottomCenter,
-// //                       children: <Widget>[
-// //                         Container(
-// //                           height: 136,
-// //                           decoration: BoxDecoration(
-// //                             borderRadius: BorderRadius.circular(22),
-// //                             color: Colors.blue,
-// //                             boxShadow: [kDefaultShadow],
-// //                           ),
-// //                           child: Container(
-// //                             margin: EdgeInsets.only(right: 10),
-// //                             decoration: BoxDecoration(
-// //                               color: Colors.white,
-// //                               borderRadius: BorderRadius.circular(22),
-// //                             ),
-// //                           ),
-// //                         ),
-// //
-// //                         Positioned(
-// //                           bottom: 0,
-// //                           left: 0,
-// //                           child: SizedBox(
-// //                             height: 136,
-// //                             width: size.width - 200,
-// //                             child: Column(
-// //                               crossAxisAlignment: CrossAxisAlignment.start,
-// //                               children: <Widget>[
-// //                                 Spacer(),
-// //                                 Padding(
-// //                                   padding: const EdgeInsets.symmetric(
-// //                                       horizontal: kDefaultPadding),
-// //                                   child:Row(
-// //                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-// //                                     children: [
-// //                                       Text(
-// //                                         departement.nom,
-// //                                         style: Theme.of(context).textTheme.button,
-// //                                       ),
-// //                                       SizedBox(width: 8),
-// //                                       MaterialButton(
-// //                                         child: Icon(
-// //                                           Icons.edit,
-// //                                           color: Colors.blue,
-// //                                           size: 24.0,
-// //                                           semanticLabel: 'Edit',
-// //                                         ),
-// //                                         onPressed: () {
-// //                                           Navigator.push(
-// //                                             context,
-// //                                             MaterialPageRoute(
-// //                                               builder: (context) => HomeDepartement(
-// //                                                 widgetName: DepartementForm(
-// //                                                   departement: departement,
-// //                                                 ),
-// //                                                 title: 'Edit',
-// //                                                 index: 1,
-// //                                               ),
-// //                                             ),
-// //                                           );
-// //                                         },
-// //                                       ),
-// //
-// //                                   MaterialButton(
-// //                                     child: Icon(
-// //                                       Icons.delete,
-// //                                       color: Colors.red,
-// //                                       size: 24.0,
-// //                                       semanticLabel: 'Delete',
-// //                                     ),
-// //                                     onPressed: () async {
-// //                                       bool confirmed = await showDialog(
-// //                                         context: context,
-// //                                         builder: (BuildContext context) {
-// //                                           return AlertDialog(
-// //                                             title: Text("Confirmation"),
-// //                                             content: Text("Sure you want to delete this item?"),
-// //                                             actions: <Widget>[
-// //                                               TextButton(
-// //                                                 child: Text("No"),
-// //                                                 onPressed: () {
-// //                                                   Navigator.of(context).pop(false); // Return false when "No" is pressed
-// //                                                 },
-// //                                               ),
-// //                                               TextButton(
-// //                                                 child: Text("Yes"),
-// //                                                 onPressed: () {
-// //                                                   Navigator.of(context).pop(true); // Return true when "Yes" is pressed
-// //                                                 },
-// //                                               ),
-// //                                             ],
-// //                                           );
-// //                                         },
-// //                                       );
-// //
-// //                                       if (confirmed != null && confirmed) {
-// //                                         await delete(departement.id.toString());
-// //                                         setState(() {});
-// //                                         Navigator.push(
-// //                                           context,
-// //                                           MaterialPageRoute(
-// //                                             builder: (context) => HomeDepartement(
-// //                                               widgetName: ListDepartement(),
-// //                                               title: 'List',
-// //                                               index: 0,
-// //                                             ),
-// //                                           ),
-// //                                         );
-// //                                       }
-// //                                     },
-// //                                   ),
-// //
-// //
-// //
-// //
-// //                                   ],
-// //                                   ),
-// //                                   // Text(
-// //                                   //   departement.nom,
-// //                                   //   style: Theme.of(context).textTheme.button,
-// //                                   // ),
-// //                                 ),
-// //                                 Spacer(),
-// //                                 Container(
-// //                                   padding: EdgeInsets.symmetric(
-// //                                     horizontal: kDefaultPadding * 1.5,
-// //                                     vertical: kDefaultPadding / 4,
-// //                                   ),
-// //                                   decoration: BoxDecoration(
-// //                                     color: Colors.blue,
-// //                                     borderRadius: BorderRadius.only(
-// //                                       bottomLeft: Radius.circular(22),
-// //                                       topRight: Radius.circular(22),
-// //                                     ),
-// //                                   ),
-// //                                   child: Text(
-// //                                     departement.id.toString(),
-// //                                     style: Theme.of(context).textTheme.button,
-// //                                   ),
-// //                                 ),
-// //                               ],
-// //                             ),
-// //                           ),
-// //                         ),
-// //                       ],
-// //                     ),
-// //                   );
-// //                 },
-// //               );
-// //             }
-// //           },
-// //         ),
-// //       ),
-// //     );
-// //   }
-// // }
-//
-//
-// import 'dart:convert';
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:pfe_front_flutter/screens/forms/departementform.dart';
-// import 'package:pfe_front_flutter/screens/homes/homedepartement.dart';
-// import '../../../constants.dart';
-// import 'package:pfe_front_flutter/models/departement.dart';
-// import 'package:quickalert/quickalert.dart';
-//
-// class ListDepartement extends StatefulWidget {
-//   ListDepartement({Key? key}) : super(key: key);
-//
-//   @override
-//   _ListDepartementState createState() => _ListDepartementState();
-// }
-//
-// class _ListDepartementState extends State<ListDepartement> {
-//   List<Departement> departementsList = [];
-//
-//   Future<List<Departement>> fetchDepartements() async {
-//     var response = await http.get(Uri.parse('http://127.0.0.1:8000/departements/'));
-//     var departements = <Departement>[];
-//     for (var u in jsonDecode(response.body)) {
-//       departements.add(Departement(u['id'], u['nom']));
-//     }
-//     print(departements);
-//     return departements;
-//   }
-//
-//   Future delete(id) async {
-//     await http.delete(Uri.parse('http://127.0.0.1:8000/departements/' + id));
-//   }
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     fetchDepartements().then((departements) {
-//       setState(() {
-//         departementsList = departements;
-//       });
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     Size size = MediaQuery.of(context).size;
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,// Wrap with MaterialApp widget
-//       home: Scaffold(
-//         body: Container(
-//           margin: EdgeInsets.symmetric(
-//             horizontal: kDefaultPadding,
-//             vertical: kDefaultPadding / 2,
-//           ),
-//           child: FutureBuilder<List<Departement>>(
-//             future: fetchDepartements(),
-//             builder: (BuildContext context, AsyncSnapshot<List<Departement>> snapshot) {
-//               if (snapshot.connectionState == ConnectionState.waiting) {
-//                 return Center(child: CircularProgressIndicator());
-//               } else if (snapshot.hasError) {
-//                 return Center(child: Text('Error: ${snapshot.error}'));
-//               } else {
-//                 var departements = snapshot.data!;
-//                 return ListView.separated(
-//                   itemCount: departements.length,
-//                   separatorBuilder: (BuildContext context, int index) =>
-//                       SizedBox(height: 16), // Spacing of 16 pixels between each item
-//                   itemBuilder: (BuildContext context, int index) {
-//                     var departement = departements[index];
-//                     return InkWell(
-//                       child: Stack(
-//                         alignment: Alignment.bottomCenter,
-//                         children: <Widget>[
-//                           Container(
-//                             height: 136,
-//                             decoration: BoxDecoration(
-//                               borderRadius: BorderRadius.circular(22),
-//                               color: Colors.blue,
-//                               boxShadow: [kDefaultShadow],
-//                             ),
-//                             child: Container(
-//                               margin: EdgeInsets.only(right: 10),
-//                               decoration: BoxDecoration(
-//                                 color: Colors.white,
-//                                 borderRadius: BorderRadius.circular(22),
-//                               ),
-//                             ),
-//                           ),
-//                           Positioned(
-//                             bottom: 0,
-//                             left: 0,
-//                             child: SizedBox(
-//                               height: 136,
-//                               width: size.width - 200,
-//                               child: Column(
-//                                 crossAxisAlignment: CrossAxisAlignment.start,
-//                                 children: <Widget>[
-//                                   Spacer(),
-//                                   Padding(
-//                                     padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-//                                     child: Row(
-//                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                                       children: [
-//                                         Text(
-//                                           departement.nom,
-//                                           style: Theme.of(context).textTheme.button,
-//                                         ),
-//                                         SizedBox(width: 8),
-//                                         MaterialButton(
-//                                           child: Icon(
-//                                             Icons.edit,
-//                                             color: Colors.blue,
-//                                             size: 24.0,
-//                                             semanticLabel: 'Edit',
-//                                           ),
-//                                           onPressed: () {
-//                                             Navigator.push(
-//                                               context,
-//                                               MaterialPageRoute(
-//                                                 builder: (context) =>
-//                                                   //   HomeDepartement(
-//                                                   // widgetName:
-//                                                   DepartementForm(
-//                                                     departement: departement,
-//                                                   ),
-//                                                 //   title: 'Edit',
-//                                                 //   index: 1,
-//                                                 // ),
-//                                               ),
-//                                             );
-//                                           },
-//                                         ),
-//                                         MaterialButton(
-//                                           child: Icon(
-//                                             Icons.delete,
-//                                             color: Colors.red,
-//                                             size: 24.0,
-//                                             semanticLabel: 'Delete',
-//                                           ),
-//                                           onPressed: () async {
-//                                             bool confirmed = await showDialog(
-//                                               context: context,
-//                                               builder: (BuildContext context) {
-//                                                 return AlertDialog(
-//                                                   title: Text("Confirmation"),
-//                                                   content: Text("Are you sure you want to delete this item?"),
-//                                                   actions: <Widget>[
-//                                                     TextButton(
-//                                                       child: Text("No"),
-//                                                       onPressed: () {
-//                                                         Navigator.of(context).pop(false); // Return false when "No" is pressed
-//                                                       },
-//                                                     ),
-//                                                     TextButton(
-//                                                       child: Text("Yes"),
-//                                                       onPressed: () {
-//                                                         Navigator.of(context).pop(true); // Return true when "Yes" is pressed
-//                                                       },
-//                                                     ),
-//                                                   ],
-//                                                 );
-//                                               },
-//                                             );
-//
-//                                             if (confirmed != null && confirmed) {
-//                                               await delete(departement.id.toString());
-//                                               setState(() {});
-//                                               Navigator.push(
-//                                                 context,
-//                                                 MaterialPageRoute(
-//                                                   builder: (context) => HomeDepartement(
-//                                                     widgetName: ListDepartement(),
-//                                                     title: 'List',
-//                                                     index: 0,
-//                                                   ),
-//                                                 ),
-//                                               );
-//                                             }
-//                                           },
-//                                         ),
-//                                       ],
-//                                     ),
-//                                   ),
-//                                   Spacer(),
-//                                   Container(
-//                                     padding: EdgeInsets.symmetric(
-//                                       horizontal: kDefaultPadding * 1.5,
-//                                       vertical: kDefaultPadding / 4,
-//                                     ),
-//                                     decoration: BoxDecoration(
-//                                       color: Colors.blue,
-//                                       borderRadius: BorderRadius.only(
-//                                         bottomLeft: Radius.circular(22),
-//                                         topRight: Radius.circular(22),
-//                                       ),
-//                                     ),
-//                                     child: Text(
-//                                       departement.id.toString(),
-//                                       style: Theme.of(context).textTheme.button,
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     );
-//                   },
-//                 );
-//               }
-//             },
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -451,7 +7,7 @@ import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import 'package:pfe_front_flutter/screens/forms/departementform.dart';
 import '../../../constants.dart';
 import '../../models/departement.dart';
-
+import 'package:rflutter_alert/rflutter_alert.dart';
 class ListDepartement extends StatefulWidget {
   ListDepartement({Key? key}) : super(key: key);
 
@@ -625,42 +181,46 @@ class _ListDepartementState extends State<ListDepartement> {
                                                         ),
                                                         GestureDetector(
                                                           onTap: () async {
-                                                            bool confirmed = await showDialog(
+                                                            Alert(
                                                               context: context,
-                                                              builder: (BuildContext context) {
-                                                                return AlertDialog(
-                                                                  title: Text("Confirmation"),
-                                                                  content: Text("Are you sure you want to delete this item?"),
-                                                                  actions: <Widget>[
-                                                                    TextButton(
-                                                                      child: Text("No"),
-                                                                      onPressed: () {
-                                                                        Navigator.of(context).pop(false);
-                                                                      },
-                                                                    ),
-                                                                    TextButton(
-                                                                      child: Text("Yes"),
-                                                                      onPressed: () {
-                                                                        Navigator.of(context).pop(true);
-                                                                      },
-                                                                    ),
-                                                                  ],
-                                                                );
-                                                              },
-                                                            );
-
-                                                            if (confirmed != null && confirmed) {
-                                                              await delete(departement.id.toString());
-                                                              setState(() {});
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder: (context) => MasterPage(
-                                                                    child: ListDepartement(),
+                                                              type: AlertType.warning,
+                                                              title: "Confirmation",
+                                                              desc: "Are you sure you want to delete this item?",
+                                                              buttons: [
+                                                                DialogButton(
+                                                                  child: Text(
+                                                                    "Cancel",
+                                                                    style: TextStyle(color: Colors.white, fontSize: 18),
                                                                   ),
+                                                                  onPressed: () {
+                                                                    print("Cancel button clicked");
+                                                                    Navigator.pop(context);
+                                                                  },
+                                                                  color: Colors.red,
+                                                                  radius: BorderRadius.circular(20.0),
                                                                 ),
-                                                              );
-                                                            }
+                                                                DialogButton(
+                                                                  child: Text(
+                                                                    "Delete",
+                                                                    style: TextStyle(color: Colors.white, fontSize: 18),
+                                                                  ),
+                                                                  onPressed: () async {
+                                                                    await delete(departement.id.toString());
+                                                                    setState(() {});
+                                                                    Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (context) => MasterPage(
+                                                                          child: ListDepartement(),
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                  color: Colors.blue,
+                                                                  radius: BorderRadius.circular(20.0),
+                                                                ),
+                                                              ],
+                                                            ).show();
                                                           },
                                                           child: Icon(
                                                             Icons.delete,

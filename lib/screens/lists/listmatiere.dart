@@ -5,7 +5,7 @@ import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import 'package:pfe_front_flutter/screens/forms/addmatiereform.dart';
 import '../../../constants.dart';
 import '../../models/matiere.dart';
-
+import 'package:rflutter_alert/rflutter_alert.dart';
 class MatiereHome extends StatefulWidget {
   MatiereHome({Key? key}) : super(key: key);
 
@@ -205,42 +205,46 @@ class _MatiereHomeState extends State<MatiereHome> {
                                                         ),
                                                         GestureDetector(
                                                           onTap: () async {
-                                                            bool confirmed = await showDialog(
+                                                            Alert(
                                                               context: context,
-                                                              builder: (BuildContext context) {
-                                                                return AlertDialog(
-                                                                  title: Text("Confirmation"),
-                                                                  content: Text("Are you sure you want to delete this item?"),
-                                                                  actions: <Widget>[
-                                                                    TextButton(
-                                                                      child: Text("No"),
-                                                                      onPressed: () {
-                                                                        Navigator.of(context).pop(false);
-                                                                      },
-                                                                    ),
-                                                                    TextButton(
-                                                                      child: Text("Yes"),
-                                                                      onPressed: () {
-                                                                        Navigator.of(context).pop(true);
-                                                                      },
-                                                                    ),
-                                                                  ],
-                                                                );
-                                                              },
-                                                            );
-
-                                                            if (confirmed != null && confirmed) {
-                                                              await delete(matiere.id.toString());
-                                                              setState(() {});
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder: (context) => MasterPage(
-                                                                    child: MatiereHome(),
+                                                              type: AlertType.warning,
+                                                              title: "Confirmation",
+                                                              desc: "Are you sure you want to delete this item?",
+                                                              buttons: [
+                                                                DialogButton(
+                                                                  child: Text(
+                                                                    "Cancel",
+                                                                    style: TextStyle(color: Colors.white, fontSize: 18),
                                                                   ),
+                                                                  onPressed: () {
+                                                                    print("Cancel button clicked");
+                                                                    Navigator.pop(context);
+                                                                  },
+                                                                  color: Colors.red,
+                                                                  radius: BorderRadius.circular(20.0),
                                                                 ),
-                                                              );
-                                                            }
+                                                                DialogButton(
+                                                                  child: Text(
+                                                                    "Delete",
+                                                                    style: TextStyle(color: Colors.white, fontSize: 18),
+                                                                  ),
+                                                                  onPressed: () async {
+                                                                    await delete(matiere.id.toString());
+                                                                    setState(() {});
+                                                                    Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder: (context) => MasterPage(
+                                                                          child: MatiereHome(),
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                  color: Colors.blue,
+                                                                  radius: BorderRadius.circular(20.0),
+                                                                ),
+                                                              ],
+                                                            ).show();
                                                           },
                                                           child: Icon(
                                                             Icons.delete,

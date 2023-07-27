@@ -13,6 +13,8 @@ import '../bar/masterpagesuperviseur.dart';
 import 'lists/notifications.dart';
 
 class LoginScreen extends StatelessWidget {
+  final String accessToken;
+  LoginScreen({Key? key, required this.accessToken}) : super(key: key);
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController accessTokenController = TextEditingController();
@@ -75,7 +77,7 @@ class LoginScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MasterPageSupeurviseur(child:Notifications(accessToken: accessToken)),
+            builder: (context) => MasterPageSupeurviseur(child:Notifications(accessToken: accessToken),accessToken: accessToken),
           ),
         );
       } else if (validUrl == 'http://127.0.0.1:8000/admin') {

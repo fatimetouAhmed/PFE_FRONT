@@ -7,11 +7,13 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent
   ));
-  runApp(const MyApp());
+  runApp(MyApp(accessToken:''));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String accessToken;
+  MyApp({Key? key,required this.accessToken}) : super(key: key);
+  // const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
@@ -20,38 +22,36 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: LoginScreen(accessToken:accessToken),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      // debugShowMaterialGrid: false,
-
-      home:
-      LoginScreen(),
-    );
-  }
-}
+// class MyHomePage extends StatefulWidget {
+//   const MyHomePage({super.key, required this.title});
+//
+//   final String title;
+//
+//   @override
+//   State<MyHomePage> createState() => _MyHomePageState();
+// }
+//
+// class _MyHomePageState extends State<MyHomePage> {
+//
+//   @override
+//   Widget build(BuildContext context) {
+//
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       // debugShowMaterialGrid: false,
+//
+//       home: LoginScreen(),
+//     );
+//   }
+// }
 
 
 

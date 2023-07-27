@@ -9,7 +9,7 @@ class SupervisorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MasterPageSupeurviseur(child:Notifications(accessToken: accessToken))
+    return MasterPageSupeurviseur(child:Notifications(accessToken: accessToken),accessToken: accessToken)
     ;
   }
 }
