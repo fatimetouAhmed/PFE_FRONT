@@ -7,8 +7,9 @@ import '../screens/lists/notifications.dart';
 import 'masterpagesuperviseur.dart';
 
 class SideBarSuperviseur extends StatefulWidget {
-  String accessToken = '';
-
+  // /String accessToken = '';
+  final String accessToken;
+  SideBarSuperviseur({Key? key,required this.accessToken}) : super(key: key);
   @override
   _SideBarSuperviseurState createState() => _SideBarSuperviseurState();
 }
@@ -28,11 +29,11 @@ class _SideBarSuperviseurState extends State<SideBarSuperviseur> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MasterPageSupeurviseur(
-              child: Notifications(accessToken: widget.accessToken),
+            builder: (context) => MasterPageSupeurviseur(child: Notifications(accessToken: widget.accessToken),accessToken: widget.accessToken
             ),
           ),
         );
+
         break;
       case 1:
         indicatorColor = Colors.blue.shade300;
@@ -40,7 +41,7 @@ class _SideBarSuperviseurState extends State<SideBarSuperviseur> {
           context,
           MaterialPageRoute(
             builder: (context) => MasterPageSupeurviseur(
-              child: ListSurveillance(),
+              child: ListSurveillance(accessToken: widget.accessToken,), accessToken: widget.accessToken,
             ),
           ),
         );
@@ -50,7 +51,7 @@ class _SideBarSuperviseurState extends State<SideBarSuperviseur> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => LoginScreen()
+            builder: (context) => LoginScreen(accessToken: widget.accessToken,)
           ),
         );
         break;

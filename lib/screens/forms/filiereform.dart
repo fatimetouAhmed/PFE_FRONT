@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import '../../bar/masterpageadmin.dart';
 import '../../models/filliere.dart';
 import '../lists/listfiliere.dart';
-
+import 'package:quickalert/quickalert.dart';
 class FiliereForm extends StatefulWidget {
   final Filiere filiere;
 
@@ -19,6 +19,8 @@ class _FiliereFormState extends State<FiliereForm> {
   TextEditingController nomController = new TextEditingController();
   TextEditingController descriptionController = new TextEditingController();
   TextEditingController id_depController = new TextEditingController();
+  FocusNode nom = FocusNode();
+  FocusNode description = FocusNode();
 
   String? selectedOption;
   List<String> departmentList = [];
@@ -67,12 +69,15 @@ class _FiliereFormState extends State<FiliereForm> {
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
+      Set<String> uniqueDepartments = {}; // Using a Set to ensure unique values
       for (var department in data) {
-        departmentList.add(department['nom'] as String);
+        uniqueDepartments.add(department['nom'] as String);
       }
+      departmentList = uniqueDepartments.toList(); // Convert back to a list
     }
     print(departmentList);
   }
+
 
   Future<int?> fetchDepartementsId(String nom) async {
     var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/$nom'));
@@ -81,15 +86,6 @@ class _FiliereFormState extends State<FiliereForm> {
       dynamic jsonData = json.decode(response.body);
       print(jsonData);
       return jsonData;
-     // print(jsonData); // Print the response body for debugging
-     //
-     //  if (jsonData != null && jsonData is Map) {
-     //    if (jsonData.containsKey('id')) {
-     //      int departementId = jsonData['id'] as int;
-     //     // print(departementId);
-     //      return departementId;
-     //    }
-     //  }
     }
 
     return null;
@@ -125,131 +121,254 @@ class _FiliereFormState extends State<FiliereForm> {
 int? iddep=0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
+    return   Scaffold(
+      backgroundColor: Colors.grey.shade100,
+      body: SafeArea(
+        child: Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+
+            background_container(context),
+            Positioned(
+              top: 120,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                ),
+                height: 360,
+                width: 340,
                 child: Form(
                   child: Column(
                     children: [
                       Visibility(
                         visible: false,
                         child: TextFormField(
-                          decoration: InputDecoration(hintText: 'Enter ID'),
+                          decoration: InputDecoration(hintText: 'Entrez id'),
                           controller: idController,
                         ),
                       ),
-                      FractionallySizedBox(
-                        widthFactor: 0.8,
-                        child: TextFormField(
-                          decoration: InputDecoration(hintText: 'Enter Name'),
+                      SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          focusNode: nom,
                           controller: nomController,
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                      FractionallySizedBox(
-                        widthFactor: 0.8,
-                        child: TextFormField(
-                          decoration: InputDecoration(hintText: 'Enter Description'),
-                          controller: descriptionController,
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                      FractionallySizedBox(
-                        widthFactor: 0.8,
-                        child: DropdownButtonFormField<String>(
-                         // print(selectedOption),
-                          value: selectedOption,
-                          items: departmentList.map((String option) {
-                            return DropdownMenuItem<String>(
-                              value: option,
-                              child: Text(option),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) async {
-                            selectedOption = newValue;
-                            print(selectedOption);
-                            if (selectedOption != null) {
-                              int? id = await fetchDepartementsId(selectedOption!);
-                              id_depController.text = id.toString();
-
-                            }
-                          },
-
                           decoration: InputDecoration(
-                            labelText: 'Department',
-                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                            labelText: 'nom',
+                            labelStyle: TextStyle(fontSize: 17, color: Colors.grey.shade500),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(width: 2, color: Colors.blue,)),
                           ),
                         ),
                       ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                      Visibility(
-                        visible: false,
-                        child: TextFormField(
-                          decoration: InputDecoration(hintText: 'Enter ID'),
-                          controller: id_depController,
+                        SizedBox(height: 30),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            focusNode: description,
+                            controller: descriptionController,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                              labelText: 'description',
+                              labelStyle: TextStyle(fontSize: 17, color: Colors.grey.shade500),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                            ),
+                          ),
                         ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                        ),
-                        child: Text("Submit"),
-                        onPressed: () async {
-                          int? id = int.tryParse(idController.text);
-                          int? idDep = int.tryParse(id_depController.text);
+                      SizedBox(height: 30),
 
-                          if (id != null && idDep != null) {
-                            await save(
-                              Filiere(
-                                id,
-                                nomController.text,
-                                descriptionController.text,
-                                idDep,
-                                '',
-                              ),
-                            );
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>MasterPage(child:  ListFiliere(),)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              width: 2,
+                              color: Color(0xffC5C5C5),
+                            ),
+                          ),
+                          child: DropdownButton<String>(
+                            value: selectedOption,
+                            onChanged: (String? newValue) async {
+                        print(selectedOption);
+                              setState(() {
+                                selectedOption = newValue!;
+                              });
+
+                              if (selectedOption != null) {
+                                int? id = await fetchDepartementsId(selectedOption!);
+                                print(id);
+                                id_depController.text = id.toString();
+                              }
+                            },
+                            items: departmentList.map((e) => DropdownMenuItem(
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  e,
+                                  style: TextStyle(fontSize: 18),
                                 ),
-                              );
-
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text("Error"),
-                                  content: Text("Invalid ID or Department ID"),
-                                  actions: [
-                                    TextButton(
-                                      child: Text("OK"),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        },
+                              ),
+                              value: e,
+                            )).toList(),
+                            selectedItemBuilder: (BuildContext context) => departmentList.map((e) => Text(e)).toList(),
+                            hint: Padding(
+                              padding: const EdgeInsets.only(top: 12),
+                              child: Text(
+                                'Departement',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                            dropdownColor: Colors.white,
+                            isExpanded: true,
+                            underline: Container(),
+                          ),
+                        ),
                       ),
+
+
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () async {
+                          await QuickAlert.show(
+                            context: context,
+                            type: QuickAlertType.success,
+                            text: 'Operation Completed Successfully!',
+                            confirmBtnColor: Colors.blue,
+                          ).then((value) async {
+                            if (value == null) {
+                              int? id = int.tryParse(idController.text);
+                              int? idDep = int.tryParse(id_depController.text);
+
+                              if (id != null && idDep != null) {
+                                await save(
+                                  Filiere(
+                                    id,
+                                    nomController.text,
+                                    descriptionController.text,
+                                    idDep,
+                                    '',
+                                  ),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>MasterPage(child:  ListFiliere(),)
+                                  ),
+                                );
+
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Error"),
+                                      content: Text("Invalid ID or Department ID"),
+                                      actions: [
+                                        TextButton(
+                                          child: Text("OK"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            }
+                          });
+
+
+                        },
+
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.blue,
+                          ),
+                          width: 120,
+                          height: 50,
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                              fontFamily: 'f',
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 25),
                     ],
                   ),
                 ),
               ),
             ),
-          );
-        },
+          ],
+        ),
       ),
+    );
+
+  }
+
+  Column background_container(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          height: 240,
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            children: [
+              SizedBox(height: 40),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                // child: Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                child:   Center(
+                  child: Text(
+                    'Adding',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  ),
+                  //   ),
+                  //
+                  // ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -49,7 +49,7 @@ class _CameraScreenState extends State<CameraScreen> {
             icon: Icon(Icons.logout),
             onPressed: () {
               // Vous pouvez mettre ici le code pour déconnecter l'utilisateur et aller à la page de connexion
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(accessToken: widget.accessToken)));
             },
           ),
         ],

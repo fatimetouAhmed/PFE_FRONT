@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../../constants.dart';
-import 'package:quickalert/quickalert.dart';
-
+import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../bar/masterpageadmin.dart';
 import '../../models/filliere.dart';
 import '../../models/semestre.dart';
@@ -187,42 +186,46 @@ class _ListSemestreState extends State<ListSemestre> {
                                                       ),
                                                       GestureDetector(
                                                         onTap: () async {
-                                                          bool confirmed = await showDialog(
+                                                          Alert(
                                                             context: context,
-                                                            builder: (BuildContext context) {
-                                                              return AlertDialog(
-                                                                title: Text("Confirmation"),
-                                                                content: Text("Are you sure you want to delete this item?"),
-                                                                actions: <Widget>[
-                                                                  TextButton(
-                                                                    child: Text("No"),
-                                                                    onPressed: () {
-                                                                      Navigator.of(context).pop(false);
-                                                                    },
-                                                                  ),
-                                                                  TextButton(
-                                                                    child: Text("Yes"),
-                                                                    onPressed: () {
-                                                                      Navigator.of(context).pop(true);
-                                                                    },
-                                                                  ),
-                                                                ],
-                                                              );
-                                                            },
-                                                          );
-
-                                                          if (confirmed != null && confirmed) {
-                                                            await delete(semestre.id.toString());
-                                                            setState(() {});
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) => MasterPage(
-                                                                  child: ListSemestre(),
+                                                            type: AlertType.warning,
+                                                            title: "Confirmation",
+                                                            desc: "Are you sure you want to delete this item?",
+                                                            buttons: [
+                                                              DialogButton(
+                                                                child: Text(
+                                                                  "Cancel",
+                                                                  style: TextStyle(color: Colors.white, fontSize: 18),
                                                                 ),
+                                                                onPressed: () {
+                                                                  print("Cancel button clicked");
+                                                                  Navigator.pop(context);
+                                                                },
+                                                                color: Colors.red,
+                                                                radius: BorderRadius.circular(20.0),
                                                               ),
-                                                            );
-                                                          }
+                                                              DialogButton(
+                                                                child: Text(
+                                                                  "Delete",
+                                                                  style: TextStyle(color: Colors.white, fontSize: 18),
+                                                                ),
+                                                                onPressed: () async {
+                                                                  await delete(semestre.id.toString());
+                                                                  setState(() {});
+                                                                  Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder: (context) => MasterPage(
+                                                                        child: ListSemestre(),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                                color: Colors.blue,
+                                                                radius: BorderRadius.circular(20.0),
+                                                              ),
+                                                            ],
+                                                          ).show();
                                                         },
                                                         child: Icon(
                                                           Icons.delete,
