@@ -85,6 +85,7 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     MasterPage(
+                                      index: 0,
                                       child:
                                       EtudierMatForm(etudierMat: EtudierMat(0,0,0)),
                                     ),
@@ -176,7 +177,9 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                              builder: (context) => MasterPage(child:
+                                                              builder: (context) => MasterPage(
+                                                                index: 0,
+                                                                child:
                                                               EtudierMatForm(
                                                                 etudierMat: etudier,
                                                               ),),
@@ -223,6 +226,7 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
                                                                     context,
                                                                     MaterialPageRoute(
                                                                       builder: (context) => MasterPage(
+                                                                        index: 0,
                                                                         child: ListEtudierMat(),
                                                                       ),
                                                                     ),

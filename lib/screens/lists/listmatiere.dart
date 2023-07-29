@@ -93,6 +93,7 @@ class _MatiereHomeState extends State<MatiereHome> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                   MasterPage(
+                                    index: 0,
                                   child:
                                   AddMatiereForm(matiere: Matiere(0, '',0,0)),
                                ),
@@ -189,7 +190,9 @@ class _MatiereHomeState extends State<MatiereHome> {
                                                             Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
-                                                                builder: (context) => MasterPage(child:
+                                                                builder: (context) => MasterPage(
+                                                                  index: 0,
+                                                                  child:
                                                                     AddMatiereForm(
                                                                   matiere: matiere,
                                                                 ),
@@ -235,6 +238,7 @@ class _MatiereHomeState extends State<MatiereHome> {
                                                                       context,
                                                                       MaterialPageRoute(
                                                                         builder: (context) => MasterPage(
+                                                                          index: 0,
                                                                           child: MatiereHome(),
                                                                         ),
                                                                       ),

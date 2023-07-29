@@ -268,7 +268,7 @@ int? iddep=0;
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>MasterPage(child:  ListFiliere(),)
+                                      builder: (context) =>MasterPage( index: 0,child:  ListFiliere(),)
                                   ),
                                 );
 

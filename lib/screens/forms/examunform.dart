@@ -421,7 +421,7 @@ class _ExamunFormState extends State<ExamunForm> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>MasterPage(child:  ListExamun(),)
+                                      builder: (context) =>MasterPage( index: 0,child:  ListExamun(),)
                                   ),
                                 );
 

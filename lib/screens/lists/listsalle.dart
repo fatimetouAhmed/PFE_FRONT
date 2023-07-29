@@ -79,6 +79,7 @@ class _ListSalleState extends State<ListSalle> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       MasterPage(
+                                        index: 0,
                                         child:
                                         SalleForm(salle: Salle(0, '')),
                                       ),
@@ -165,7 +166,9 @@ class _ListSalleState extends State<ListSalle> {
                                                             Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
-                                                                builder: (context) => MasterPage(child:
+                                                                builder: (context) => MasterPage(
+                                                                  index: 0,
+                                                                  child:
                                                                 SalleForm(
                                                                   salle: salle,
                                                                 ),
@@ -211,6 +214,7 @@ class _ListSalleState extends State<ListSalle> {
                                                                       context,
                                                                       MaterialPageRoute(
                                                                         builder: (context) => MasterPage(
+                                                                          index: 0,
                                                                           child: ListSalle(),
                                                                         ),
                                                                       ),

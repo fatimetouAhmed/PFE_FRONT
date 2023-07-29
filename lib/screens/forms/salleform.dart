@@ -122,7 +122,7 @@ class _SalleFormState extends State<SalleForm> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        MasterPage(
+                                        MasterPage( index: 0,
                                           child:
                                           ListSalle(),
                                         ),

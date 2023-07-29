@@ -9,83 +9,90 @@ import 'drawer.dart';
 class MasterPage extends StatefulWidget {
   String accessToken = '';
   final Widget child;
-
-  MasterPage({required this.child});
+  final int index;
+  MasterPage({required this.child, required this.index,});
 
   @override
   _MasterPageState createState() => _MasterPageState();
 }
 
 class _MasterPageState extends State<MasterPage> {
-  int index = 0;
-
+  Widget _currentWidget = Notifications(accessToken: ''); // Set a default value
+  int _currentIndex = 0;
+  @override
+  void initState(){
+    super.initState();
+    _currentWidget=this.widget.child;
+    _currentIndex=this.widget.index;
+  }
   void handleDestinationTap(int selectedIndex) {
     setState(() {
-      index = selectedIndex;
+      _currentIndex = selectedIndex;
+      switch (selectedIndex) {
+        case 0:
+          _currentWidget = Notifications(accessToken: widget.accessToken);
+          break;
+        case 1:
+        // Replace this with your desired widget for index 1
+        // For example: _currentWidget = YourCustomWidget();
+          break;
+        case 2:
+          _currentWidget = Historiques();
+          break;
+      // Add more cases for other indices if needed
+        default:
+        // Handle default case or leave empty if not needed
+          break;
+      }
     });
-    switch (selectedIndex) {
-      case 0:
-        indicatorColor = Colors.blue.shade300;
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MasterPage(
-              child: Notifications(accessToken: widget.accessToken),
-            ),
-          ),
-        );
-        break;
-      case 1:
-        indicatorColor = Colors.blue.shade300;
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MasterPage(
-              child: Notifications(accessToken: widget.accessToken),
-            ),
-          ),
-        );
-        break;
-      case 2:
-        indicatorColor = Colors.blue.shade300;
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MasterPage(
-              child: Historiques(),
-            ),
-          ),
-        );
-        break;
-      case 3:
-        indicatorColor = Colors.blue.shade300;
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MasterPage(
-              child: Notifications(accessToken: widget.accessToken),
-            ),
-          ),
-        );
-        break;
-    }
   }
-
   @override
   Widget build(BuildContext context) {
-    Widget selectedChild = widget.child; // Default widget is the passed child
+    // Widget selectedChild = widget.child; // Default widget is the passed child
 
     return Scaffold(
-      drawer: NavBar(accessToken: widget.accessToken ),
+      drawer:NavBar(accessToken:widget.accessToken,),
       appBar: CustomAppBar(),
-      body: Container(
-        child: selectedChild,
-      ),
+      body:  _currentWidget,
       bottomNavigationBar: CurvedNavigationBar(
-        index: index,
+        index: _currentIndex,
         height: 60.0,
         items: <Widget>[
-          Icon(Icons.home, size: 30),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                width: 40, // Définir la largeur souhaitée de l'icône
+                height: 40, // Définir la hauteur souhaitée de l'icône
+                child: Icon(Icons.notification_important),
+              ),
+              Positioned(
+                top: -1,
+                right: 0,
+                child: Container(
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  constraints: BoxConstraints(
+                    minWidth: 10,
+                    minHeight: 10,
+                  ),
+                  child: Text(
+                    '5',
+                    // Remplacez ceci par le véritable nombre de notifications
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          ),
           Icon(Icons.notifications, size: 30),
           Icon(Icons.history, size: 30),
         ],

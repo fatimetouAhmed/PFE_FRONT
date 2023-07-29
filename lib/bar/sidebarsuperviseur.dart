@@ -29,7 +29,7 @@ class _SideBarSuperviseurState extends State<SideBarSuperviseur> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MasterPageSupeurviseur(child: Notifications(accessToken: widget.accessToken),accessToken: widget.accessToken
+            builder: (context) => MasterPageSupeurviseur(child: Notifications(accessToken: widget.accessToken),accessToken: widget.accessToken, index: 0,
             ),
           ),
         );
@@ -41,7 +41,7 @@ class _SideBarSuperviseurState extends State<SideBarSuperviseur> {
           context,
           MaterialPageRoute(
             builder: (context) => MasterPageSupeurviseur(
-              child: ListSurveillance(accessToken: widget.accessToken,), accessToken: widget.accessToken,
+              child: ListSurveillance(accessToken: widget.accessToken,), accessToken: widget.accessToken, index: 1,
             ),
           ),
         );

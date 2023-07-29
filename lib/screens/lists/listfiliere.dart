@@ -79,6 +79,7 @@ class _ListFiliereState extends State<ListFiliere> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     MasterPage(
+                                      index: 0,
                                       child:
                                       FiliereForm(filiere: Filiere(0, '','',0,'')),
                                     ),
@@ -170,7 +171,9 @@ class _ListFiliereState extends State<ListFiliere> {
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                              builder: (context) => MasterPage(child:
+                                                              builder: (context) => MasterPage(
+                                                                index: 0,
+                                                                child:
                                                               FiliereForm(
                                                                 filiere: filiere,
                                                               ),),
@@ -218,6 +221,7 @@ class _ListFiliereState extends State<ListFiliere> {
                                                                     context,
                                                                     MaterialPageRoute(
                                                                       builder: (context) => MasterPage(
+                                                                        index: 0,
                                                                         child: ListFiliere(),
                                                                       ),
                                                                     ),

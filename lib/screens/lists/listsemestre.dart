@@ -78,6 +78,7 @@ class _ListSemestreState extends State<ListSemestre> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     MasterPage(
+                                      index: 0,
                                       child:
                                       SemestreForm(semestre: Semestre(0, '',0,'')),
                                     ),
@@ -169,7 +170,9 @@ class _ListSemestreState extends State<ListSemestre> {
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                              builder: (context) => MasterPage(child:
+                                                              builder: (context) => MasterPage(
+                                                                index: 0,
+                                                                child:
                                                               SemestreForm(
                                                                 semestre: semestre,
                                                               ),),
@@ -216,6 +219,7 @@ class _ListSemestreState extends State<ListSemestre> {
                                                                     context,
                                                                     MaterialPageRoute(
                                                                       builder: (context) => MasterPage(
+                                                                        index: 0,
                                                                         child: ListSemestre(),
                                                                       ),
                                                                     ),

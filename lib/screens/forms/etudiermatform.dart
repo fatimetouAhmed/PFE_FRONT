@@ -293,7 +293,7 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>MasterPage(child:  ListEtudierMat(),)
+                                      builder: (context) =>MasterPage( index: 0,child:  ListEtudierMat(),)
                                   ),
                                 );
 

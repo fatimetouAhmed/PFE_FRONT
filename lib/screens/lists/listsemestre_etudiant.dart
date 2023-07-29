@@ -76,6 +76,7 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     MasterPage(
+                                      index: 0,
                                       child:
                                       Semestre_EtudiantForm(semestre_etudiant: Semestre_Etudiant(0,0,0)),
                                     ),
@@ -167,7 +168,9 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                              builder: (context) => MasterPage(child:
+                                                              builder: (context) => MasterPage(
+                                                                index: 0,
+                                                                child:
                                                               Semestre_EtudiantForm(
                                                                 semestre_etudiant: semestre_etudiant,
                                                               ),),
@@ -214,6 +217,7 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
                                                                     context,
                                                                     MaterialPageRoute(
                                                                       builder: (context) => MasterPage(
+                                                                        index: 0,
                                                                         child: ListSemestre_Etudiant(),
                                                                       ),
                                                                     ),

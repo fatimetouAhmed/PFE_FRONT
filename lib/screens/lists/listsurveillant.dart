@@ -36,9 +36,9 @@ class _ListSurveillanceState extends State<ListSurveillance> {
       "Authorization": "Bearer ${widget.accessToken}",
     };
     var response = await http.get(
-      Uri.parse('http://127.0.0.1:8000/surveillances/surveillance/'),headers: headers);
+        Uri.parse('http://127.0.0.1:8000/surveillances/surveillance/'),headers: headers);
     print(id);
-   // // print(token);
+    // // print(token);
     if (response.statusCode != 200) {
       // Handle the error when the API request is not successful (e.g., status code is not 200 OK).
       throw Exception('Failed to fetch surveillances.');
@@ -77,7 +77,7 @@ class _ListSurveillanceState extends State<ListSurveillance> {
   Future delete(id) async {
     await http.delete(Uri.parse('http://127.0.0.1:8000/surveillances/' + id));
   }
-int id=0;
+  int id=0;
   @override
   void initState() {
     super.initState();
@@ -132,9 +132,11 @@ int id=0;
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      MasterPage(
+                                      MasterPageSupeurviseur(
+                                        accessToken:widget.accessToken,
+                                        index: 0,
                                         child:
-                                        DepartementForm(departement: Departement(0, ''),accessToken: widget.accessToken),
+                                        SurveillanceForm(surveillance: Surveillance(0,  DateTime.parse('0000-00-00 00:00:00'), DateTime.parse('0000-00-00 00:00:00'),0,0), accessToken: widget.accessToken,),
                                       ),
                                 ),
                                 // ),
@@ -210,7 +212,7 @@ int id=0;
                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
                                                         Text(
-                                                        DateFormat('MM-dd HH:mm').format(surveillance.date_debut),
+                                                          DateFormat('MM-dd HH:mm').format(surveillance.date_debut),
                                                           style: Theme.of(context).textTheme.button,
                                                         ),
                                                         SizedBox(width: 8),
@@ -220,13 +222,36 @@ int id=0;
                                                         ),
                                                         SizedBox(width: 8),
                                                         Text(
-                                                            surveillance.surveillant_id.toString(),
+                                                          surveillance.surveillant_id.toString(),
                                                           style: Theme.of(context).textTheme.button,
                                                         ),
                                                         SizedBox(width: 8),
                                                         Text(
                                                           surveillance.salle_id.toString(),
                                                           style: Theme.of(context).textTheme.button,
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder: (context) => MasterPageSupeurviseur(accessToken:widget.accessToken,
+                                                                  index: 0,
+                                                                  child:
+                                                                  SurveillanceForm(
+                                                                    surveillance: surveillance, accessToken: widget.accessToken,
+                                                                  ),),
+
+                                                              ),
+                                                            );
+                                                          },
+                                                          child: Icon(
+                                                            Icons.edit,
+                                                            color: Colors.blue,
+                                                            size: 24.0,
+                                                            semanticLabel: 'Edit',
+                                                          ),
                                                         ),
                                                         SizedBox(width: 8),
                                                         GestureDetector(
@@ -261,7 +286,7 @@ int id=0;
                                                                       context,
                                                                       MaterialPageRoute(
                                                                         builder: (context) => MasterPageSupeurviseur(
-                                                                          child: ListSurveillance(accessToken: widget.accessToken,),accessToken: widget.accessToken,
+                                                                          child: ListSurveillance(accessToken: widget.accessToken,),accessToken: widget.accessToken,index: 0,
                                                                         ),
                                                                       ),
                                                                     );

@@ -174,6 +174,7 @@ class _AddMatiereFormState extends State<AddMatiereForm> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       MasterPage(
+                                        index: 0,
                                         child:
                                         MatiereHome(),
                                       ),

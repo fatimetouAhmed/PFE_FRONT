@@ -81,7 +81,7 @@ class LoginScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MasterPageSupeurviseur(child:Notifications(accessToken: accessToken),accessToken: accessToken),
+            builder: (context) => MasterPageSupeurviseur(child:Notifications(accessToken: accessToken),accessToken: accessToken, index: 0,),
           ),
         );
       } else if (validUrl == 'http://127.0.0.1:8000/admin') {
@@ -89,6 +89,7 @@ class LoginScreen extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => MasterPage(
+              index: 0,
                 child: ListDepartement(accessToken: accessToken),
             ),
           ),

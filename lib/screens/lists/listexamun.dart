@@ -83,6 +83,7 @@ class _ListExamunState extends State<ListExamun> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     MasterPage(
+                                      index: 0,
                                       child:
                                       ExamunForm(examun: Examun(0, '', DateTime.parse('0000-00-00 00:00:00'), DateTime.parse('0000-00-00 00:00:00'), 0, 0)),
 
@@ -182,7 +183,9 @@ class _ListExamunState extends State<ListExamun> {
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                              builder: (context) => MasterPage(child:
+                                                              builder: (context) => MasterPage(
+                                                                index: 0,
+                                                                child:
                                                               ExamunForm(
                                                                 examun: examun,
                                                               ),),
@@ -228,6 +231,7 @@ class _ListExamunState extends State<ListExamun> {
                                                                     context,
                                                                     MaterialPageRoute(
                                                                       builder: (context) => MasterPage(
+                                                                        index: 0,
                                                                         child: ListExamun(),
                                                                       ),
                                                                     ),

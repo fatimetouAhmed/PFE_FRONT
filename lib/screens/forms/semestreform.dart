@@ -235,7 +235,7 @@ class _SemestreFormState extends State<SemestreForm> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>MasterPage(child:  ListSemestre(),)
+                                      builder: (context) =>MasterPage( index: 0,child:  ListSemestre(),)
                                   ),
                                 );
 
