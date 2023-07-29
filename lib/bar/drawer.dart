@@ -11,7 +11,8 @@ import '../screens/lists/listsalle.dart';
 import 'masterpageadmin.dart';
 
 class NavBar extends StatelessWidget{
-  const NavBar({super.key});
+  final String accessToken;
+  const NavBar({required this.accessToken, Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context){
     return Drawer(
@@ -127,7 +128,7 @@ class NavBar extends StatelessWidget{
                 context,
                 MaterialPageRoute(
                   builder: (context) => MasterPage(
-                    child: ListDepartement(),
+                    child: ListDepartement(accessToken: accessToken),
 
                   ),
                 ),

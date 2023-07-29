@@ -9,7 +9,9 @@ import '../../../constants.dart';
 import '../../models/departement.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 class ListDepartement extends StatefulWidget {
-  ListDepartement({Key? key}) : super(key: key);
+  final String accessToken;
+
+  ListDepartement({Key? key,required this.accessToken}) : super(key: key);
 
   @override
   State<ListDepartement> createState() => _ListDepartementState();
@@ -19,17 +21,24 @@ class _ListDepartementState extends State<ListDepartement> {
   List<Departement> departementsList = [];
 
   Future<List<Departement>> fetchDepartements() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/departements/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/departements/'),headers: headers);
+
     var departements = <Departement>[];
     for (var u in jsonDecode(response.body)) {
       departements.add(Departement(u['id'], u['nom']));
     }
-   // print(departements);
+    // print(departements);
     return departements;
   }
 
   Future delete(id) async {
-    await http.delete(Uri.parse('http://127.0.0.1:8000/departements/' + id));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    await http.delete(Uri.parse('http://127.0.0.1:8000/departements/' + id),headers: headers);
   }
 
   @override
@@ -80,7 +89,7 @@ class _ListDepartementState extends State<ListDepartement> {
                                   builder: (context) =>
                                       MasterPage(
                                         child:
-                                        DepartementForm(departement: Departement(0, '')),
+                                        DepartementForm(departement: Departement(0, ''),accessToken: widget.accessToken),
                                       ),
                                 ),
                                 // ),
@@ -167,7 +176,7 @@ class _ListDepartementState extends State<ListDepartement> {
                                                               MaterialPageRoute(
                                                                 builder: (context) => MasterPage(child:
                                                                 DepartementForm(
-                                                                  departement: departement,
+                                                                  departement: departement,accessToken: widget.accessToken
                                                                 ),
                                                                 ),),
                                                             );
@@ -211,7 +220,7 @@ class _ListDepartementState extends State<ListDepartement> {
                                                                       context,
                                                                       MaterialPageRoute(
                                                                         builder: (context) => MasterPage(
-                                                                          child: ListDepartement(),
+                                                                          child: ListDepartement(accessToken: widget.accessToken),
                                                                         ),
                                                                       ),
                                                                     );

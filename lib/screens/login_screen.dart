@@ -89,7 +89,7 @@ class LoginScreen extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => MasterPage(
-              child: ListDepartement(),
+                child: ListDepartement(accessToken: accessToken),
             ),
           ),
         );

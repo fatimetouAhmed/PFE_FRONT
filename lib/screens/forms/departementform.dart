@@ -6,59 +6,55 @@ import 'package:pfe_front_flutter/screens/lists/listdepartement.dart';
 import 'package:quickalert/quickalert.dart';
 import '../../bar/masterpageadmin.dart';
 
-
 class DepartementForm extends StatefulWidget {
   final Departement departement;
+  final String accessToken;
 
-  DepartementForm({Key? key, required this.departement}) : super(key: key);
+  DepartementForm({Key? key, required this.departement, required this.accessToken}) : super(key: key);
 
   @override
   _DepartementFormState createState() => _DepartementFormState();
 }
-int i=0;
-Future save(departement) async {
-  if (departement.id == 0) {
-    i=0;
-    await http.post(
-      Uri.parse('http://127.0.0.1:8000/departements/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'nom': departement.nom,
-      }),
-    );
-  } else {
-    i=1;
-    await http.put(
-      Uri.parse('http://127.0.0.1:8000/departements/' + departement.id.toString()),
-      headers: <String, String>{
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'nom': departement.nom,
-      }),
-    );
-  }
-}
 
 class _DepartementFormState extends State<DepartementForm> {
-  TextEditingController idController = new TextEditingController();
-  TextEditingController nomController = new TextEditingController();
+  TextEditingController idController = TextEditingController();
+  TextEditingController nomController = TextEditingController();
   FocusNode nom = FocusNode();
+
   @override
   void initState() {
     super.initState();
-    print(this.widget.departement.nom);
-    setState(() {
-      idController.text = this.widget.departement.id.toString();
-      nomController.text = this.widget.departement.nom;
-    });
+    idController.text = widget.departement.id.toString();
+    nomController.text = widget.departement.nom;
+  }
+
+  Future<void> save(departement) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json;charset=UTF-8',
+      'Authorization': 'Bearer ${widget.accessToken}',
+    };
+
+    if (departement.id == 0) {
+      await http.post(
+        Uri.parse('http://127.0.0.1:8000/departements/'),
+        headers: headers,
+        body: jsonEncode(<String, String>{
+          'nom': departement.nom,
+        }),
+      );
+    } else {
+      await http.put(
+        Uri.parse('http://127.0.0.1:8000/departements/' + departement.id.toString()),
+        headers: headers,
+        body: jsonEncode(<String, String>{
+          'nom': departement.nom,
+        }),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: SafeArea(
@@ -66,7 +62,7 @@ class _DepartementFormState extends State<DepartementForm> {
           alignment: AlignmentDirectional.center,
           children: [
             SizedBox(height: 25),
-            background_container(context),
+            backgroundContainer(context),
             Positioned(
               top: 120,
               child: Container(
@@ -98,18 +94,20 @@ class _DepartementFormState extends State<DepartementForm> {
                             labelText: 'nom',
                             labelStyle: TextStyle(fontSize: 17, color: Colors.grey.shade500),
                             enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5)),
+                            ),
                             focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(width: 2, color: Colors.blue),
+                            ),
                           ),
                         ),
                       ),
                       Spacer(),
                       GestureDetector(
                         onTap: () async {
-                           await QuickAlert.show(
+                          await QuickAlert.show(
                             context: context,
                             type: QuickAlertType.success,
                             text: 'Operation Completed Successfully!',
@@ -117,24 +115,19 @@ class _DepartementFormState extends State<DepartementForm> {
                           ).then((value) async {
                             if (value == null) {
                               await save(
-                                  Departement(int.parse(idController.text), nomController.text),
+                                Departement(int.parse(idController.text), nomController.text),
                               );
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      MasterPage(
-                                        child:
-                                        ListDepartement(),
-                                      ),
+                                  builder: (context) => MasterPage(
+                                    child: ListDepartement(accessToken: widget.accessToken),
+                                  ),
                                 ),
                               );
                             }
                           });
-
-
                         },
-
                         child: Container(
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
@@ -154,7 +147,6 @@ class _DepartementFormState extends State<DepartementForm> {
                           ),
                         ),
                       ),
-
                       SizedBox(height: 25),
                     ],
                   ),
@@ -167,9 +159,7 @@ class _DepartementFormState extends State<DepartementForm> {
     );
   }
 
-
-
-  Column background_container(BuildContext context) {
+  Column backgroundContainer(BuildContext context) {
     return Column(
       children: [
         Container(
@@ -187,21 +177,11 @@ class _DepartementFormState extends State<DepartementForm> {
               SizedBox(height: 40),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
-                // child: Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: [
-                 child:   Center(
-                      child: Text(
-                        'Adding',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white),
-                      ),
-                  //   ),
-                  //
-                  // ],
+                child: Center(
+                  child: Text(
+                    'Adding',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
+                  ),
                 ),
               )
             ],
