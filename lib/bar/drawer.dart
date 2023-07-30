@@ -48,8 +48,9 @@ class NavBar extends StatelessWidget{
                 context,
                 MaterialPageRoute(
                   builder: (context) => MasterPage(
-                    index: 0,
-                    child: ListSemestre(),
+                    index: 0,accessToken: accessToken,
+                    child: ListSemestre(  accessToken: accessToken
+                    ),
                   ),
                 ),
               );
@@ -64,7 +65,8 @@ class NavBar extends StatelessWidget{
                 MaterialPageRoute(
                   builder: (context) => MasterPage(
                     index: 0,
-                    child: MatiereHome(),
+                    child: MatiereHome(  accessToken: accessToken
+                    ),accessToken: accessToken,
                     // HomeMatiere(
                     //   widgetName: ListMatiere(),
                     //   title: 'List',
@@ -85,7 +87,8 @@ class NavBar extends StatelessWidget{
                   builder: (context) => MasterPage(
                     index: 0,
                     child:
-                      ListSalle(),
+                      ListSalle(  accessToken:accessToken
+                      ),accessToken: accessToken,
 
                   ),
                 ),
@@ -102,7 +105,8 @@ class NavBar extends StatelessWidget{
                   builder: (context) => MasterPage(
                     index: 0,
                     child:
-                    ListSalle(),
+                    ListSalle(  accessToken: accessToken
+                    ),accessToken: accessToken
 
                   ),
                 ),
@@ -117,8 +121,9 @@ class NavBar extends StatelessWidget{
                 context,
                 MaterialPageRoute(
                   builder: (context) => MasterPage(
-                    index: 0,
-                    child: ListFiliere(
+                    index: 0,accessToken: accessToken,
+                    child: ListFiliere(  accessToken: accessToken
+
                     ),
                   ),
                 ),
@@ -134,7 +139,7 @@ class NavBar extends StatelessWidget{
                 MaterialPageRoute(
                   builder: (context) => MasterPage(
                     index: 0,
-                    child: ListDepartement(accessToken: accessToken),
+                    child: ListDepartement(accessToken: accessToken),accessToken: accessToken
 
                   ),
                 ),
@@ -151,7 +156,8 @@ class NavBar extends StatelessWidget{
                 MaterialPageRoute(
                   builder: (context) => MasterPage(
                     index: 0,
-                    child: ListExamun(),
+                    child: ListExamun(  accessToken: accessToken
+                    ),accessToken: accessToken
                   ),
                 ),
               );
@@ -166,7 +172,8 @@ class NavBar extends StatelessWidget{
                 MaterialPageRoute(
                   builder: (context) => MasterPage(
                     index: 0,
-                    child: ListEtudierMat(),
+                    child: ListEtudierMat(  accessToken: accessToken
+                    ),accessToken: accessToken,
                   ),
                 ),
               );
@@ -181,7 +188,8 @@ class NavBar extends StatelessWidget{
                 MaterialPageRoute(
                   builder: (context) => MasterPage(
                     index: 0,
-                    child: ListSemestre_Etudiant(),
+                    child: ListSemestre_Etudiant(  accessToken:accessToken
+                    ),accessToken: accessToken,
                   ),
                 ),
               );

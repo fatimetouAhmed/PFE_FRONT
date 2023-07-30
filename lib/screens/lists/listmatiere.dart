@@ -7,17 +7,24 @@ import '../../../constants.dart';
 import '../../models/matiere.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 class MatiereHome extends StatefulWidget {
-  MatiereHome({Key? key}) : super(key: key);
+  final String accessToken;
+
+  MatiereHome({Key? key, required this.accessToken}) : super(key: key);
+
 
   @override
   State<MatiereHome> createState() => _MatiereHomeState();
 }
 
 class _MatiereHomeState extends State<MatiereHome> {
+
   List<Matiere> matieresList = [];
 
   Future<List<Matiere>> fetchMatieres() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/matieres/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/matieres/'),headers: headers);
     var matieres = <Matiere>[];
     for (var u in jsonDecode(response.body)) {
       matieres.add(Matiere(u['id'], u['libelle'],u['nbre_heure'],u['credit']));
@@ -27,7 +34,10 @@ class _MatiereHomeState extends State<MatiereHome> {
   }
 
   Future delete(id) async {
-    await http.delete(Uri.parse('http://127.0.0.1:8000/matieres/' + id));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    await http.delete(Uri.parse('http://127.0.0.1:8000/matieres/' + id),headers: headers);
   }
 
   // List<Matiere> matieres = []; // Liste des départements
@@ -93,9 +103,11 @@ class _MatiereHomeState extends State<MatiereHome> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                   MasterPage(
-                                    index: 0,
-                                  child:
-                                  AddMatiereForm(matiere: Matiere(0, '',0,0)),
+                                    index: 0,  accessToken: widget.accessToken,
+
+                                      child:
+                                  AddMatiereForm(matiere: Matiere(0, '',0,0),  accessToken: widget.accessToken
+                                  ),
                                ),
                                  ),
                              // ),
@@ -191,11 +203,13 @@ class _MatiereHomeState extends State<MatiereHome> {
                                                               context,
                                                               MaterialPageRoute(
                                                                 builder: (context) => MasterPage(
-                                                                  index: 0,
+                                                                  index: 0,  accessToken: widget.accessToken
+                                                                  ,
                                                                   child:
                                                                     AddMatiereForm(
-                                                                  matiere: matiere,
-                                                                ),
+                                                                  matiere: matiere,  accessToken: widget.accessToken
+
+                                                                    ),
                                                               ),),
                                                             );
                                                           },
@@ -238,8 +252,10 @@ class _MatiereHomeState extends State<MatiereHome> {
                                                                       context,
                                                                       MaterialPageRoute(
                                                                         builder: (context) => MasterPage(
-                                                                          index: 0,
-                                                                          child: MatiereHome(),
+                                                                          index: 0,  accessToken: widget.accessToken,
+
+                                                                            child: MatiereHome(  accessToken: widget.accessToken
+                                                                        ),
                                                                         ),
                                                                       ),
                                                                     );

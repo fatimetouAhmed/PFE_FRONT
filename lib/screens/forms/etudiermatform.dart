@@ -9,8 +9,9 @@ import '../lists/listetudiermat.dart';
 
 class EtudierMatForm extends StatefulWidget {
   final EtudierMat etudierMat;
+  final String accessToken;
 
-  EtudierMatForm({Key? key, required this.etudierMat}) : super(key: key);
+  EtudierMatForm({Key? key, required this.etudierMat,required this.accessToken}) : super(key: key);
 
   @override
   _EtudierMatFormState createState() => _EtudierMatFormState();
@@ -47,7 +48,10 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
   }
 
   Future<List<EtudierMat>> fetchEtudierMats() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiermatiere/'));
+    final headers = <String, String>{
+      'Authorization': 'Bearer ${widget.accessToken}',
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiermatiere/'),headers: headers);
     var etudiermats = <EtudierMat>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -68,7 +72,10 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
   }
 
   Future<void> fetchEtudiants() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiants/nometudiant/'));
+    final headers = <String, String>{
+      'Authorization': 'Bearer ${widget.accessToken}',
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiants/nometudiant/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -79,7 +86,10 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
     print(etudiantList);
   }
   Future<void> fetchMatieres() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/matieres/nom/'));
+    final headers = <String, String>{
+      'Authorization': 'Bearer ${widget.accessToken}',
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/matieres/nom/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -90,7 +100,10 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
     print(matiereList);
   }
   Future<int?> fetchMatiereId(String nom) async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiermatiere/matiere/$nom'));
+    final headers = <String, String>{
+      'Authorization': 'Bearer ${widget.accessToken}',
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiermatiere/matiere/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -101,7 +114,10 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
     return null;
   }
   Future<int?> fetchEtudiantsId(String nom) async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/etudiant/$nom'));
+    final headers = <String, String>{
+      'Authorization': 'Bearer ${widget.accessToken}',
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/etudiant/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -112,12 +128,13 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
     return null;
   }
   Future<void> save(EtudierMat etudierMat) async {
+    final headers = <String, String>{
+      'Content-Type': 'application/json;charset=UTF-8',
+      'Authorization': 'Bearer ${widget.accessToken}',
+    };
     if (etudierMat.id == 0) {
       await http.post(
-        Uri.parse('http://127.0.0.1:8000/etudiermatiere/'),
-        headers: <String, String>{
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
+        Uri.parse('http://127.0.0.1:8000/etudiermatiere/'),headers: headers,
         body: jsonEncode(<String, dynamic>{
           'id_etu': etudierMat.id_etu.toString(),
           'id_mat': etudierMat.id_mat.toString(),
@@ -125,10 +142,8 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
       );
     } else {
       await http.put(
-        Uri.parse('http://127.0.0.1:8000/etudiermatiere/' + etudierMat.id.toString()),
-        headers: <String, String>{
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
+        Uri.parse('http://127.0.0.1:8000/etudiermatiere/' + etudierMat.id.toString()),headers: headers
+        ,
         body: jsonEncode(<String, dynamic>{
           'id_etu': etudierMat.id_etu.toString(),
           'id_mat': etudierMat.id_mat.toString(),
@@ -293,7 +308,9 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>MasterPage( index: 0,child:  ListEtudierMat(),)
+                                      builder: (context) =>MasterPage( index: 0,  accessToken: widget.accessToken
+                                        ,child:  ListEtudierMat(  accessToken: widget.accessToken
+                                        ),)
                                   ),
                                 );
 

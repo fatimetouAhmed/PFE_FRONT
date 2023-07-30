@@ -7,21 +7,24 @@ import '../lists/listsalle.dart';
 import 'package:quickalert/quickalert.dart';
 class SalleForm extends StatefulWidget {
   final Salle salle;
+  final String accessToken;
 
-  SalleForm({Key? key, required this.salle}) : super(key: key);
+  SalleForm({Key? key, required this.salle, required this.accessToken }) : super(key: key);
 
   @override
   _SalleFormState createState() => _SalleFormState();
 }
 int i=0;
-Future save(salle) async {
+Future save(salle,String accessToken) async {
+  final headers = <String, String>{
+    'Content-Type': 'application/json;charset=UTF-8',
+    'Authorization': 'Bearer $accessToken'
+  };
   if (salle.id == 0) {
     i=0;
     await http.post(
       Uri.parse('http://127.0.0.1:8000/salles/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
+        headers: headers,
       body: jsonEncode(<String, String>{
         'nom': salle.nom,
       }),
@@ -115,16 +118,18 @@ class _SalleFormState extends State<SalleForm> {
                             ).then((value) async {
                               if (value == null) {
                                 await save(
-                                  Salle(int.parse(idController.text), nomController.text),
+                                  Salle(int.parse(idController.text), nomController.text), widget.accessToken
+
+                                  ,
                                 );
 
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        MasterPage( index: 0,
+                                        MasterPage( index: 0,accessToken: widget.accessToken,
                                           child:
-                                          ListSalle(),
+                                          ListSalle(accessToken: widget.accessToken,),
                                         ),
                                   ),
                                 );

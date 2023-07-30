@@ -9,20 +9,26 @@ import '../../models/matiere.dart';
 
 class AddMatiereForm extends StatefulWidget {
   final Matiere matiere;
+  final String accessToken;
 
-  AddMatiereForm({Key? key, required this.matiere}) : super(key: key);
+
+
+  AddMatiereForm({Key? key, required this.matiere, required this.accessToken}) : super(key: key);
 
   @override
   _AddMatiereFormState createState() => _AddMatiereFormState();
 }
-
-Future save(matiere) async {
+Future save(String accessToken, Matiere matiere) async {
+  final headers = <String, String>{
+    'Content-Type': 'application/json;charset=UTF-8',
+    'Authorization': 'Bearer $accessToken'
+  };
   if (matiere.id == 0) {
+
     await http.post(
       Uri.parse('http://127.0.0.1:8000/matieres/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
+      headers: headers,
+
       body: jsonEncode(<String, String>{
         'libelle': matiere.libelle,
         'nbre_heure': matiere.nbre_heure.toString(),
@@ -34,9 +40,8 @@ Future save(matiere) async {
 
     await http.put(
       Uri.parse('http://127.0.0.1:8000/matieres/' + matiere.id.toString()),
-      headers: <String, String>{
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
+      headers: headers,
+
       body: jsonEncode(<String, String>{
         'libelle': matiere.libelle,
         'nbre_heure': matiere.nbre_heure.toString(),
@@ -165,7 +170,7 @@ class _AddMatiereFormState extends State<AddMatiereForm> {
                             confirmBtnColor: Colors.blue,
                           ).then((value) async {
                             if (value == null) {
-                              await save(
+                              await save(widget.accessToken,
                                 Matiere(int.parse(idController.text), libelleController.text,int.parse(nbre_heureController.text),int.parse(creditController.text)),
                               );
 
@@ -174,9 +179,11 @@ class _AddMatiereFormState extends State<AddMatiereForm> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       MasterPage(
-                                        index: 0,
-                                        child:
-                                        MatiereHome(),
+                                        index: 0,  accessToken: widget.accessToken,
+
+                                          child:
+                                        MatiereHome( accessToken: widget.accessToken
+                                        ),
                                       ),
                                 ),
                               );

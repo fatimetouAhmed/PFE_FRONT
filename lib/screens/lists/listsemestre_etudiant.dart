@@ -8,7 +8,9 @@ import '../../bar/masterpageadmin.dart';
 import '../../models/semestre_etudiant.dart';
 
 class ListSemestre_Etudiant extends StatefulWidget {
-  ListSemestre_Etudiant({Key? key}) : super(key: key);
+  final String accessToken;
+
+  ListSemestre_Etudiant({Key? key,required this.accessToken}) : super(key: key);
 
   @override
   _ListSemestre_EtudiantState createState() => _ListSemestre_EtudiantState();
@@ -18,7 +20,10 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
   List<Semestre_Etudiant> semestre_etudiantsList = [];
 
   Future<List<Semestre_Etudiant>> fetchSemestre_Etudiants() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/'),headers: headers);
     var semestre_etudiants = <Semestre_Etudiant>[];
     for (var u in jsonDecode(response.body)) {
       semestre_etudiants.add(Semestre_Etudiant(u['id'], u['id_sem'], u['id_etu']));
@@ -28,7 +33,10 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
   }
 
   Future delete(id) async {
-    await http.delete(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/' + id));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    await http.delete(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/' + id),headers: headers);
   }
 
   @override
@@ -76,9 +84,10 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     MasterPage(
-                                      index: 0,
+                                      index: 0,accessToken: widget.accessToken,
                                       child:
-                                      Semestre_EtudiantForm(semestre_etudiant: Semestre_Etudiant(0,0,0)),
+                                      Semestre_EtudiantForm(semestre_etudiant: Semestre_Etudiant(0,0,0),  accessToken: widget.accessToken
+                                      ),
                                     ),
                               ),
                               // ),
@@ -169,10 +178,11 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) => MasterPage(
-                                                                index: 0,
+                                                                index: 0,accessToken: widget.accessToken,
                                                                 child:
                                                               Semestre_EtudiantForm(
-                                                                semestre_etudiant: semestre_etudiant,
+                                                                semestre_etudiant: semestre_etudiant,  accessToken: widget.accessToken
+
                                                               ),),
 
                                                             ),
@@ -217,8 +227,8 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
                                                                     context,
                                                                     MaterialPageRoute(
                                                                       builder: (context) => MasterPage(
-                                                                        index: 0,
-                                                                        child: ListSemestre_Etudiant(),
+                                                                        index: 0,accessToken: widget.accessToken,
+                                                                        child: ListSemestre_Etudiant(accessToken: widget.accessToken),
                                                                       ),
                                                                     ),
                                                                   );

@@ -90,7 +90,7 @@ class _ListDepartementState extends State<ListDepartement> {
                                       MasterPage(
                                         index: 0,
                                         child:
-                                        DepartementForm(departement: Departement(0, ''),accessToken: widget.accessToken),
+                                        DepartementForm(departement: Departement(0, ''),accessToken: widget.accessToken),accessToken: widget.accessToken,
                                       ),
                                 ),
                                 // ),
@@ -181,7 +181,7 @@ class _ListDepartementState extends State<ListDepartement> {
                                                                 DepartementForm(
                                                                   departement: departement,accessToken: widget.accessToken
                                                                 ),
-                                                                ),),
+                                                                    accessToken:widget.accessToken ,),),
                                                             );
                                                           },
                                                           child: Icon(
@@ -224,7 +224,7 @@ class _ListDepartementState extends State<ListDepartement> {
                                                                       MaterialPageRoute(
                                                                         builder: (context) => MasterPage(
                                                                           index: 0,
-                                                                          child: ListDepartement(accessToken: widget.accessToken),
+                                                                          child: ListDepartement(accessToken: widget.accessToken),accessToken: widget.accessToken,
                                                                         ),
                                                                       ),
                                                                     );

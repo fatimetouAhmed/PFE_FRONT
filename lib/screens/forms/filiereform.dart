@@ -6,9 +6,11 @@ import '../../models/filliere.dart';
 import '../lists/listfiliere.dart';
 import 'package:quickalert/quickalert.dart';
 class FiliereForm extends StatefulWidget {
+  final String accessToken;
+
   final Filiere filiere;
 
-  FiliereForm({Key? key, required this.filiere}) : super(key: key);
+  FiliereForm({Key? key, required this.filiere,required this.accessToken}) : super(key: key);
 
   @override
   _FiliereFormState createState() => _FiliereFormState();
@@ -42,7 +44,10 @@ class _FiliereFormState extends State<FiliereForm> {
   }
 
   Future<List<Filiere>> fetchFilieres() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/filiere_departement/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/filiere_departement/'),headers: headers);
     var filieres = <Filiere>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -65,7 +70,10 @@ class _FiliereFormState extends State<FiliereForm> {
   }
 
   Future<void> fetchDepartements() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/departements/nomdepartement'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/departements/nomdepartement'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -80,7 +88,10 @@ class _FiliereFormState extends State<FiliereForm> {
 
 
   Future<int?> fetchDepartementsId(String nom) async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/$nom'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -92,12 +103,15 @@ class _FiliereFormState extends State<FiliereForm> {
   }
 
   Future<void> save(Filiere filiere) async {
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+      'Content-Type': 'application/json;charset=UTF-8',
+
+    };
     if (filiere.id == 0) {
       await http.post(
-        Uri.parse('http://127.0.0.1:8000/filieres/'),
-        headers: <String, String>{
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
+        Uri.parse('http://127.0.0.1:8000/filieres/'),headers: headers,
+
         body: jsonEncode(<String, dynamic>{
           'nom': filiere.nom,
           'description': filiere.description,
@@ -106,10 +120,7 @@ class _FiliereFormState extends State<FiliereForm> {
       );
     } else {
       await http.put(
-        Uri.parse('http://127.0.0.1:8000/filieres/' + filiere.id.toString()),
-        headers: <String, String>{
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
+        Uri.parse('http://127.0.0.1:8000/filieres/' + filiere.id.toString()),headers: headers,
         body: jsonEncode(<String, dynamic>{
           'nom': filiere.nom,
           'description': filiere.description,
@@ -268,7 +279,9 @@ int? iddep=0;
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>MasterPage( index: 0,child:  ListFiliere(),)
+                                      builder: (context) =>MasterPage( index: 0,  accessToken: widget.accessToken
+                                        ,child:  ListFiliere(  accessToken: widget.accessToken
+                                        ),)
                                   ),
                                 );
 

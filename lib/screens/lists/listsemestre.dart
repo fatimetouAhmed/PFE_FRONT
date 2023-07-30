@@ -9,7 +9,9 @@ import '../../models/semestre.dart';
 import '../forms/semestreform.dart';
 
 class ListSemestre extends StatefulWidget {
-  ListSemestre({Key? key}) : super(key: key);
+  final String accessToken;
+
+  ListSemestre({Key? key, required this.accessToken}) : super(key: key);
 
   @override
   _ListSemestreState createState() => _ListSemestreState();
@@ -19,7 +21,10 @@ class _ListSemestreState extends State<ListSemestre> {
   List<Semestre> semestresList = [];
 
   Future<List<Semestre>> fetchFilieres() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/semestre_filiere/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/semestre_filiere/'),headers: headers);
     var semestres = <Semestre>[];
     for (var u in jsonDecode(response.body)) {
       print('Parsed JSON object: $u');
@@ -30,7 +35,10 @@ class _ListSemestreState extends State<ListSemestre> {
   }
 
   Future delete(id) async {
-    await http.delete(Uri.parse('http://127.0.0.1:8000/semestres/' + id));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    await http.delete(Uri.parse('http://127.0.0.1:8000/semestres/' + id),headers: headers);
   }
 
   @override
@@ -78,9 +86,11 @@ class _ListSemestreState extends State<ListSemestre> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     MasterPage(
-                                      index: 0,
-                                      child:
-                                      SemestreForm(semestre: Semestre(0, '',0,'')),
+                                      index: 0,  accessToken: widget.accessToken,
+
+                                        child:
+                                      SemestreForm(semestre: Semestre(0, '',0,''),  accessToken: widget.accessToken
+                                      ),
                                     ),
                               ),
                               // ),
@@ -171,10 +181,11 @@ class _ListSemestreState extends State<ListSemestre> {
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) => MasterPage(
-                                                                index: 0,
+                                                                index: 0,accessToken: widget.accessToken,
                                                                 child:
                                                               SemestreForm(
-                                                                semestre: semestre,
+                                                                semestre: semestre,  accessToken: widget.accessToken
+
                                                               ),),
 
                                                             ),
@@ -219,8 +230,8 @@ class _ListSemestreState extends State<ListSemestre> {
                                                                     context,
                                                                     MaterialPageRoute(
                                                                       builder: (context) => MasterPage(
-                                                                        index: 0,
-                                                                        child: ListSemestre(),
+                                                                        index: 0,accessToken: widget.accessToken,
+                                                                        child: ListSemestre(accessToken: widget.accessToken),
                                                                       ),
                                                                     ),
                                                                   );

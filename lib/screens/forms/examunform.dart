@@ -8,8 +8,10 @@ import '../lists/listexamun.dart';
 import 'package:intl/intl.dart';
 class ExamunForm extends StatefulWidget {
   final Examun examun;
+  final String accessToken;
 
-  ExamunForm({Key? key, required this.examun}) : super(key: key);
+
+  ExamunForm({Key? key, required this.examun,required this.accessToken}) : super(key: key);
 
   @override
   _ExamunFormState createState() => _ExamunFormState();
@@ -56,7 +58,10 @@ class _ExamunFormState extends State<ExamunForm> {
   }
 
   Future<List<Examun>> fetchSemestre_Etudians() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/'),headers: headers);
     var examuns = <Examun>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -80,7 +85,11 @@ class _ExamunFormState extends State<ExamunForm> {
   }
 
   Future<void> fetchMatieres() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/matieres/nom/'));
+
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/matieres/nom/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -91,7 +100,10 @@ class _ExamunFormState extends State<ExamunForm> {
     print(matiereList);
   }
   Future<void> fetchSalles() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/salles/nom/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/salles/nom/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -102,7 +114,10 @@ class _ExamunFormState extends State<ExamunForm> {
     print(salleList);
   }
   Future<int?> fetchMatieresId(String nom) async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/matiere/$nom'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/matiere/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -113,7 +128,10 @@ class _ExamunFormState extends State<ExamunForm> {
     return null;
   }
   Future<int?> fetchSallesId(String nom) async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/salle/$nom'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/salle/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -124,13 +142,17 @@ class _ExamunFormState extends State<ExamunForm> {
     return null;
   }
   Future<void> save(Examun examun) async {
+
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+      'Content-Type': 'application/json;charset=UTF-8',
+
+    };
     if (examun.id == 0) {
 
       await http.post(
         Uri.parse('http://127.0.0.1:8000/examuns/'),
-        headers: <String, String>{
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
+        headers: headers,
         body: jsonEncode(<String, dynamic>{
           'type': examun.type,
           'heure_deb': examun.heure_deb.toIso8601String(),
@@ -142,9 +164,7 @@ class _ExamunFormState extends State<ExamunForm> {
     } else {
       await http.put(
         Uri.parse('http://127.0.0.1:8000/examuns/' + examun.id.toString()),
-        headers: <String, String>{
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
+        headers: headers,
         body: jsonEncode(<String, dynamic>{
           'type': examun.type,
           'heure_deb': examun.heure_deb.toIso8601String(),
@@ -421,7 +441,9 @@ class _ExamunFormState extends State<ExamunForm> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>MasterPage( index: 0,child:  ListExamun(),)
+                                      builder: (context) =>MasterPage( index: 0,  accessToken: widget.accessToken
+                                        ,child:  ListExamun(  accessToken: widget.accessToken
+                                        ),)
                                   ),
                                 );
 

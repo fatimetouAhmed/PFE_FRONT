@@ -9,7 +9,9 @@ import '../../bar/masterpageadmin.dart';
 import '../forms/examunform.dart';
 
 class ListExamun extends StatefulWidget {
-  ListExamun({Key? key}) : super(key: key);
+  final String accessToken;
+
+  ListExamun({Key? key,required this.accessToken}) : super(key: key);
 
   @override
   _ListExamunState createState() => _ListExamunState();
@@ -19,7 +21,10 @@ class _ListExamunState extends State<ListExamun> {
   List<Examun> examunList = [];
 
   Future<List<Examun>> fetchExamuns() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/'),headers: headers);
     var examuns = <Examun>[];
     for (var u in jsonDecode(response.body)) {
       // print(u['heure_deb']);
@@ -35,7 +40,10 @@ class _ListExamunState extends State<ListExamun> {
   }
 
   Future delete(id) async {
-    await http.delete(Uri.parse('http://127.0.0.1:8000/examuns/' + id));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    await http.delete(Uri.parse('http://127.0.0.1:8000/examuns/' + id),headers: headers);
   }
 
   @override
@@ -83,9 +91,11 @@ class _ListExamunState extends State<ListExamun> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     MasterPage(
-                                      index: 0,
-                                      child:
-                                      ExamunForm(examun: Examun(0, '', DateTime.parse('0000-00-00 00:00:00'), DateTime.parse('0000-00-00 00:00:00'), 0, 0)),
+                                      index: 0,  accessToken: widget.accessToken,
+
+                                        child:
+                                      ExamunForm(examun: Examun(0, '', DateTime.parse('0000-00-00 00:00:00'),DateTime.parse('0000-00-00 00:00:00'), 0, 0),  accessToken: widget.accessToken
+                                      ),
 
                                     ),
                               ),
@@ -184,10 +194,11 @@ class _ListExamunState extends State<ListExamun> {
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) => MasterPage(
-                                                                index: 0,
+                                                                index: 0,accessToken: widget.accessToken,
                                                                 child:
                                                               ExamunForm(
-                                                                examun: examun,
+                                                                examun: examun,  accessToken: widget.accessToken
+
                                                               ),),
 
                                                             ),
@@ -231,8 +242,8 @@ class _ListExamunState extends State<ListExamun> {
                                                                     context,
                                                                     MaterialPageRoute(
                                                                       builder: (context) => MasterPage(
-                                                                        index: 0,
-                                                                        child: ListExamun(),
+                                                                        index: 0,accessToken: widget.accessToken,
+                                                                        child: ListExamun(accessToken: widget.accessToken,),
                                                                       ),
                                                                     ),
                                                                   );

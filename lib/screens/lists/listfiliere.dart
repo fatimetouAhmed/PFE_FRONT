@@ -10,7 +10,8 @@ import '../forms/filiereform.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class ListFiliere extends StatefulWidget {
-  ListFiliere({Key? key}) : super(key: key);
+  final String accessToken;
+  ListFiliere({Key? key ,required this.accessToken}) : super(key: key);
 
   @override
   _ListFiliereState createState() => _ListFiliereState();
@@ -20,7 +21,10 @@ class _ListFiliereState extends State<ListFiliere> {
   List<Filiere> filieresList = [];
 
   Future<List<Filiere>> fetchFilieres() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/filiere_departement/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/filiere_departement/'),headers: headers);
     var filieres = <Filiere>[];
     for (var u in jsonDecode(response.body)) {
      // print('Parsed JSON object: $u');
@@ -31,7 +35,10 @@ class _ListFiliereState extends State<ListFiliere> {
   }
 
   Future delete(id) async {
-    await http.delete(Uri.parse('http://127.0.0.1:8000/filieres/' + id));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    await http.delete(Uri.parse('http://127.0.0.1:8000/filieres/' + id),headers: headers);
   }
 
   @override
@@ -79,9 +86,11 @@ class _ListFiliereState extends State<ListFiliere> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     MasterPage(
-                                      index: 0,
-                                      child:
-                                      FiliereForm(filiere: Filiere(0, '','',0,'')),
+                                      index: 0,  accessToken: widget.accessToken,
+
+                                        child:
+                                      FiliereForm(filiere: Filiere(0, '','',0,''),  accessToken: widget.accessToken
+                                      ),
                                     ),
                               ),
                               // ),
@@ -172,10 +181,12 @@ class _ListFiliereState extends State<ListFiliere> {
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) => MasterPage(
-                                                                index: 0,
+                                                                index: 0,  accessToken: widget.accessToken,
+
                                                                 child:
                                                               FiliereForm(
-                                                                filiere: filiere,
+                                                                filiere: filiere,  accessToken: widget.accessToken
+
                                                               ),),
 
                                                             ),
@@ -221,8 +232,10 @@ class _ListFiliereState extends State<ListFiliere> {
                                                                     context,
                                                                     MaterialPageRoute(
                                                                       builder: (context) => MasterPage(
-                                                                        index: 0,
-                                                                        child: ListFiliere(),
+                                                                        index: 0,  accessToken: widget.accessToken,
+
+                                                                          child: ListFiliere( accessToken: widget.accessToken
+                                                                          ),
                                                                       ),
                                                                     ),
                                                                   );

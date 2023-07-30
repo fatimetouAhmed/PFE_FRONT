@@ -7,10 +7,11 @@ import 'appbar.dart';
 import 'drawer.dart';
 
 class MasterPage extends StatefulWidget {
-  String accessToken = '';
   final Widget child;
   final int index;
-  MasterPage({required this.child, required this.index,});
+  final String accessToken;
+
+  MasterPage({required this.child, required this.index,required this.accessToken});
 
   @override
   _MasterPageState createState() => _MasterPageState();

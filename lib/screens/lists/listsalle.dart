@@ -8,7 +8,9 @@ import '../../models/salle.dart';
 import '../forms/salleform.dart';
 
 class ListSalle extends StatefulWidget {
-  ListSalle({Key? key}) : super(key: key);
+  final String accessToken;
+
+  ListSalle({Key? key,required this.accessToken}) : super(key: key);
 
   @override
   _ListSalleState createState() => _ListSalleState();
@@ -18,7 +20,10 @@ class _ListSalleState extends State<ListSalle> {
   List<Salle> sallesList = [];
 
   Future<List<Salle>> fetchSalles() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/salles/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/salles/'),headers: headers);
     var salles = <Salle>[];
     for (var u in jsonDecode(response.body)) {
       salles.add(Salle(u['id'], u['nom']));
@@ -28,7 +33,10 @@ class _ListSalleState extends State<ListSalle> {
   }
 
   Future delete(id) async {
-    await http.delete(Uri.parse('http://127.0.0.1:8000/salles/' + id));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    await http.delete(Uri.parse('http://127.0.0.1:8000/salles/' + id),headers: headers);
   }
 
   @override
@@ -79,9 +87,11 @@ class _ListSalleState extends State<ListSalle> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       MasterPage(
-                                        index: 0,
-                                        child:
-                                        SalleForm(salle: Salle(0, '')),
+                                        index: 0,accessToken: widget.accessToken,
+
+                                          child:
+                                        SalleForm(salle: Salle(0, ''),  accessToken: widget.accessToken
+                                        ),
                                       ),
                                 ),
                                 // ),
@@ -167,10 +177,11 @@ class _ListSalleState extends State<ListSalle> {
                                                               context,
                                                               MaterialPageRoute(
                                                                 builder: (context) => MasterPage(
-                                                                  index: 0,
+                                                                  index: 0,accessToken: widget.accessToken,
                                                                   child:
                                                                 SalleForm(
-                                                                  salle: salle,
+                                                                  salle: salle,  accessToken: widget.accessToken
+
                                                                 ),
                                                                 ),),
                                                             );
@@ -214,8 +225,8 @@ class _ListSalleState extends State<ListSalle> {
                                                                       context,
                                                                       MaterialPageRoute(
                                                                         builder: (context) => MasterPage(
-                                                                          index: 0,
-                                                                          child: ListSalle(),
+                                                                          index: 0,accessToken: widget.accessToken,
+                                                                          child: ListSalle(accessToken: widget.accessToken),
                                                                         ),
                                                                       ),
                                                                     );

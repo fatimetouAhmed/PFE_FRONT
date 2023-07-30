@@ -122,7 +122,7 @@ class _DepartementFormState extends State<DepartementForm> {
                                 MaterialPageRoute(
                                   builder: (context) => MasterPage(
                                     index: 0,
-                                    child: ListDepartement(accessToken: widget.accessToken),
+                                    child: ListDepartement(accessToken: widget.accessToken),accessToken: widget.accessToken,
                                   ),
                                 ),
                               );

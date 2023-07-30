@@ -8,7 +8,9 @@ import '../../bar/masterpageadmin.dart';
 import '../forms/etudiermatform.dart';
 
 class ListEtudierMat extends StatefulWidget {
-  ListEtudierMat({Key? key}) : super(key: key);
+  final String accessToken;
+
+  ListEtudierMat({Key? key, required this.accessToken}) : super(key: key);
 
   @override
   _ListEtudierMatState createState() => _ListEtudierMatState();
@@ -28,7 +30,11 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
   // }
 
   Future<List<EtudierMat>> fetchEtudierMats() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiermatiere/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiermatiere/'),headers: headers);
+
     var etudiers = <EtudierMat>[];
     for (var u in jsonDecode(response.body)) {
       etudiers.add(EtudierMat(u['id'],u['id_mat'], u['id_etu']));
@@ -37,7 +43,11 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
     return etudiers;
   }
   Future delete(id) async {
-    await http.delete(Uri.parse('http://127.0.0.1:8000/etudiermatiere/' + id));
+
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    await http.delete(Uri.parse('http://127.0.0.1:8000/etudiermatiere/' + id),headers: headers);
   }
 
   @override
@@ -87,7 +97,8 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
                                     MasterPage(
                                       index: 0,
                                       child:
-                                      EtudierMatForm(etudierMat: EtudierMat(0,0,0)),
+                                      EtudierMatForm(etudierMat: EtudierMat(0,0,0),  accessToken: widget.accessToken
+                                      ),accessToken: widget.accessToken,
                                     ),
                               ),
                               // ),
@@ -178,10 +189,11 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) => MasterPage(
-                                                                index: 0,
+                                                                index: 0,accessToken: widget.accessToken,
                                                                 child:
                                                               EtudierMatForm(
-                                                                etudierMat: etudier,
+                                                                etudierMat: etudier,  accessToken: widget.accessToken
+                                                                ,
                                                               ),),
 
                                                             ),
@@ -227,7 +239,10 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
                                                                     MaterialPageRoute(
                                                                       builder: (context) => MasterPage(
                                                                         index: 0,
-                                                                        child: ListEtudierMat(),
+                                                                        child: ListEtudierMat(  accessToken: widget.accessToken
+                                                                        ),   accessToken: widget.accessToken
+
+
                                                                       ),
                                                                     ),
                                                                   );

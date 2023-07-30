@@ -9,8 +9,10 @@ import '../../models/semestre.dart';
 
 class SemestreForm extends StatefulWidget {
   final Semestre semestre;
+  final String accessToken;
 
-  SemestreForm({Key? key, required this.semestre}) : super(key: key);
+
+  SemestreForm({Key? key, required this.semestre,required this.accessToken}) : super(key: key);
 
   @override
   _SemestreFormState createState() => _SemestreFormState();
@@ -39,7 +41,10 @@ class _SemestreFormState extends State<SemestreForm> {
   }
 
   Future<List<Semestre>> fetchSemestres() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/semestre_filiere/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/semestre_filiere/'),headers: headers);
     var semestres = <Semestre>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -60,7 +65,10 @@ class _SemestreFormState extends State<SemestreForm> {
   }
 
   Future<void> fetchFilieres() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/nomfiliere/'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/nomfiliere/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -72,7 +80,10 @@ class _SemestreFormState extends State<SemestreForm> {
   }
 
   Future<int?> fetchFilieresId(String nom) async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/$nom'));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -84,12 +95,15 @@ class _SemestreFormState extends State<SemestreForm> {
   }
 
   Future<void> save(Semestre semestre) async {
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+      'Content-Type': 'application/json;charset=UTF-8',
+
+    };
     if (semestre.id == 0) {
       await http.post(
         Uri.parse('http://127.0.0.1:8000/semestres/'),
-        headers: <String, String>{
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
+        headers: headers,
         body: jsonEncode(<String, dynamic>{
           'nom': semestre.nom,
           'id_fil': semestre.id_fil.toString(),
@@ -98,9 +112,7 @@ class _SemestreFormState extends State<SemestreForm> {
     } else {
       await http.put(
         Uri.parse('http://127.0.0.1:8000/semestres/' + semestre.id.toString()),
-        headers: <String, String>{
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
+        headers: headers,
         body: jsonEncode(<String, dynamic>{
           'nom': semestre.nom,
           'id_fil': semestre.id_fil.toString(),
@@ -235,7 +247,9 @@ class _SemestreFormState extends State<SemestreForm> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>MasterPage( index: 0,child:  ListSemestre(),)
+                                      builder: (context) =>MasterPage( index: 0,  accessToken: widget.accessToken
+                                        ,child:  ListSemestre(  accessToken: widget.accessToken
+                                        ),)
                                   ),
                                 );
 
