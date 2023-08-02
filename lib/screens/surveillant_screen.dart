@@ -43,45 +43,37 @@ class _CameraScreenState extends State<CameraScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Surveillant'),
+        backgroundColor: Colors.blue, // Couleur bleue pour l'app bar
         actions: [
           IconButton(
-
             icon: Icon(Icons.logout),
             onPressed: () {
               // Vous pouvez mettre ici le code pour déconnecter l'utilisateur et aller à la page de connexion
-              Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(accessToken: widget.accessToken)));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(accessToken: widget.accessToken),
+                ),
+              );
             },
           ),
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _image == null
-                ? ElevatedButton(
-              onPressed: () {
-                getImage().then((_) => uploadImage(File(_image!.path)));
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Colors.blue, // Couleur bleue
-                onPrimary: Colors.white, // Texte en blanc
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0), // Bord arrondi
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Prendre une photo',
-                  style: TextStyle(fontSize: 18.0),
-                ),
-              ),
-            )
-                : Image.file(File(_image!.path)),
-          ],
-        ),
+        child: _image == null
+            ? Text(
+          'Prendre une photo',
+          style: TextStyle(fontSize: 18.0),
+        )
+            : Image.file(File(_image!.path)),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          getImage().then((_) => uploadImage(File(_image!.path)));
+        },
+        child: Icon(Icons.add_a_photo), // Icône de la caméra
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // Bouton de la caméra en bas à droite
     );
   }
 }
