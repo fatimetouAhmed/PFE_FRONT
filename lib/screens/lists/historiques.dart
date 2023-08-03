@@ -15,7 +15,7 @@ class _HistoriquesState extends State<Historiques> {
 
   Future<List<Historique>> fetchHistoriques() async {
     var headers = {"Content-Type": "application/json; charset=utf-8"};
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/historiques/historiques/'), headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/historiques/historiques/'), headers: headers);
 
     var data = utf8.decode(response.bodyBytes); // Ensure UTF-8 decoding
     //print(data);

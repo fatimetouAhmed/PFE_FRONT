@@ -8,6 +8,7 @@ import '../screens/lists/listmatiere.dart';
 import '../screens/lists/listdepartement.dart';
 import '../screens/lists/listfiliere.dart';
 import '../screens/lists/listsalle.dart';
+import '../screens/login_screen.dart';
 import 'masterpageadmin.dart';
 
 class NavBar extends StatelessWidget{
@@ -199,7 +200,14 @@ class NavBar extends StatelessWidget{
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Logout'),
-            onTap: ()=>print('Logout'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LoginScreen(accessToken: accessToken),
+                ),
+              );
+            }
           ),
         ],
       ),

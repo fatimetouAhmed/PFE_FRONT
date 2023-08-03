@@ -43,7 +43,7 @@ class _MasterPageSupeurviseurState extends State<MasterPageSupeurviseur> {
         "Authorization": "Bearer ${widget.accessToken}",
       };
       var response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/notifications/nb_notifications_no_read/'),
+        Uri.parse('http://192.168.186.113:8000/notifications/nb_notifications_no_read/'),
         headers: headers,
       );
       if (response.statusCode == 200) {

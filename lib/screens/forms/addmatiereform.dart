@@ -26,7 +26,7 @@ Future save(String accessToken, Matiere matiere) async {
   if (matiere.id == 0) {
 
     await http.post(
-      Uri.parse('http://127.0.0.1:8000/matieres/'),
+      Uri.parse('http://192.168.186.113:8000/matieres/'),
       headers: headers,
 
       body: jsonEncode(<String, String>{
@@ -39,7 +39,7 @@ Future save(String accessToken, Matiere matiere) async {
   else {
 
     await http.put(
-      Uri.parse('http://127.0.0.1:8000/matieres/' + matiere.id.toString()),
+      Uri.parse('http://192.168.186.113:8000/matieres/' + matiere.id.toString()),
       headers: headers,
 
       body: jsonEncode(<String, String>{
@@ -104,7 +104,7 @@ class _AddMatiereFormState extends State<AddMatiereForm> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: TextField(
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           focusNode: libelle,
                           controller: libelleController,
                           decoration: InputDecoration(

@@ -51,7 +51,7 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
     final headers = <String, String>{
       'Authorization': 'Bearer ${widget.accessToken}',
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiermatiere/'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/etudiermatiere/'),headers: headers);
     var etudiermats = <EtudierMat>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -75,7 +75,7 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
     final headers = <String, String>{
       'Authorization': 'Bearer ${widget.accessToken}',
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiants/nometudiant/'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/etudiants/nometudiant/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -89,7 +89,7 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
     final headers = <String, String>{
       'Authorization': 'Bearer ${widget.accessToken}',
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/matieres/nom/'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/matieres/nom/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -103,7 +103,7 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
     final headers = <String, String>{
       'Authorization': 'Bearer ${widget.accessToken}',
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiermatiere/matiere/$nom'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/etudiermatiere/matiere/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -117,7 +117,7 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
     final headers = <String, String>{
       'Authorization': 'Bearer ${widget.accessToken}',
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/etudiant/$nom'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/semestre_etudiants/etudiant/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -134,7 +134,7 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
     };
     if (etudierMat.id == 0) {
       await http.post(
-        Uri.parse('http://127.0.0.1:8000/etudiermatiere/'),headers: headers,
+        Uri.parse('http://192.168.186.113:8000/etudiermatiere/'),headers: headers,
         body: jsonEncode(<String, dynamic>{
           'id_etu': etudierMat.id_etu.toString(),
           'id_mat': etudierMat.id_mat.toString(),
@@ -142,7 +142,7 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
       );
     } else {
       await http.put(
-        Uri.parse('http://127.0.0.1:8000/etudiermatiere/' + etudierMat.id.toString()),headers: headers
+        Uri.parse('http://192.168.186.113:8000/etudiermatiere/' + etudierMat.id.toString()),headers: headers
         ,
         body: jsonEncode(<String, dynamic>{
           'id_etu': etudierMat.id_etu.toString(),

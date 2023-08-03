@@ -23,7 +23,7 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/semestre_etudiants/'),headers: headers);
     var semestre_etudiants = <Semestre_Etudiant>[];
     for (var u in jsonDecode(response.body)) {
       semestre_etudiants.add(Semestre_Etudiant(u['id'], u['id_sem'], u['id_etu']));
@@ -36,7 +36,7 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/' + id),headers: headers);
+    await http.delete(Uri.parse('http://192.168.186.113:8000/semestre_etudiants/' + id),headers: headers);
   }
 
   @override

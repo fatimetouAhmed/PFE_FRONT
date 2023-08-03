@@ -20,9 +20,9 @@ class _NotificationsState extends State<Notifications> {
   Future<List<NotificationModel>> fetchNotifications() async {
     var headers = {
       "Content-Type": "application/json; charset=utf-8",
-      "Authorization": "Bearer ${widget.accessToken}",
+      // "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/notifications/notifications/'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/notifications/notifications/'),headers: headers);
     var data = utf8.decode(response.bodyBytes);
     var notifications = <NotificationModel>[];
     for (var u in jsonDecode(data)) {
@@ -32,7 +32,7 @@ class _NotificationsState extends State<Notifications> {
     return notifications;
   }
   Future update(id) async {
-    await http.put(Uri.parse('http://127.0.0.1:8000/notifications/' + id));
+    await http.put(Uri.parse('http://192.168.186.113:8000/notifications/' + id));
   }
 
   void _showNotificationContent(String content,int id) async{

@@ -50,7 +50,7 @@ class _Semestre_EtudiantFormState extends State<Semestre_EtudiantForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/semestre_etudiants/'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/filieres/semestre_etudiants/'),headers: headers);
     var semestre_etudiants = <Semestre_Etudiant>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -74,7 +74,7 @@ class _Semestre_EtudiantFormState extends State<Semestre_EtudiantForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiants/nometudiant/'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/etudiants/nometudiant/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -88,7 +88,7 @@ class _Semestre_EtudiantFormState extends State<Semestre_EtudiantForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/semestres/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -102,7 +102,7 @@ class _Semestre_EtudiantFormState extends State<Semestre_EtudiantForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/semestre/$nom'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/semestre_etudiants/semestre/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -116,7 +116,7 @@ class _Semestre_EtudiantFormState extends State<Semestre_EtudiantForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/etudiant/$nom'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/semestre_etudiants/etudiant/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -134,7 +134,7 @@ class _Semestre_EtudiantFormState extends State<Semestre_EtudiantForm> {
     };
     if (semestre_etudiant.id == 0) {
       await http.post(
-        Uri.parse('http://127.0.0.1:8000/semestre_etudiants/'),
+        Uri.parse('http://192.168.186.113:8000/semestre_etudiants/'),
         headers: headers,
         body: jsonEncode(<String, dynamic>{
           'id_sem': semestre_etudiant.id_sem.toString(),
@@ -143,7 +143,7 @@ class _Semestre_EtudiantFormState extends State<Semestre_EtudiantForm> {
       );
     } else {
       await http.put(
-        Uri.parse('http://127.0.0.1:8000/semestre_etudiants/' + semestre_etudiant.id.toString()),
+        Uri.parse('http://192.168.186.113:8000/semestre_etudiants/' + semestre_etudiant.id.toString()),
         headers: headers,
         body: jsonEncode(<String, dynamic>{
           'id_sem': semestre_etudiant.id_sem.toString(),

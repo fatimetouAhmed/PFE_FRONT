@@ -24,7 +24,7 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController accessTokenController = TextEditingController();
 
   Future<String> loginUser(String email, String password) async {
-    var url = Uri.parse('http://127.0.0.1:8000/token');
+    var url = Uri.parse('http://192.168.186.113:8000/token');
     var response = await http.post(
       url,
       body: {
@@ -45,9 +45,9 @@ class LoginScreen extends StatelessWidget {
 
   Future<void> checkAccess(BuildContext context, String accessToken) async {
     List<String> urlsToCheck = [
-      'http://127.0.0.1:8000/surveillant',
-      'http://127.0.0.1:8000/superv',
-      'http://127.0.0.1:8000/admin',
+      'http://192.168.186.113:8000/surveillant',
+      'http://192.168.186.113:8000/superv',
+      'http://192.168.186.113:8000/admin',
     ];
 
     bool accessGranted = false;
@@ -70,27 +70,27 @@ class LoginScreen extends StatelessWidget {
 
     if (accessGranted) {
       // Envoyer l'utilisateur vers un écran spécifique en fonction de la validUrl
-      if (validUrl == 'http://127.0.0.1:8000/surveillant') {
+      if (validUrl == 'http://192.168.186.113:8000/surveillant') {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) =>CameraScreen(accessToken: accessToken),
           ),
         );
-      } else if (validUrl == 'http://127.0.0.1:8000/superv') {
+      } else if (validUrl == 'http://192.168.186.113:8000/superv') {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => MasterPageSupeurviseur(child:Notifications(accessToken: accessToken),accessToken: accessToken, index: 0,),
           ),
         );
-      } else if (validUrl == 'http://127.0.0.1:8000/admin') {
+      } else if (validUrl == 'http://192.168.186.113:8000/admin') {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => MasterPage(
               index: 0,
-                child: ListDepartement(accessToken: accessToken),accessToken: accessToken
+                child: Notifications(accessToken: accessToken),accessToken: accessToken
             ),
           ),
         );

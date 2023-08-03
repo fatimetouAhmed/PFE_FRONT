@@ -20,7 +20,7 @@ class ListSurveillance extends StatefulWidget {
 class _ListSurveillanceState extends State<ListSurveillance> {
   List<Surveillance> surveillancetsList = [];
   Future<int?> fetch_User_current_Id() async {
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/current_user_id/'));
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/current_user_id/'));
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -36,7 +36,7 @@ class _ListSurveillanceState extends State<ListSurveillance> {
       "Authorization": "Bearer ${widget.accessToken}",
     };
     var response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/surveillances/surveillance/'),headers: headers);
+        Uri.parse('http://192.168.186.113:8000/surveillances/surveillance/'),headers: headers);
     print(id);
     // // print(token);
     if (response.statusCode != 200) {
@@ -61,7 +61,7 @@ class _ListSurveillanceState extends State<ListSurveillance> {
   }
   Future<int?> fetchSuperviseurId() async {
     var response = await http.get(
-      Uri.parse('http://127.0.0.1:8000/current_user_id/'),
+      Uri.parse('http://192.168.186.113:8000/current_user_id/'),
       headers: {
         'Authorization': 'Bearer ${widget.accessToken}',
       },
@@ -75,7 +75,7 @@ class _ListSurveillanceState extends State<ListSurveillance> {
     return null;
   }
   Future delete(id) async {
-    await http.delete(Uri.parse('http://127.0.0.1:8000/surveillances/' + id));
+    await http.delete(Uri.parse('http://192.168.186.113:8000/surveillances/' + id));
   }
   int id=0;
   @override
@@ -212,25 +212,25 @@ class _ListSurveillanceState extends State<ListSurveillance> {
                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
                                                         Text(
-                                                          DateFormat('MM-dd HH:mm').format(surveillance.date_debut),
+                                                          DateFormat('HH:mm').format(surveillance.date_debut),
                                                           style: Theme.of(context).textTheme.button,
                                                         ),
                                                         SizedBox(width: 8),
                                                         Text(
-                                                          DateFormat('MM-dd HH:mm').format(surveillance.date_fin),
+                                                          DateFormat('HH:mm').format(surveillance.date_fin),
                                                           style: Theme.of(context).textTheme.button,
                                                         ),
                                                         SizedBox(width: 8),
-                                                        Text(
-                                                          surveillance.surveillant_id.toString(),
-                                                          style: Theme.of(context).textTheme.button,
-                                                        ),
-                                                        SizedBox(width: 8),
-                                                        Text(
-                                                          surveillance.salle_id.toString(),
-                                                          style: Theme.of(context).textTheme.button,
-                                                        ),
-                                                        SizedBox(width: 8),
+                                                        // Text(
+                                                        //   surveillance.surveillant_id.toString(),
+                                                        //   style: Theme.of(context).textTheme.button,
+                                                        // ),
+                                                        // SizedBox(width: 8),
+                                                        // Text(
+                                                        //   surveillance.salle_id.toString(),
+                                                        //   style: Theme.of(context).textTheme.button,
+                                                        // ),
+                                                        // SizedBox(width: 8),
                                                         GestureDetector(
                                                           onTap: () {
                                                             Navigator.push(

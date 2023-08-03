@@ -24,7 +24,7 @@ class _ListExamunState extends State<ListExamun> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/examuns/'),headers: headers);
     var examuns = <Examun>[];
     for (var u in jsonDecode(response.body)) {
       // print(u['heure_deb']);
@@ -43,7 +43,7 @@ class _ListExamunState extends State<ListExamun> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse('http://127.0.0.1:8000/examuns/' + id),headers: headers);
+    await http.delete(Uri.parse('http://192.168.186.113:8000/examuns/' + id),headers: headers);
   }
 
   @override

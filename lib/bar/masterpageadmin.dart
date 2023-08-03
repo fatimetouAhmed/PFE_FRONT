@@ -81,7 +81,7 @@ class _MasterPageState extends State<MasterPage> {
                     minHeight: 10,
                   ),
                   child: Text(
-                    '5',
+                    '23',
                     // Remplacez ceci par le véritable nombre de notifications
                     style: TextStyle(
                       color: Colors.white,
@@ -94,7 +94,8 @@ class _MasterPageState extends State<MasterPage> {
               ),
             ],
           ),
-          Icon(Icons.notifications, size: 30),
+
+          Icon(Icons.home, size: 30),
           Icon(Icons.history, size: 30),
         ],
         color: Colors.white,

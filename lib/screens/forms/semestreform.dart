@@ -44,7 +44,7 @@ class _SemestreFormState extends State<SemestreForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/semestre_filiere/'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/semestres/semestre_filiere/'),headers: headers);
     var semestres = <Semestre>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -68,7 +68,7 @@ class _SemestreFormState extends State<SemestreForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/nomfiliere/'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/filieres/nomfiliere/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -83,7 +83,7 @@ class _SemestreFormState extends State<SemestreForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/$nom'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.186.113:8000/semestres/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -102,7 +102,7 @@ class _SemestreFormState extends State<SemestreForm> {
     };
     if (semestre.id == 0) {
       await http.post(
-        Uri.parse('http://127.0.0.1:8000/semestres/'),
+        Uri.parse('http://192.168.186.113:8000/semestres/'),
         headers: headers,
         body: jsonEncode(<String, dynamic>{
           'nom': semestre.nom,
@@ -111,7 +111,7 @@ class _SemestreFormState extends State<SemestreForm> {
       );
     } else {
       await http.put(
-        Uri.parse('http://127.0.0.1:8000/semestres/' + semestre.id.toString()),
+        Uri.parse('http://192.168.186.113:8000/semestres/' + semestre.id.toString()),
         headers: headers,
         body: jsonEncode(<String, dynamic>{
           'nom': semestre.nom,
@@ -153,7 +153,7 @@ class _SemestreFormState extends State<SemestreForm> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: TextField(
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           focusNode: nom,
                           controller: nomController,
                           decoration: InputDecoration(
