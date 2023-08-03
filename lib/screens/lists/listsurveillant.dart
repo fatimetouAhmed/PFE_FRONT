@@ -20,7 +20,12 @@ class ListSurveillance extends StatefulWidget {
 class _ListSurveillanceState extends State<ListSurveillance> {
   List<Surveillance> surveillancetsList = [];
   Future<int?> fetch_User_current_Id() async {
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/current_user_id/'));
+
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/current_user_id/'),headers: headers);
+
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -35,10 +40,8 @@ class _ListSurveillanceState extends State<ListSurveillance> {
       "Content-Type": "application/json; charset=utf-8",
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(
-        Uri.parse('http://192.168.186.113:8000/surveillances/surveillance/'),headers: headers);
-    print(id);
-    // // print(token);
+
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/surveillances/surveillance'), headers: headers);
     if (response.statusCode != 200) {
       // Handle the error when the API request is not successful (e.g., status code is not 200 OK).
       throw Exception('Failed to fetch surveillances.');
@@ -75,7 +78,10 @@ class _ListSurveillanceState extends State<ListSurveillance> {
     return null;
   }
   Future delete(id) async {
-    await http.delete(Uri.parse('http://192.168.186.113:8000/surveillances/' + id));
+    var headers = {
+      "Authorization": "Bearer ${widget.accessToken}",
+    };
+    await http.delete(Uri.parse('http://127.0.0.1:8000/surveillances/' + id),headers: headers);
   }
   int id=0;
   @override
