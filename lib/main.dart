@@ -4,27 +4,21 @@ import 'package:pfe_front_flutter/screens/lists/listdepartement.dart';
 import 'package:pfe_front_flutter/screens/login_screen.dart';
 import 'bar/masterpageadmin.dart';
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent
-  ));
+  // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+  //     statusBarColor: Colors.transparent
+  // ));
   runApp(MyApp(accessToken:''));
 }
 
 class MyApp extends StatelessWidget {
   final String accessToken;
   MyApp({Key? key,required this.accessToken}) : super(key: key);
-  // const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
       home: LoginScreen(accessToken:accessToken),
     );
   }

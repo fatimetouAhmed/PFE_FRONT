@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pfe_front_flutter/screens/lists/listdepartement.dart';
+import 'package:pfe_front_flutter/screens/superviseur/GridViewWidgetDepartement.dart';
 import 'package:pfe_front_flutter/screens/surveillant_screen.dart';
 import 'package:pfe_front_flutter/screens/Admin_screen.dart';
 import 'package:pfe_front_flutter/screens/Screen_superv.dart';
@@ -22,9 +23,37 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController accessTokenController = TextEditingController();
+  int id_user=0;
+  Future<int> fetchUserId(String accessToken1) async {
+    var headers = {
+      "Authorization": "Bearer $accessToken1",
+    };
+    var url = Uri.parse('http://127.0.0.1:8000/current_user_id');
+
+    try {
+      var response = await http.get(url, headers: headers);
+
+      print('FetchUserId URL: $url');
+      print('FetchUserId Headers: $headers');
+      print('FetchUserId Response Code: ${response.statusCode}');
+      print('FetchUserId Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        dynamic jsonData = json.decode(response.body);
+        print('FetchUserId JSON Data: $jsonData');
+        return jsonData as int; // Make sure the JSON data is an integer
+      } else {
+        print('FetchUserId Request Failed');
+        return 0;
+      }
+    } catch (e) {
+      print('FetchUserId Exception: $e');
+      return 0;
+    }
+  }
 
   Future<String> loginUser(String email, String password) async {
-    var url = Uri.parse('http://192.168.186.113:8000/token');
+    var url = Uri.parse('http://127.0.0.1:8000/token');
     var response = await http.post(
       url,
       body: {
@@ -45,9 +74,10 @@ class LoginScreen extends StatelessWidget {
 
   Future<void> checkAccess(BuildContext context, String accessToken) async {
     List<String> urlsToCheck = [
-      'http://192.168.186.113:8000/surveillant',
-      'http://192.168.186.113:8000/superv',
-      'http://192.168.186.113:8000/admin',
+      'http://127.0.0.1:8000/surveillant',
+      'http://127.0.0.1:8000/superv',
+      'http://127.0.0.1:8000/admin',
+
     ];
 
     bool accessGranted = false;
@@ -62,29 +92,46 @@ class LoginScreen extends StatelessWidget {
       );
 
       if (response.statusCode == 200) {
+       id_user=await fetchUserId(accessToken);
         accessGranted = true;
         validUrl = url;
         break;
       }
     }
-
+   // id_user=await http.get();
     if (accessGranted) {
+      // var response = await http.get(
+      //   Uri.parse('http://127.0.0.1:8000/token'),
+      //   headers: {
+      //     'Authorization': 'Bearer $accessToken',
+      //   },
+      // );
+      //
+      // if (response.statusCode == 200) {
+      //   dynamic jsonData = json.decode(response.body);
+      //   id_user=jsonData;
+      // }
       // Envoyer l'utilisateur vers un écran spécifique en fonction de la validUrl
-      if (validUrl == 'http://192.168.186.113:8000/surveillant') {
+      if (validUrl == 'http://127.0.0.1:8000/surveillant') {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) =>CameraScreen(accessToken: accessToken),
           ),
         );
-      } else if (validUrl == 'http://192.168.186.113:8000/superv') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MasterPageSupeurviseur(child:Notifications(accessToken: accessToken),accessToken: accessToken, index: 0,),
-          ),
-        );
-      } else if (validUrl == 'http://192.168.186.113:8000/admin') {
+      } else if (validUrl == 'http://127.0.0.1:8000/superv') {
+        print(id_user);
+        id_user=await fetchUserId(accessToken);
+          print(id_user);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>MasterPageSupeurviseur(child:GridViewWidget(id: id_user,accessToken: accessToken,),accessToken: accessToken, index: 0,),
+                  //HomeSceen(id: id_user,),
+            ),
+          );
+
+      } else if (validUrl == 'http://127.0.0.1:8000/admin') {
         Navigator.push(
           context,
           MaterialPageRoute(

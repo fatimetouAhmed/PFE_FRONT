@@ -7,11 +7,12 @@ import '../models/surveillance.dart';
 import '../screens/lists/listsurveillant.dart';
 import '../screens/lists/notifications.dart';
 import '../screens/login_screen.dart';
+import '../screens/superviseur/GridViewWidgetDepartement.dart';
 import 'appbarsuperviseur.dart';
 import 'package:http/http.dart' as http;
 
 class MasterPageSupeurviseur extends StatefulWidget {
-  final Widget child;
+  late final Widget child;
   final String accessToken;
   final int index;
   MasterPageSupeurviseur({
@@ -26,13 +27,13 @@ class MasterPageSupeurviseur extends StatefulWidget {
 }
 
 class _MasterPageSupeurviseurState extends State<MasterPageSupeurviseur> {
-  Widget _currentWidget = Notifications(accessToken: ''); // Set a default value
+//  Widget _currentWidget = Notifications(accessToken: ''); // Set a default value
   int _currentIndex = 0;
-
+  final colors=Colors.blueAccent;
   @override
   void initState() {
     super.initState();
-    _currentWidget = this.widget.child;
+   // _currentWidget = this.widget.child;
     _currentIndex = this.widget.index;
   }
 
@@ -66,12 +67,16 @@ class _MasterPageSupeurviseurState extends State<MasterPageSupeurviseur> {
       _currentIndex = selectedIndex;
       switch (selectedIndex) {
         case 0:
-          _currentWidget = Notifications(accessToken: widget.accessToken);
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) =>MasterPageSupeurviseur(child:GridViewWidget(id: id_user,accessToken: accessToken,),accessToken: accessToken, index: 0,),
+          //     //HomeSceen(id: id_user,),
+          //   ),
+          // );
+
           break;
         case 1:
-          _currentWidget = ListSurveillance(accessToken: widget.accessToken);
-          break;
-        case 2:
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -90,118 +95,71 @@ class _MasterPageSupeurviseurState extends State<MasterPageSupeurviseur> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
-      body: _currentWidget,
-      bottomNavigationBar: FutureBuilder<int>(
-        future: fetchCountNotifications(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CurvedNavigationBar(
-              index: _currentIndex,
-              height: 60.0,
-              items: [
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      child: Icon(Icons.notification_important),
-                    ),
-                    Positioned(
-                      top: -1,
-                      right: 0,
-                      child: Container(
-                        padding: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        constraints: BoxConstraints(
-                          minWidth: 10,
-                          minHeight: 10,
-                        ),
-                        child: Text(
-                          "0", // Use the default value or 0 during waiting state
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Icon(Icons.person_2, size: 30),
-                Icon(Icons.logout, size: 30),
-              ],
-              onTap: (value){
-                handleDestinationTap;
-                setState(() {
-                  _currentIndex=value;
-                  _currentWidget=widget.child;
+      backgroundColor: Colors.grey[100],
+     // appBar: CustomAppBar(),
+      body: Container(
+      child: Scaffold(
+      backgroundColor: Colors.grey[100],
 
-                });
-              },
-              // Rest of the CurvedNavigationBar properties...
-            );
-          } else if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              int notificationCount = snapshot.data ?? 0;
-              return CurvedNavigationBar(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // StackWidgetFiliere(id: widget.id,)
+            Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    // borderRadius: BorderRadius.circular(30),
+                    color: colors,
+                  ),
+                  height: 200,
+                  child:
+                  ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 30),
+                    title: Text('Hello Ahad!', style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: Colors.white
+                    )),
+                    subtitle: Text('Good Morning', style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.white54
+                    )),
+                    trailing: const CircleAvatar(
+                      radius: 30,
+                      backgroundImage: AssetImage('images/image2.jpg'),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 130.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.white
+                    ),
+                    height: 500,
+                    child: widget.child,
+                    // color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: CurvedNavigationBar(
                 index: _currentIndex,
                 height: 60.0,
                 items: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        child: Icon(Icons.notification_important),
-                      ),
-                      Positioned(
-                        top: -1,
-                        right: 0,
-                        child: Container(
-                          padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          constraints: BoxConstraints(
-                            minWidth: 10,
-                            minHeight: 10,
-                          ),
-                          child: Text(
-                            notificationCount.toString(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Icon(Icons.person_2, size: 30),
+                  Icon(Icons.home, size: 30),
                   Icon(Icons.logout, size: 30),
                 ],
                 onTap: handleDestinationTap,
                 // Rest of the CurvedNavigationBar properties...
-              );
-            } else {
-              return Text('Error: Unable to fetch notification count');
-            }
-          }
-          // Handle other connection states if necessary
-          return SizedBox.shrink();
-        },
+              ),
+
+
       ),
+    ),
+
     );
   }
 }
