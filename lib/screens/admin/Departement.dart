@@ -1,39 +1,37 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+import '../../bar/masterpageadmin.dart';
+import '../../models/departement.dart';
 import 'package:http/http.dart' as http;
 
-import '../../../bar/masterpagesuperviseur.dart';
-import '../../models/filliere.dart';
-import 'GridViewWidgetSemestre.dart';
-
-class GridViewWidgetFiliere extends StatefulWidget {
-  final int id;
+import 'Filiere.dart';
+class GridViewWidget extends StatefulWidget {
+ // final int id;
   final String accessToken;
-  const GridViewWidgetFiliere({Key? key, required this.id,required this.accessToken}) : super(key: key);
+  const GridViewWidget({Key? key,
+   // required this.id,
+    required this.accessToken}) : super(key: key);
+
   @override
-  State<GridViewWidgetFiliere> createState() => _GridViewWidgetFiliereState();
+  State<GridViewWidget> createState() => _GridViewWidgetState();
 }
 
-class _GridViewWidgetFiliereState extends State<GridViewWidgetFiliere> {
-
+class _GridViewWidgetState extends State<GridViewWidget> {
   DateTime now = DateTime.now();
   //String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
   final colors=Colors.blueAccent;
-  List<Filiere> fileresList = [];
-  Future<List<Filiere>> fetchFilieres(id) async {
+  List<Departement> departementsList = [];
+  Future<List<Departement>> fetchDepartements() async {
     var headers = {
       "Content-Type": "application/json; charset=utf-8",
-       "Authorization": "Bearer ${widget.accessToken}",
+      "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/'+ id),headers: headers);
-    var data = utf8.decode(response.bodyBytes);
-
-    var departements = <Filiere>[];
-    for (var u in jsonDecode(data)) {// Adjust the date format here
-      departements.add(Filiere(u['id'],u['nom'], u['description'],0,''));
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/departements/'),headers: headers);
+    var departements = <Departement>[];
+    for (var u in jsonDecode(response.body)) {// Adjust the date format here
+      departements.add(Departement(u['id'],u['nom']));
     }
     return departements;
   }
@@ -41,9 +39,9 @@ class _GridViewWidgetFiliereState extends State<GridViewWidgetFiliere> {
   @override
   void initState() {
     super.initState();
-    fetchFilieres(widget.id.toString()).then((fileres) {
+    fetchDepartements().then((departements) {
       setState(() {
-        fileresList = fileres;
+        departementsList = departements;
       });
     });
   }
@@ -52,19 +50,21 @@ class _GridViewWidgetFiliereState extends State<GridViewWidgetFiliere> {
   Widget build(BuildContext context){
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child:FutureBuilder<List<Filiere>>(
-          future: fetchFilieres(widget.id.toString()),
-          builder: (BuildContext context, AsyncSnapshot<List<Filiere>> snapshot) {
+      child:FutureBuilder<List<Departement>>(
+          future: fetchDepartements(),
+          builder: (BuildContext context, AsyncSnapshot<List<Departement>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
-              var filieres = snapshot.data!;
+              var departements = snapshot.data!;
 
               return GridView.builder(
-                itemCount: filieres.length,
+                itemCount: departements.length,
                 itemBuilder: (context,index){
+                  // if (departements[index].date_debut.isBefore(DateTime.now()) &&
+                  //     departements[index].date_fin.isAfter(DateTime.now())) {
                     return Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Card(
@@ -76,34 +76,31 @@ class _GridViewWidgetFiliereState extends State<GridViewWidgetFiliere> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.fact_check_outlined,
-                              size: 60,
+                              Icons.dashboard,
+                              size: 90,
                               color: colors.withOpacity(0.9),
                             ),
                             GestureDetector(
                               onTap: () {
+                                print("action push");
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) =>MasterPageSupeurviseur(child:GridViewWidgetSemestre(id: filieres[index].id, accessToken: widget.accessToken,),accessToken: widget.accessToken, index: 0,),
-                               ),  // Replace AutrePage() with the name of your other page.
+                                  MaterialPageRoute(builder: (context) =>MasterPage(child:GridViewWidgetFiliere(id:  departements[index].id, accessToken: widget.accessToken,),accessToken: widget.accessToken, index: 0,),
+                                      ), // Replace AutrePage() with the name of your other page.
                                 );
                               },
                               child: Text(
-                                filieres[index].nom,
+                                departements[index].nom,
                                 style: TextStyle(fontSize: 18),
                               ),
                             ),
-                            Text(
-                              filieres[index].description,
-                              style: TextStyle(fontSize: 12),
-                            ),
-
+                            // Text(departements[index].date as String,style: TextStyle(fontSize: 18),)
                           ],
                         ),
                       ),
                     );
-
-                },
+                 // }
+                  },
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2
                 ),

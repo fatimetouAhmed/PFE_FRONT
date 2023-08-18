@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import 'package:pfe_front_flutter/screens/lists/listsemestre.dart';
 import 'package:quickalert/quickalert.dart';
@@ -22,8 +23,12 @@ class _SemestreFormState extends State<SemestreForm> {
   TextEditingController idController = new TextEditingController();
   TextEditingController nomController =new  TextEditingController();
   TextEditingController id_filController = new TextEditingController();
+  TextEditingController date_debController =new TextEditingController();
+  TextEditingController date_finController = new TextEditingController();
   FocusNode nom = FocusNode();
   FocusNode id_fil = FocusNode();
+  FocusNode date_deb = FocusNode();
+  FocusNode date_fin = FocusNode();
   String? selectedOption;
   List<String> semestreList = [];
   int? fetchedId;
@@ -36,6 +41,8 @@ class _SemestreFormState extends State<SemestreForm> {
         idController.text = this.widget.semestre.id.toString();
         nomController.text = this.widget.semestre.nom;
         id_filController.text = this.widget.semestre.id_fil.toString();
+        date_debController.text = this.widget.semestre.date_debut.toString();
+        date_finController.text = this.widget.semestre.date_fin.toString();
       });
     });
   }
@@ -44,7 +51,7 @@ class _SemestreFormState extends State<SemestreForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/semestres/semestre_filiere/'),headers: headers);
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/semestre_filiere/'),headers: headers);
     var semestres = <Semestre>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -53,9 +60,10 @@ class _SemestreFormState extends State<SemestreForm> {
       var nom = u['nom'];
       var id_fil = u['id_fil'];
       var filiere = u['filiere'];
-
-      if (id != null && nom != null &&  id_fil != null && filiere != null) {
-        semestres.add(Semestre(id, nom, id_fil, filiere));
+      var date_deb= u['heure_deb'];
+      var date_fin = u['heure_fin'];
+      if (id != null && nom != null &&  id_fil != null && date_deb != null && date_fin != null && filiere != null) {
+        semestres.add(Semestre(id, nom, id_fil,date_deb,date_fin, filiere));
       } else {
         print('Incomplete data for Semestre object');
       }
@@ -68,7 +76,7 @@ class _SemestreFormState extends State<SemestreForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/filieres/nomfiliere/'),headers: headers);
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/nomfiliere/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -83,7 +91,7 @@ class _SemestreFormState extends State<SemestreForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/semestres/$nom'),headers: headers);
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -102,7 +110,7 @@ class _SemestreFormState extends State<SemestreForm> {
     };
     if (semestre.id == 0) {
       await http.post(
-        Uri.parse('http://192.168.186.113:8000/semestres/'),
+        Uri.parse('http://127.0.0.1:8000/semestres/'),
         headers: headers,
         body: jsonEncode(<String, dynamic>{
           'nom': semestre.nom,
@@ -111,7 +119,7 @@ class _SemestreFormState extends State<SemestreForm> {
       );
     } else {
       await http.put(
-        Uri.parse('http://192.168.186.113:8000/semestres/' + semestre.id.toString()),
+        Uri.parse('http://127.0.0.1:8000/semestres/' + semestre.id.toString()),
         headers: headers,
         body: jsonEncode(<String, dynamic>{
           'nom': semestre.nom,
@@ -138,7 +146,7 @@ class _SemestreFormState extends State<SemestreForm> {
                   color: Colors.white,
                 ),
                 height: 300,
-                width: 340,
+                width: 370,
                 child: Form(
                   child: Column(
                     children: [
@@ -220,8 +228,90 @@ class _SemestreFormState extends State<SemestreForm> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: TextField(
+                          keyboardType: TextInputType.datetime,
+                          focusNode: date_deb,
+                          controller: date_debController,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                            labelText: 'heure_deb',
+                            icon: Icon(Icons.calendar_today),
+                            labelStyle: TextStyle(fontSize: 17, color: Colors.grey.shade500),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                          ),
+                          readOnly: true,  //set it true, so that user will not able to edit text
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context, initialDate: DateTime.now(),
+                                firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                                lastDate: DateTime(2101)
+                            );
 
+                            if(pickedDate != null ){
+                              print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
+                              String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                              print(formattedDate); //formatted date output using intl package =>  2021-03-16
+                              //you can implement different kind of Date Format here according to your requirement
 
+                              setState(() {
+                                date_debController.text = formattedDate; //set output date to TextField value.
+                              });
+                            }else{
+                              print("Date is not selected");
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: TextField(
+                          keyboardType: TextInputType.datetime,
+                          focusNode: date_fin,
+                          controller: date_finController,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                            labelText: 'heure_deb',
+                            icon: Icon(Icons.calendar_today),
+                            labelStyle: TextStyle(fontSize: 17, color: Colors.grey.shade500),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                          ),
+                          readOnly: true,  //set it true, so that user will not able to edit text
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context, initialDate: DateTime.now(),
+                                firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                                lastDate: DateTime(2101)
+                            );
+
+                            if(pickedDate != null ){
+                              print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
+                              String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                              print(formattedDate); //formatted date output using intl package =>  2021-03-16
+                              //you can implement different kind of Date Format here according to your requirement
+
+                              setState(() {
+                                date_finController.text = formattedDate; //set output date to TextField value.
+                              });
+                            }else{
+                              print("Date is not selected");
+                            }
+                          },
+                        ),
+                      ),
                       Spacer(),
                       GestureDetector(
                         onTap: () async {
@@ -235,12 +325,14 @@ class _SemestreFormState extends State<SemestreForm> {
                               int? id = int.tryParse(idController.text);
                               int? idFil = int.tryParse(id_filController.text);
 
-                              if (id != null && idFil != null) {
+                              if (id != null  && idFil != null) {
                                 await save(
                                   Semestre(
                                     id,
                                     nomController.text,
                                     idFil,
+                                    DateTime.parse(date_debController.text),
+                                    DateTime.parse(date_finController.text),
                                     '',
                                   ),
                                 );

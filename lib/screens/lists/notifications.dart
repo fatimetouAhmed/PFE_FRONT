@@ -22,17 +22,17 @@ class _NotificationsState extends State<Notifications> {
       "Content-Type": "application/json; charset=utf-8",
       // "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/notifications/notifications/'),headers: headers);
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/notifications/notifications/'),headers: headers);
     var data = utf8.decode(response.bodyBytes);
     var notifications = <NotificationModel>[];
     for (var u in jsonDecode(data)) {
       var date = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['date']);
-      notifications.add(NotificationModel(u['id'], u['content'], date, u['is_read']));
+      notifications.add(NotificationModel(u['id'], u['content'], date, u['is_read'],u['image']));
     }
     return notifications;
   }
   Future update(id) async {
-    await http.put(Uri.parse('http://192.168.186.113:8000/notifications/' + id));
+    await http.put(Uri.parse('http://127.0.0.1:8000/notifications/' + id));
   }
 
   void _showNotificationContent(String content,int id) async{

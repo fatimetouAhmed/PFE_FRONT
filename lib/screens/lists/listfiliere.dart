@@ -24,7 +24,7 @@ class _ListFiliereState extends State<ListFiliere> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/filieres/filiere_departement/'),headers: headers);
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/filiere_departement'),headers: headers);
     var filieres = <Filiere>[];
     for (var u in jsonDecode(response.body)) {
      // print('Parsed JSON object: $u');
@@ -38,7 +38,7 @@ class _ListFiliereState extends State<ListFiliere> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse('http://192.168.186.113:8000/filieres/' + id),headers: headers);
+    await http.delete(Uri.parse('http://127.0.0.1:8000/filieres/' + id),headers: headers);
   }
 
   @override

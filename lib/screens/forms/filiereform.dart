@@ -47,7 +47,7 @@ class _FiliereFormState extends State<FiliereForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/filieres/filiere_departement/'),headers: headers);
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/filiere_departement/'),headers: headers);
     var filieres = <Filiere>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -73,7 +73,7 @@ class _FiliereFormState extends State<FiliereForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/departements/nomdepartement'),headers: headers);
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/departements/nomdepartement'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -91,7 +91,7 @@ class _FiliereFormState extends State<FiliereForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/filieres/$nom'),headers: headers);
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -110,7 +110,7 @@ class _FiliereFormState extends State<FiliereForm> {
     };
     if (filiere.id == 0) {
       await http.post(
-        Uri.parse('http://192.168.186.113:8000/filieres/'),headers: headers,
+        Uri.parse('http://127.0.0.1:8000/filieres/'),headers: headers,
 
         body: jsonEncode(<String, dynamic>{
           'nom': filiere.nom,
@@ -120,7 +120,7 @@ class _FiliereFormState extends State<FiliereForm> {
       );
     } else {
       await http.put(
-        Uri.parse('http://192.168.186.113:8000/filieres/' + filiere.id.toString()),headers: headers,
+        Uri.parse('http://127.0.0.1:8000/filieres/' + filiere.id.toString()),headers: headers,
         body: jsonEncode(<String, dynamic>{
           'nom': filiere.nom,
           'description': filiere.description,

@@ -67,7 +67,7 @@ int id=0;
   }
   Future<int?> fetchSuperviseurId(String token) async {
     var response = await http.get(
-      Uri.parse('http://192.168.186.113:8000/current_user_id/'),
+      Uri.parse('http://127.0.0.1:8000/current_user_id/'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -82,7 +82,7 @@ int id=0;
   }
   Future<List<Surveillance>> fetchSurveillances(int id) async {
     var response = await http.get(
-      Uri.parse('http://192.168.186.113:8000/surveillances/surveillance/'),
+      Uri.parse('http://127.0.0.1:8000/surveillances/surveillance/'),
       headers: {
         'Authorization': 'Bearer ${widget.accessToken}', // Add the authorization token to the headers
       },
@@ -110,7 +110,7 @@ int id=0;
 
   Future<void> fetchNomSurveillances() async {
     var response = await http.get(
-      Uri.parse('http://192.168.186.113:8000/surveillances/surveillances/nom/'),
+      Uri.parse('http://127.0.0.1:8000/surveillances/surveillances/nom/'),
       headers: {
         'Authorization': 'Bearer ${widget.accessToken}', // Add the authorization token to the headers
       },
@@ -124,7 +124,7 @@ int id=0;
     print(surveillantList);
   }
   Future<void> fetchSalles() async {
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/salles/nom/'));
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/salles/nom/'));
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -136,7 +136,7 @@ int id=0;
   }
   Future<int?> fetchSurveillanceId(String nom) async {
     var response = await http.get(
-      Uri.parse('http://192.168.186.113:8000/surveillances/surveillances/$nom'),
+      Uri.parse('http://127.0.0.1:8000/surveillances/surveillances/$nom'),
       headers: {
         'Authorization': 'Bearer ${widget.accessToken}', // Add the authorization token to the headers
       },
@@ -150,7 +150,7 @@ int id=0;
     return null;
   }
   Future<int?> fetchSallesId(String nom) async {
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/examuns/salle/$nom'),
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/salle/$nom'),
       headers: {
         'Authorization': 'Bearer ${widget.accessToken}', // Add the authorization token to the headers
       },);
@@ -167,7 +167,7 @@ int id=0;
     if (surveillance.id == 0) {
 
       await http.post(
-        Uri.parse('http://192.168.186.113:8000/surveillances/'),
+        Uri.parse('http://127.0.0.1:8000/surveillances/'),
         headers: <String, String>{
           'Content-Type': 'application/json;charset=UTF-8',
           'Authorization': 'Bearer ${widget.accessToken}',
@@ -182,7 +182,7 @@ int id=0;
       );
     } else {
       await http.put(
-        Uri.parse('http://192.168.186.113:8000/surveillances/' + surveillance.id.toString()),
+        Uri.parse('http://127.0.0.1:8000/surveillances/' + surveillance.id.toString()),
         headers: <String, String>{
           'Content-Type': 'application/json;charset=UTF-8',
         },

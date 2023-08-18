@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pfe_front_flutter/bar/sidebaradmin.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import '../screens/admin/Departement.dart';
 import '../screens/lists/historiques.dart';
 import '../screens/lists/notifications.dart';
 import 'appbar.dart';
@@ -18,7 +19,8 @@ class MasterPage extends StatefulWidget {
 }
 
 class _MasterPageState extends State<MasterPage> {
-  Widget _currentWidget = Notifications(accessToken: ''); // Set a default value
+  late Widget _currentWidget ;
+  // = Notifications(accessToken: ''); // Set a default value
   int _currentIndex = 0;
   @override
   void initState(){
@@ -39,6 +41,9 @@ class _MasterPageState extends State<MasterPage> {
           break;
         case 2:
           _currentWidget = Historiques();
+          break;
+        case 3:
+          _currentWidget = GridViewWidget(accessToken: widget.accessToken);
           break;
       // Add more cases for other indices if needed
         default:
@@ -97,6 +102,7 @@ class _MasterPageState extends State<MasterPage> {
 
           Icon(Icons.home, size: 30),
           Icon(Icons.history, size: 30),
+          Icon(Icons.archive, size: 30),
         ],
         color: Colors.white,
         buttonBackgroundColor: Colors.white,

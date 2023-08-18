@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import '../../../constants.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../bar/masterpageadmin.dart';
@@ -24,13 +25,16 @@ class _ListSemestreState extends State<ListSemestre> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/semestres/semestre_filiere/'),headers: headers);
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/semestre_filiere/'),headers: headers);
     var semestres = <Semestre>[];
     for (var u in jsonDecode(response.body)) {
-      print('Parsed JSON object: $u');
-      semestres.add(Semestre(u['id'], u['nom'], u['id_fil'], u['filiere']));
+     // print('Parsed JSON object: $u');
+      var dateDeb = DateFormat('yyyy-MM-dd\'T\'HH:mm:ss').parse(u['date_debut']);
+      var dateFin = DateFormat('yyyy-MM-dd\'T\'HH:mm:ss').parse(u['date_fin']);
+
+      semestres.add(Semestre(u['id'], u['nom'], u['id_fil'],dateDeb,dateFin, u['filiere']));
     }
-    print(semestres);
+    //print(semestres);
     return semestres;
   }
 
@@ -38,7 +42,7 @@ class _ListSemestreState extends State<ListSemestre> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse('http://192.168.186.113:8000/semestres/' + id),headers: headers);
+    await http.delete(Uri.parse('http://127.0.0.1:8000/semestres/' + id),headers: headers);
   }
 
   @override
@@ -89,7 +93,7 @@ class _ListSemestreState extends State<ListSemestre> {
                                       index: 0,  accessToken: widget.accessToken,
 
                                         child:
-                                      SemestreForm(semestre: Semestre(0, '',0,''),  accessToken: widget.accessToken
+                                      SemestreForm(semestre: Semestre(0, '',0,DateTime.parse('0000-00-00 00:00:00'),DateTime.parse('0000-00-00 00:00:00'),''),  accessToken: widget.accessToken
                                       ),
                                     ),
                               ),
@@ -171,7 +175,12 @@ class _ListSemestreState extends State<ListSemestre> {
                                                       ),
                                                       SizedBox(width: 8),
                                                       Text(
-                                                        semestre.filiere,
+                                                        DateFormat('yyyy-MM').format(semestre.date_debut),
+                                                        style: Theme.of(context).textTheme.button,
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        DateFormat('yyyy-MM').format(semestre.date_fin),
                                                         style: Theme.of(context).textTheme.button,
                                                       ),
                                                       SizedBox(width: 8),

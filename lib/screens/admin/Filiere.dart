@@ -1,13 +1,9 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
 import 'package:http/http.dart' as http;
-
-import '../../../bar/masterpagesuperviseur.dart';
+import '../../bar/masterpageadmin.dart';
 import '../../models/filliere.dart';
-import 'GridViewWidgetSemestre.dart';
+import 'Semestre.dart';
 
 class GridViewWidgetFiliere extends StatefulWidget {
   final int id;
@@ -84,7 +80,11 @@ class _GridViewWidgetFiliereState extends State<GridViewWidgetFiliere> {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) =>MasterPageSupeurviseur(child:GridViewWidgetSemestre(id: filieres[index].id, accessToken: widget.accessToken,),accessToken: widget.accessToken, index: 0,),
+                                  MaterialPageRoute(builder: (context) =>
+                                      MasterPage(
+                                    child:
+                                    GridViewWidgetSemestre(id: filieres[index].id, accessToken: widget.accessToken,),
+                                        accessToken: widget.accessToken, index: 0,),
                                ),  // Replace AutrePage() with the name of your other page.
                                 );
                               },

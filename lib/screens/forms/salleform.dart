@@ -23,7 +23,7 @@ Future save(salle,String accessToken) async {
   if (salle.id == 0) {
     i=0;
     await http.post(
-      Uri.parse('http://192.168.186.113:8000/salles/'),
+      Uri.parse('http://127.0.0.1:8000/salles/'),
         headers: headers,
       body: jsonEncode(<String, String>{
         'nom': salle.nom,
@@ -32,7 +32,7 @@ Future save(salle,String accessToken) async {
   } else {
     i=1;
     await http.put(
-      Uri.parse('http://192.168.186.113:8000/salles/' + salle.id.toString()),
+      Uri.parse('http://127.0.0.1:8000/salles/' + salle.id.toString()),
       headers: <String, String>{
         'Content-Type': 'application/json;charset=UTF-8',
       },

@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../bar/masterpagesuperviseur.dart';
-import '../../../models/filieresmatieres.dart';
+import '../../../models/semestresmatieres.dart';
 
 import 'GridViewWidgetExamun.dart';
 class GridViewWidgetMatiere extends StatefulWidget {
@@ -20,18 +20,18 @@ class GridViewWidgetMatiere extends StatefulWidget {
 class _GridViewWidgetMatiereState extends State<GridViewWidgetMatiere> {
 
   final colors=Colors.blueAccent;
-  List<FilieresMatieres> fileresList = [];
-  Future<List<FilieresMatieres>> fetchMatieres(id) async {
+  List<SemestresMatieres> fileresList = [];
+  Future<List<SemestresMatieres>> fetchMatieres(id) async {
     var headers = {
       "Content-Type": "application/json; charset=utf-8",
        "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieresmatieres/'+ id),headers: headers);
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestresmatieres/'+ id),headers: headers);
     var data = utf8.decode(response.bodyBytes);
 
-    var departements = <FilieresMatieres>[];
+    var departements = <SemestresMatieres>[];
     for (var u in jsonDecode(data)) {// Adjust the date format here
-      departements.add(FilieresMatieres(u['id'],u['id_mat'],0, u['matieres'],''));
+      departements.add(SemestresMatieres(u['id'],u['id_mat'],0, u['matieres'],''));
     }
     return departements;
   }
@@ -50,9 +50,9 @@ class _GridViewWidgetMatiereState extends State<GridViewWidgetMatiere> {
   Widget build(BuildContext context){
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child:FutureBuilder<List<FilieresMatieres>>(
+      child:FutureBuilder<List<SemestresMatieres>>(
           future: fetchMatieres(widget.id.toString()),
-          builder: (BuildContext context, AsyncSnapshot<List<FilieresMatieres>> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<List<SemestresMatieres>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {

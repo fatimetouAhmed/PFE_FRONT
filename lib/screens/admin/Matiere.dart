@@ -1,51 +1,43 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
 import 'package:http/http.dart' as http;
+import '../../../models/semestresmatieres.dart';
 
-import '../../../bar/masterpagesuperviseur.dart';
-import '../../models/examun.dart';
-import 'notifications.dart';
-
-class GridViewWidgetExamun extends StatefulWidget {
+import '../../bar/masterpageadmin.dart';
+import 'Examun.dart';
+class GridViewWidgetMatiere extends StatefulWidget {
   final int id;
   final String accessToken;
-  const GridViewWidgetExamun({Key? key, required this.id,required this.accessToken}) : super(key: key);
+  const GridViewWidgetMatiere({Key? key, required this.id,required this.accessToken}) : super(key: key);
   @override
-  State<GridViewWidgetExamun> createState() => _GridViewWidgetExamunState();
+  State<GridViewWidgetMatiere> createState() => _GridViewWidgetMatiereState();
 }
 
-class _GridViewWidgetExamunState extends State<GridViewWidgetExamun> {
+class _GridViewWidgetMatiereState extends State<GridViewWidgetMatiere> {
 
-  DateTime now = DateTime.now();
-  //String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
   final colors=Colors.blueAccent;
-  List<Examun> examunsList = [];
-  Future<List<Examun>> fetchExamuns(id) async {
+  List<SemestresMatieres> fileresList = [];
+  Future<List<SemestresMatieres>> fetchMatieres(id) async {
     var headers = {
       "Content-Type": "application/json; charset=utf-8",
-      "Authorization": "Bearer ${widget.accessToken}",
+       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/'+ id),headers: headers);
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestresmatieres/'+ id),headers: headers);
     var data = utf8.decode(response.bodyBytes);
 
-    var examuns = <Examun>[];
+    var departements = <SemestresMatieres>[];
     for (var u in jsonDecode(data)) {// Adjust the date format here
-      var heureDeb = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['heure_deb']);
-      var heureFin = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['heure_fin']);
-
-      examuns.add(Examun(u['id'],u['type'],heureDeb,heureFin, u['id_mat'], u['id_sal']));}
-    return examuns;
+      departements.add(SemestresMatieres(u['id'],u['id_mat'],0, u['matieres'],''));
+    }
+    return departements;
   }
 
   @override
   void initState() {
     super.initState();
-    fetchExamuns(widget.id.toString()).then((examuns) {
+    fetchMatieres(widget.id.toString()).then((fileres) {
       setState(() {
-        examunsList = examuns;
+        fileresList = fileres;
       });
     });
   }
@@ -54,18 +46,18 @@ class _GridViewWidgetExamunState extends State<GridViewWidgetExamun> {
   Widget build(BuildContext context){
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child:FutureBuilder<List<Examun>>(
-          future: fetchExamuns(widget.id.toString()),
-          builder: (BuildContext context, AsyncSnapshot<List<Examun>> snapshot) {
+      child:FutureBuilder<List<SemestresMatieres>>(
+          future: fetchMatieres(widget.id.toString()),
+          builder: (BuildContext context, AsyncSnapshot<List<SemestresMatieres>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
-              var examuns = snapshot.data!;
+              var matieres = snapshot.data!;
 
               return GridView.builder(
-                itemCount: examuns.length,
+                itemCount: matieres.length,
                 itemBuilder: (context,index){
                   return Padding(
                     padding: const EdgeInsets.all(4.0),
@@ -78,28 +70,25 @@ class _GridViewWidgetExamunState extends State<GridViewWidgetExamun> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.e_mobiledata,
+                            Icons.description,
                             size: 60,
                             color: colors.withOpacity(0.9),
                           ),
                           GestureDetector(
                             onTap: () {
-                              // print(examuns[index].id_mat);
+                              print(matieres[index].id_mat);
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) =>MasterPageSupeurviseur(child:Notifications(id: examuns[index].id, accessToken: widget.accessToken,),accessToken: widget.accessToken, index: 0,),
+                                MaterialPageRoute(builder: (context) =>MasterPage(child:GridViewWidgetExamun(id: matieres[index].id_mat, accessToken: widget.accessToken,),accessToken: widget.accessToken, index: 0,),
                                 ),  // Replace AutrePage() with the name of your other page.
                               );
                             },
                             child: Text(
-                              examuns[index].type,
+                              matieres[index].matieres,
                               style: TextStyle(fontSize: 18),
                             ),
                           ),
-                          Text(
-                            DateFormat('MM-dd HH:mm').format(examuns[index].heure_deb),
-                            style: TextStyle(fontSize: 12),
-                          ),
+
                         ],
                       ),
                     ),

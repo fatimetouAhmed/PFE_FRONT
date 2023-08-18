@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -24,7 +22,7 @@ class _ListDepartementState extends State<ListDepartement> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://192.168.186.113:8000/departements/'),headers: headers);
+    var response = await http.get(Uri.parse('http://127.0.0.1:8000/departements/'),headers: headers);
     var departements = <Departement>[];
     for (var u in jsonDecode(response.body)) {
       departements.add(Departement(u['id'], u['nom']));
@@ -37,7 +35,7 @@ class _ListDepartementState extends State<ListDepartement> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse('http://192.168.186.113:8000/departements/' + id),headers: headers);
+    await http.delete(Uri.parse('http://127.0.0.1:8000/departements/' + id),headers: headers);
   }
 
   @override

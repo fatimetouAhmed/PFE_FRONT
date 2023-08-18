@@ -1,11 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'package:http/http.dart' as http;
-
-import '../../../bar/masterpagesuperviseur.dart';
+import '../../bar/masterpageadmin.dart';
 import '../../models/examun.dart';
 import 'notifications.dart';
 
@@ -87,7 +84,7 @@ class _GridViewWidgetExamunState extends State<GridViewWidgetExamun> {
                               // print(examuns[index].id_mat);
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) =>MasterPageSupeurviseur(child:Notifications(id: examuns[index].id, accessToken: widget.accessToken,),accessToken: widget.accessToken, index: 0,),
+                                MaterialPageRoute(builder: (context) =>MasterPage(child:Notifications(id: examuns[index].id, accessToken: widget.accessToken,),accessToken: widget.accessToken, index: 0,),
                                 ),  // Replace AutrePage() with the name of your other page.
                               );
                             },

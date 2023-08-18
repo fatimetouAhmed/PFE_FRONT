@@ -64,7 +64,7 @@ class _ListSurveillanceState extends State<ListSurveillance> {
   }
   Future<int?> fetchSuperviseurId() async {
     var response = await http.get(
-      Uri.parse('http://192.168.186.113:8000/current_user_id/'),
+      Uri.parse('http://127.0.0.1:8000/current_user_id/'),
       headers: {
         'Authorization': 'Bearer ${widget.accessToken}',
       },
