@@ -21,16 +21,20 @@ class _CameraScreenState extends State<CameraScreen> {
     var image = await _picker.pickImage(source: ImageSource.camera);
     setState(() {
       _image = image;
+      print(_image);
     });
   }
 
   Future<void> uploadImage(File imageFile) async {
+    print("Image path: ${imageFile.path}");
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://192.168.186.113:8000/api/predict'),
+      Uri.parse('http://127.0.0.1:8000/api/predict'),
     );
     request.headers['Authorization'] = 'Bearer ${widget.accessToken}';
     request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+    print("image path");
+    print(imageFile.path);
     var response = await request.send();
     if (response.statusCode == 200) {
       String result = await response.stream.bytesToString();

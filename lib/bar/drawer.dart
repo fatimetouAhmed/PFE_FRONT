@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pfe_front_flutter/screens/lists/listetudiant.dart';
 import 'package:pfe_front_flutter/screens/lists/listmatiere.dart';
 import 'package:pfe_front_flutter/screens/lists/listsemestre.dart';
 import 'package:pfe_front_flutter/screens/lists/listsemestre_etudiant.dart';
@@ -105,8 +106,7 @@ class NavBar extends StatelessWidget{
                 MaterialPageRoute(
                   builder: (context) => MasterPage(
                     index: 0,
-                    child:
-                    ListSalle(  accessToken: accessToken
+                    child: EtudiantHome(  accessToken: accessToken
                     ),accessToken: accessToken
 
                   ),

@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
@@ -90,23 +93,50 @@ class _NotificationsState extends State<Notifications> {
                     } else {
                       var notifications = snapshot.data!;
                       return ListView.builder(
-
                         itemCount: notifications.length,
                         physics: BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           var notification = notifications[index];
+                         // Widget avatarWidget;
+                          Widget avatarWidget = CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.transparent,
+                          );
+
+                          if (notification.image.startsWith("images/")) {
+                            avatarWidget = CircleAvatar(
+                              radius: 30,
+                              backgroundImage: AssetImage(notification.image),
+                              backgroundColor: Colors.transparent,
+                            );
+                          } else if (notification.image.startsWith("/data/")) {
+                            File imageFile = File(notification.image); // Créer un objet File
+                            if (imageFile.existsSync()) {
+                              // Charger et afficher l'image
+                              avatarWidget = CircleAvatar(
+                                radius: 30,
+                                backgroundImage: FileImage(imageFile),
+                                backgroundColor: Colors.transparent,
+                              );
+                            } else {
+                              print("Le fichier image n'existe pas à l'emplacement spécifié.");
+                            }
+                          } else {
+                            avatarWidget = CircleAvatar(
+                              radius: 30,
+                              backgroundImage: AssetImage("default_image.png"),
+                              backgroundColor: Colors.transparent,
+                            );
+                          }
+
                           return GestureDetector(
-                            onTap: () => _showNotificationContent(notification.content,notification.id),
+                            onTap: () => _showNotificationContent(notification.content, notification.id),
                             child: Card(
                               margin: EdgeInsets.symmetric(vertical: 20),
                               elevation: 0,
                               child: Row(
                                 children: [
-                                  Avatar(
-                                    margin: EdgeInsets.only(right: 20),
-                                    size: 60,
-                                    image: notification.image,
-                                  ),
+                                  avatarWidget,
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,20 +145,13 @@ class _NotificationsState extends State<Notifications> {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              notification.id.toString(),
-                                              style: TextStyle(
-                                                  fontSize: 17, fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
                                               DateFormat('HH:mm').format(notification.date),
                                               style: TextStyle(
                                                   color: Colors.grey, fontWeight: FontWeight.bold),
                                             ),
                                           ],
                                         ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
+                                        SizedBox(height: 10),
                                         Text(
                                           notification.content,
                                           overflow: TextOverflow.ellipsis,
@@ -146,6 +169,7 @@ class _NotificationsState extends State<Notifications> {
                           );
                         },
                       );
+
                     }
                   },
                 ),
