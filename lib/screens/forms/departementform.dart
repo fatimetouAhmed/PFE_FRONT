@@ -5,6 +5,7 @@ import 'package:pfe_front_flutter/models/departement.dart';
 import 'package:pfe_front_flutter/screens/lists/listdepartement.dart';
 import 'package:quickalert/quickalert.dart';
 import '../../bar/masterpageadmin.dart';
+import '../../consturl.dart';
 
 class DepartementForm extends StatefulWidget {
   final Departement departement;
@@ -36,7 +37,7 @@ class _DepartementFormState extends State<DepartementForm> {
 
     if (departement.id == 0) {
       await http.post(
-        Uri.parse('http://127.0.0.1:8000/departements/'),
+        Uri.parse(baseUrl+'departements/'),
         headers: headers,
         body: jsonEncode(<String, String>{
           'nom': departement.nom,
@@ -44,7 +45,7 @@ class _DepartementFormState extends State<DepartementForm> {
       );
     } else {
       await http.put(
-        Uri.parse('http://127.0.0.1:8000/departements/' + departement.id.toString()),
+        Uri.parse(baseUrl+'departements/' + departement.id.toString()),
         headers: headers,
         body: jsonEncode(<String, String>{
           'nom': departement.nom,

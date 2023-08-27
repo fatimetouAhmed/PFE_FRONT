@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import '../../../bar/masterpagesuperviseur.dart';
 import '../../../models/semestresmatieres.dart';
 
+import '../../consturl.dart';
 import 'GridViewWidgetExamun.dart';
 class GridViewWidgetMatiere extends StatefulWidget {
   final int id;
@@ -26,7 +27,7 @@ class _GridViewWidgetMatiereState extends State<GridViewWidgetMatiere> {
       "Content-Type": "application/json; charset=utf-8",
        "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestresmatieres/'+ id),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'semestresmatieres/'+ id),headers: headers);
     var data = utf8.decode(response.bodyBytes);
 
     var departements = <SemestresMatieres>[];

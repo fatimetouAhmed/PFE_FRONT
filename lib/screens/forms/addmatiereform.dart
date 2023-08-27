@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:pfe_front_flutter/screens/lists/listmatiere.dart';
 import 'package:quickalert/quickalert.dart';
 import '../../bar/masterpageadmin.dart';
+import '../../consturl.dart';
 import '../../models/matiere.dart';
 
 
@@ -26,7 +27,7 @@ Future save(String accessToken, Matiere matiere) async {
   if (matiere.id == 0) {
 
     await http.post(
-      Uri.parse('http://127.0.0.1:8000/matieres/'),
+      Uri.parse(baseUrl+'matieres/'),
       headers: headers,
 
       body: jsonEncode(<String, String>{
@@ -39,7 +40,7 @@ Future save(String accessToken, Matiere matiere) async {
   else {
 
     await http.put(
-      Uri.parse('http://127.0.0.1:8000/matieres/' + matiere.id.toString()),
+      Uri.parse(baseUrl+'matieres/' + matiere.id.toString()),
       headers: headers,
 
       body: jsonEncode(<String, String>{

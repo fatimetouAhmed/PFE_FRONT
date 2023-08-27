@@ -7,6 +7,7 @@ import 'package:pfe_front_flutter/bar/masterpagesuperviseur.dart';
 import 'package:pfe_front_flutter/models/surveillance.dart';
 import 'package:pfe_front_flutter/screens/forms/departementform.dart';
 import '../../../constants.dart';
+import '../../consturl.dart';
 import '../../models/departement.dart';
 import '../forms/surveillanceform.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -24,7 +25,7 @@ class _ListSurveillanceState extends State<ListSurveillance> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/current_user_id/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'current_user_id/'),headers: headers);
 
 
     if (response.statusCode == 200) {
@@ -41,7 +42,7 @@ class _ListSurveillanceState extends State<ListSurveillance> {
       "Authorization": "Bearer ${widget.accessToken}",
     };
 
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/surveillances/surveillance'), headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'surveillances/surveillance'), headers: headers);
     if (response.statusCode != 200) {
       // Handle the error when the API request is not successful (e.g., status code is not 200 OK).
       throw Exception('Failed to fetch surveillances.');

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import 'package:pfe_front_flutter/screens/forms/addmatiereform.dart';
 import '../../../constants.dart';
+import '../../consturl.dart';
 import '../../models/matiere.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 class MatiereHome extends StatefulWidget {
@@ -24,7 +25,7 @@ class _MatiereHomeState extends State<MatiereHome> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/matieres/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'matieres/'),headers: headers);
     var matieres = <Matiere>[];
     for (var u in jsonDecode(response.body)) {
       matieres.add(Matiere(u['id'], u['libelle'],u['nbre_heure'],u['credit']));
@@ -37,13 +38,13 @@ class _MatiereHomeState extends State<MatiereHome> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse('http://127.0.0.1:8000/matieres/' + id),headers: headers);
+    await http.delete(Uri.parse(baseUrl+'matieres/' + id),headers: headers);
   }
 
   // List<Matiere> matieres = []; // Liste des départements
   // Future fetchMatieres() async {
   //
-  //   var response = await http.get(Uri.parse('http://127.0.0.1:8000/matieres/'));
+  //   var response = await http.get(Uri.parse(baseUrl+'matieres/'));
   //   var matieres = <Matiere>[];
   //   for (var u in jsonDecode(response.body)) {
   //     print('Parsed JSON object: $u');

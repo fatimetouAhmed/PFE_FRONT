@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import 'package:pfe_front_flutter/screens/forms/departementform.dart';
 import '../../../constants.dart';
+import '../../consturl.dart';
 import '../../models/departement.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 class ListDepartement extends StatefulWidget {
@@ -22,7 +23,7 @@ class _ListDepartementState extends State<ListDepartement> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/departements/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'departements/'),headers: headers);
     var departements = <Departement>[];
     for (var u in jsonDecode(response.body)) {
       departements.add(Departement(u['id'], u['nom']));
@@ -35,7 +36,7 @@ class _ListDepartementState extends State<ListDepartement> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse('http://127.0.0.1:8000/departements/' + id),headers: headers);
+    await http.delete(Uri.parse(baseUrl+'departements/' + id),headers: headers);
   }
 
   @override

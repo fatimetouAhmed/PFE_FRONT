@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import 'package:pfe_front_flutter/screens/lists/listsemestre.dart';
 import 'package:quickalert/quickalert.dart';
+import '../../consturl.dart';
 import '../../models/semestre.dart';
 
 
@@ -51,7 +52,7 @@ class _SemestreFormState extends State<SemestreForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/semestre_filiere/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'semestres/semestre_filiere/'),headers: headers);
     var semestres = <Semestre>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -76,7 +77,7 @@ class _SemestreFormState extends State<SemestreForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/nomfiliere/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'filieres/nomfiliere/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -91,7 +92,7 @@ class _SemestreFormState extends State<SemestreForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/$nom'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'semestres/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -110,7 +111,7 @@ class _SemestreFormState extends State<SemestreForm> {
     };
     if (semestre.id == 0) {
       await http.post(
-        Uri.parse('http://127.0.0.1:8000/semestres/'),
+        Uri.parse(baseUrl+'semestres/'),
         headers: headers,
         body: jsonEncode(<String, dynamic>{
           'nom': semestre.nom,
@@ -119,7 +120,7 @@ class _SemestreFormState extends State<SemestreForm> {
       );
     } else {
       await http.put(
-        Uri.parse('http://127.0.0.1:8000/semestres/' + semestre.id.toString()),
+        Uri.parse(baseUrl+'semestres/' + semestre.id.toString()),
         headers: headers,
         body: jsonEncode(<String, dynamic>{
           'nom': semestre.nom,

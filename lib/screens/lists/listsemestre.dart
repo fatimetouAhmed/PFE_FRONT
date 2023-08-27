@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../constants.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../bar/masterpageadmin.dart';
+import '../../consturl.dart';
 import '../../models/filliere.dart';
 import '../../models/semestre.dart';
 import '../forms/semestreform.dart';
@@ -25,7 +26,7 @@ class _ListSemestreState extends State<ListSemestre> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestres/semestre_filiere/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'semestres/semestre_filiere/'),headers: headers);
     var semestres = <Semestre>[];
     for (var u in jsonDecode(response.body)) {
      // print('Parsed JSON object: $u');
@@ -42,7 +43,7 @@ class _ListSemestreState extends State<ListSemestre> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse('http://127.0.0.1:8000/semestres/' + id),headers: headers);
+    await http.delete(Uri.parse(baseUrl+'semestres/' + id),headers: headers);
   }
 
   @override

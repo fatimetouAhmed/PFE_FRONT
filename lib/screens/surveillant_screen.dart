@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
+import '../consturl.dart';
+
 class CameraScreen extends StatefulWidget {
   final String accessToken;
 
@@ -29,7 +31,7 @@ class _CameraScreenState extends State<CameraScreen> {
     print("Image path: ${imageFile.path}");
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://127.0.0.1:8000/api/predict'),
+      Uri.parse(baseUrl+'api/predict'),
     );
     request.headers['Authorization'] = 'Bearer ${widget.accessToken}';
     request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));

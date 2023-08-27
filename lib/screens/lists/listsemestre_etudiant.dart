@@ -5,6 +5,7 @@ import 'package:pfe_front_flutter/screens/forms/semestre_etudiant.dart';
 import '../../../constants.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../bar/masterpageadmin.dart';
+import '../../consturl.dart';
 import '../../models/semestre_etudiant.dart';
 
 class ListSemestre_Etudiant extends StatefulWidget {
@@ -23,7 +24,7 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'semestre_etudiants/'),headers: headers);
     var semestre_etudiants = <Semestre_Etudiant>[];
     for (var u in jsonDecode(response.body)) {
       semestre_etudiants.add(Semestre_Etudiant(u['id'], u['id_sem'], u['id_etu']));
@@ -36,7 +37,7 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse('http://127.0.0.1:8000/semestre_etudiants/' + id),headers: headers);
+    await http.delete(Uri.parse(baseUrl+'semestre_etudiants/' + id),headers: headers);
   }
 
   @override

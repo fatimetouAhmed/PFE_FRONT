@@ -14,7 +14,7 @@ import '../widgets/rounded_input_field.dart';
 import '../widgets/rounded_password_field.dart';
 import 'lists/listetudiant.dart';
 import 'lists/notifications.dart';
-
+import 'package:pfe_front_flutter/consturl.dart';
 class LoginScreen extends StatelessWidget {
   final String accessToken;
   LoginScreen({Key? key, required this.accessToken}) : super(key: key);
@@ -26,7 +26,7 @@ class LoginScreen extends StatelessWidget {
     var headers = {
       "Authorization": "Bearer $accessToken1",
     };
-    var url = Uri.parse('http://127.0.0.1:8000/current_user_id');
+    var url = Uri.parse(baseUrl+'current_user_id');
 
     try {
       var response = await http.get(url, headers: headers);
@@ -51,7 +51,7 @@ class LoginScreen extends StatelessWidget {
   }
 
   Future<String> loginUser(String email, String password) async {
-    var url = Uri.parse('http://127.0.0.1:8000/token');
+    var url = Uri.parse(baseUrl+'token');
     var response = await http.post(
       url,
       body: {
@@ -72,9 +72,9 @@ class LoginScreen extends StatelessWidget {
 
   Future<void> checkAccess(BuildContext context, String accessToken) async {
     List<String> urlsToCheck = [
-      'http://127.0.0.1:8000/surveillant',
-      'http://127.0.0.1:8000/superv',
-      'http://127.0.0.1:8000/admin',
+      baseUrl+'surveillant',
+      baseUrl+'superv',
+      baseUrl+'admin',
 
     ];
 
@@ -90,13 +90,13 @@ class LoginScreen extends StatelessWidget {
       );
 
       if (response.statusCode == 200) {
-       id_user=await fetchUserId(accessToken);
+        id_user=await fetchUserId(accessToken);
         accessGranted = true;
         validUrl = url;
         break;
       }
     }
-   // id_user=await http.get();
+    // id_user=await http.get();
     if (accessGranted) {
       // var response = await http.get(
       //   Uri.parse('http://127.0.0.1:8000/token'),
@@ -110,31 +110,31 @@ class LoginScreen extends StatelessWidget {
       //   id_user=jsonData;
       // }
       // Envoyer l'utilisateur vers un écran spécifique en fonction de la validUrl
-      if (validUrl == 'http://127.0.0.1:8000/surveillant') {
+      if (validUrl == baseUrl+'surveillant') {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) =>CameraScreen(accessToken: accessToken),
           ),
         );
-      } else if (validUrl == 'http://127.0.0.1:8000/superv') {
+      } else if (validUrl == baseUrl+'superv') {
         print(id_user);
         id_user=await fetchUserId(accessToken);
-          print(id_user);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>MasterPageSupeurviseur(child:GridViewWidget(id: id_user,accessToken: accessToken,),accessToken: accessToken, index: 0,),
-                  //HomeSceen(id: id_user,),
-            ),
-          );
+        print(id_user);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>MasterPageSupeurviseur(child:GridViewWidget(id: id_user,accessToken: accessToken,),accessToken: accessToken, index: 0,),
+            //HomeSceen(id: id_user,),
+          ),
+        );
 
-      } else if (validUrl == 'http://127.0.0.1:8000/admin') {
+      } else if (validUrl == baseUrl+'admin') {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => MasterPage(
-              index: 0,
+                index: 0,
                 child: EtudiantHome(accessToken: accessToken),accessToken: accessToken
             ),
           ),
@@ -215,7 +215,7 @@ class LoginScreen extends StatelessWidget {
                               RoundedPasswordField(
                                 controller: passwordController,
                               ),
-                             // switchListTile(),
+                              // switchListTile(),
                               RoundedButton(
                                 text: 'LOGIN',
                                 press: () async {

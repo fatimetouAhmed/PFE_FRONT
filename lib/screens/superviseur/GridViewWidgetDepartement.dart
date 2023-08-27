@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:pfe_front_flutter/screens/superviseur/GridViewWidgetFiliere.dart';
 
 import '../../bar/masterpagesuperviseur.dart';
+import '../../consturl.dart';
 import '../../models/departementssuperviseurs.dart';
 import 'package:http/http.dart' as http;
 class GridViewWidget extends StatefulWidget {
@@ -26,7 +27,7 @@ class _GridViewWidgetState extends State<GridViewWidget> {
       "Content-Type": "application/json; charset=utf-8",
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/departementssuperviseurs/read/'+ id),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'departementssuperviseurs/read/'+ id),headers: headers);
     var departements = <DepartementsSuperviseurs>[];
     for (var u in jsonDecode(response.body)) {
       var date_debut = DateFormat('yyyy-MM-dd').parse(u['date_debut']);

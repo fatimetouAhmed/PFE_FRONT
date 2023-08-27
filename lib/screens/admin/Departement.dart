@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../../bar/masterpageadmin.dart';
+import '../../consturl.dart';
 import '../../models/departement.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,7 +29,7 @@ class _GridViewWidgetState extends State<GridViewWidget> {
       "Content-Type": "application/json; charset=utf-8",
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/departements/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'departements/'),headers: headers);
     var departements = <Departement>[];
     for (var u in jsonDecode(response.body)) {// Adjust the date format here
       departements.add(Departement(u['id'],u['nom']));

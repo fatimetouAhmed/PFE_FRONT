@@ -5,6 +5,7 @@ import 'package:pfe_front_flutter/models/etudiermat.dart';
 import '../../../constants.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../bar/masterpageadmin.dart';
+import '../../consturl.dart';
 import '../forms/etudiermatform.dart';
 
 class ListEtudierMat extends StatefulWidget {
@@ -20,7 +21,7 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
   List<ListEtudierMat> etudiermatList = [];
 
   // Future<List<EtudierMat>> fetchEtudierMats() async {
-  //   var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiermatiere/'));
+  //   var response = await http.get(Uri.parse(baseUrl+'etudiermatiere/'));
   //   var etudiermats = <EtudierMat>[];
   //   for (var u in jsonDecode(response.body)) {
   //     etudiermats.add(EtudierMat(u['id'], u['id_mat'], u['id_etu']));
@@ -33,7 +34,7 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiermatiere/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'etudiermatiere/'),headers: headers);
 
     var etudiers = <EtudierMat>[];
     for (var u in jsonDecode(response.body)) {
@@ -47,7 +48,7 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse('http://127.0.0.1:8000/etudiermatiere/' + id),headers: headers);
+    await http.delete(Uri.parse(baseUrl+'etudiermatiere/' + id),headers: headers);
   }
 
   @override

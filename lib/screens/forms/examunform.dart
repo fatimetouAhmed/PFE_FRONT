@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
+import '../../consturl.dart';
 import '../../models/examun.dart';
 import 'package:quickalert/quickalert.dart';
 import '../lists/listexamun.dart';
@@ -61,7 +62,7 @@ class _ExamunFormState extends State<ExamunForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'examuns/'),headers: headers);
     var examuns = <Examun>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -89,7 +90,7 @@ class _ExamunFormState extends State<ExamunForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/matieres/nom/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'matieres/nom/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -103,7 +104,7 @@ class _ExamunFormState extends State<ExamunForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/salles/nom/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'salles/nom/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -117,7 +118,7 @@ class _ExamunFormState extends State<ExamunForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/matiere/$nom'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'examuns/matiere/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -131,7 +132,7 @@ class _ExamunFormState extends State<ExamunForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/salle/$nom'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'examuns/salle/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -151,7 +152,7 @@ class _ExamunFormState extends State<ExamunForm> {
     if (examun.id == 0) {
 
       await http.post(
-        Uri.parse('http://127.0.0.1:8000/examuns/'),
+        Uri.parse(baseUrl+'examuns/'),
         headers: headers,
         body: jsonEncode(<String, dynamic>{
           'type': examun.type,
@@ -163,7 +164,7 @@ class _ExamunFormState extends State<ExamunForm> {
       );
     } else {
       await http.put(
-        Uri.parse('http://127.0.0.1:8000/examuns/' + examun.id.toString()),
+        Uri.parse(baseUrl+'examuns/' + examun.id.toString()),
         headers: headers,
         body: jsonEncode(<String, dynamic>{
           'type': examun.type,

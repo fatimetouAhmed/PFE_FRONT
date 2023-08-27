@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../../bar/masterpageadmin.dart';
+import '../../consturl.dart';
 import '../../models/examun.dart';
 import 'notifications.dart';
 
@@ -25,7 +26,7 @@ class _GridViewWidgetExamunState extends State<GridViewWidgetExamun> {
       "Content-Type": "application/json; charset=utf-8",
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/'+ id),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'examuns/'+ id),headers: headers);
     var data = utf8.decode(response.bodyBytes);
 
     var examuns = <Examun>[];

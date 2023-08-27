@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'dart:convert';
+import '../../consturl.dart';
 import '../../models/notification.dart';
 
 class Notifications extends StatefulWidget {
@@ -22,7 +23,7 @@ class _NotificationsState extends State<Notifications> {
       "Content-Type": "application/json; charset=utf-8",
       // "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/notifications/notifications/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'notifications/notifications/'),headers: headers);
     var data = utf8.decode(response.bodyBytes);
     var notifications = <NotificationModel>[];
     for (var u in jsonDecode(data)) {
@@ -32,7 +33,7 @@ class _NotificationsState extends State<Notifications> {
     return notifications;
   }
   Future update(id) async {
-    await http.put(Uri.parse('http://127.0.0.1:8000/notifications/' + id));
+    await http.put(Uri.parse(baseUrl+'notifications/' + id));
   }
 
   void _showNotificationContent(String content,int id) async{

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import '../../../constants.dart';
 
 import '../../bar/masterpageadmin.dart';
+import '../../consturl.dart';
 import '../../models/filliere.dart';
 import '../forms/filiereform.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -24,7 +25,7 @@ class _ListFiliereState extends State<ListFiliere> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/filiere_departement'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'filieres/filiere_departement'),headers: headers);
     var filieres = <Filiere>[];
     for (var u in jsonDecode(response.body)) {
      // print('Parsed JSON object: $u');
@@ -38,7 +39,7 @@ class _ListFiliereState extends State<ListFiliere> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse('http://127.0.0.1:8000/filieres/' + id),headers: headers);
+    await http.delete(Uri.parse(baseUrl+'filieres/' + id),headers: headers);
   }
 
   @override

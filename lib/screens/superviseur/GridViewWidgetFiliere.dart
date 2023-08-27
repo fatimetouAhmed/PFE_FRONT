@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../bar/masterpagesuperviseur.dart';
+import '../../consturl.dart';
 import '../../models/filliere.dart';
 import 'GridViewWidgetSemestre.dart';
 
@@ -28,7 +29,7 @@ class _GridViewWidgetFiliereState extends State<GridViewWidgetFiliere> {
       "Content-Type": "application/json; charset=utf-8",
        "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/filieres/'+ id),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'filieres/'+ id),headers: headers);
     var data = utf8.decode(response.bodyBytes);
 
     var departements = <Filiere>[];

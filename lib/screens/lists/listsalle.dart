@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import '../../../constants.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../bar/masterpageadmin.dart';
+import '../../consturl.dart';
 import '../../models/salle.dart';
 import '../forms/salleform.dart';
 
@@ -23,7 +24,7 @@ class _ListSalleState extends State<ListSalle> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/salles/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'salles/'),headers: headers);
     var salles = <Salle>[];
     for (var u in jsonDecode(response.body)) {
       salles.add(Salle(u['id'], u['nom']));
@@ -36,7 +37,7 @@ class _ListSalleState extends State<ListSalle> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse('http://127.0.0.1:8000/salles/' + id),headers: headers);
+    await http.delete(Uri.parse(baseUrl+'salles/' + id),headers: headers);
   }
 
   @override

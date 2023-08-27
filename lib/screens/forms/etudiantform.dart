@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import 'package:pfe_front_flutter/screens/lists/listsemestre.dart';
 import 'package:quickalert/quickalert.dart';
+import '../../consturl.dart';
 import '../../models/etudiant.dart';
 import '../../models/semestre.dart';
 import '../lists/listetudiant.dart';
@@ -42,6 +43,7 @@ class EtudiantForm extends StatefulWidget {
 }
 
 class _EtudiantFormState extends State<EtudiantForm> {
+
   TextEditingController idController = new TextEditingController();
   TextEditingController nomController = new TextEditingController();
   TextEditingController prenomController = new TextEditingController();
@@ -97,7 +99,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse('http://127.0.0.1:8000/etudiants/'),headers: headers);
+    var response = await http.get(Uri.parse('http://192.168.225.113/etudiants/'),headers: headers);
     var etudiants = <Etudiant>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -146,10 +148,10 @@ class _EtudiantFormState extends State<EtudiantForm> {
     var url;
 
     if (id == 0) {
-      url = Uri.parse('http://127.0.0.1:8000/etudiants/');
+      url = Uri.parse(baseUrl+'etudiants/');
       request = http.MultipartRequest('POST', url);
     } else {
-      url = Uri.parse('http://127.0.0.1:8000/etudiants/$id');
+      url = Uri.parse(baseUrl+'etudiants/$id');
       request = http.MultipartRequest('PUT', url);
     }
     request.headers.addAll(headers);
@@ -162,7 +164,12 @@ class _EtudiantFormState extends State<EtudiantForm> {
     request.fields['telephone'] = telephone.toString();
     request.fields['nationalite'] = nationalite;
     request.fields['date_insecription'] = date_insecription.toIso8601String();
-    request.files.add(await http.MultipartFile.fromPath('file', photo.path));
+    var file = await http.MultipartFile.fromPath(
+      'file',
+      photo.path,
+      contentType: MediaType('image', 'jpeg'),
+    );
+    request.files.add(file);
     //request.files.add(http.MultipartFile('file', photo!.readAsBytes().asStream(), photo!.lengthSync(), filename: 'filename.jpg'));
 
     var response = await request.send();
