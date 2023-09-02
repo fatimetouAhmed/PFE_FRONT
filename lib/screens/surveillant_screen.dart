@@ -27,13 +27,30 @@ class _CameraScreenState extends State<CameraScreen> {
     });
   }
 
-  Future<void> uploadImage(File imageFile) async {
-    print("Image path: ${imageFile.path}");
+  Future<void> uploadImage(int id,String nom,
+      String prenom,
+      String genre,
+      DateTime date_N,
+      String lieu_n,
+      String email,
+      int telephone,
+      String nationalite,
+      DateTime date_insecription,File imageFile) async {
+    //print("Image path: ${imageFile.path}");
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse(baseUrl+'api/predict'),
+      Uri.parse(baseUrl+'api/pv'),
     );
     request.headers['Authorization'] = 'Bearer ${widget.accessToken}';
+    request.fields['nom'] = nom;
+    request.fields['prenom'] = prenom;
+    request.fields['genre'] = genre;
+    request.fields['date_N'] = date_N.toIso8601String();
+    request.fields['lieu_n'] = lieu_n;
+    request.fields['email'] = email;
+    request.fields['telephone'] = telephone.toString();
+    request.fields['nationalite'] = nationalite;
+    request.fields['date_insecription'] = date_insecription.toIso8601String();
     request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
     print("image path");
     print(imageFile.path);
@@ -75,7 +92,7 @@ class _CameraScreenState extends State<CameraScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          getImage().then((_) => uploadImage(File(_image!.path)));
+          getImage().then((_) => uploadImage(3,'sidi','ahmed','m',DateTime.parse('2023-09-14 00:00:00.000'),'mmm','kklk',090990,'nmnmnm',DateTime.parse('2023-09-14 00:00:00.000'),File(_image!.path)));
         },
         child: Icon(Icons.add_a_photo), // Icône de la caméra
       ),

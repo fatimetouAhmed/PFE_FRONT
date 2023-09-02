@@ -9,6 +9,7 @@ import '../screens/lists/listmatiere.dart';
 import '../screens/lists/listdepartement.dart';
 import '../screens/lists/listfiliere.dart';
 import '../screens/lists/listsalle.dart';
+import '../screens/lists/listuser.dart';
 import '../screens/login_screen.dart';
 import 'masterpageadmin.dart';
 
@@ -40,7 +41,18 @@ class NavBar extends StatelessWidget{
           ListTile(
             leading: Icon(Icons.person),
             title: Text('Users'),
-            onTap: ()=>print('Users'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MasterPage(
+                    index: 0,accessToken: accessToken,
+                    child: ListUser(  accessToken: accessToken
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
           ListTile(
             leading: Icon(Icons.playlist_add),

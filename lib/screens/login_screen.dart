@@ -24,7 +24,7 @@ class LoginScreen extends StatelessWidget {
   int id_user=0;
   Future<int> fetchUserId(String accessToken1) async {
     var headers = {
-      "Authorization": "Bearer $accessToken1",
+      "Authorization": "Bearer '$accessToken1'",
     };
     var url = Uri.parse(baseUrl+'current_user_id');
 

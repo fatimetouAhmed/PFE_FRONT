@@ -57,7 +57,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
   TextEditingController date_insecriptionController = new TextEditingController();
   FocusNode nom = FocusNode();
   FocusNode prenom = FocusNode();
-  FocusNode photo = FocusNode();
+ // FocusNode photo = FocusNode();
   FocusNode genre = FocusNode();
   FocusNode date_N = FocusNode();
   FocusNode lieu_n = FocusNode();
@@ -79,19 +79,19 @@ class _EtudiantFormState extends State<EtudiantForm> {
   @override
   void initState() {
     super.initState();
-      setState(() {
-        idController.text = this.widget.id.toString();
-        nomController.text = this.widget.nom;
-        prenomController.text = this.widget.prenom;
-        photoController.text = this.widget.photo.toString();
-        genreController.text = this.widget.genre;
-        date_NController.text = this.widget.date_N.toString();
-        lieu_nController.text = this.widget.lieu_n;
-        emailController.text = this.widget.email;
-        telephoneController.text = this.widget.telephone.toString();
-        nationaliteController.text = this.widget.genre;
-        date_insecriptionController.text = this.widget.date_insecription.toString();
-      });
+    setState(() {
+      idController.text = this.widget.id.toString();
+      nomController.text = this.widget.nom;
+      prenomController.text = this.widget.prenom;
+      photoController.text = this.widget.photo.toString();
+      genreController.text = this.widget.genre;
+      date_NController.text = this.widget.date_N.toString();
+      lieu_nController.text = this.widget.lieu_n;
+      emailController.text = this.widget.email;
+      telephoneController.text = this.widget.telephone.toString();
+      nationaliteController.text = this.widget.genre;
+      date_insecriptionController.text = this.widget.date_insecription.toString();
+    });
 
   }
 
@@ -126,35 +126,27 @@ class _EtudiantFormState extends State<EtudiantForm> {
   }
 
 
-  Future<void> save(
-      int id,
-      String nom,
+  Future<void> save( int id, String nom,
       String prenom,
-      File photo,
       String genre,
       DateTime date_N,
       String lieu_n,
       String email,
       int telephone,
       String nationalite,
-      DateTime date_insecription,
-      ) async {
-    var headers = {
-      "Authorization": "Bearer ${widget.accessToken}",
-      'Content-Type': 'application/json;charset=UTF-8',
-    };
-
+      DateTime date_insecription,File imageFile) async {
     var request;
-    var url;
-
     if (id == 0) {
-      url = Uri.parse(baseUrl+'etudiants/');
-      request = http.MultipartRequest('POST', url);
+       request = http.MultipartRequest('POST', Uri.parse(baseUrl+'etudiants/'));
     } else {
-      url = Uri.parse(baseUrl+'etudiants/$id');
-      request = http.MultipartRequest('PUT', url);
+      request = http.MultipartRequest('PUT', Uri.parse(baseUrl+'etudiants/'+id.toString()));
     }
-    request.headers.addAll(headers);
+    //print("Image path: ${imageFile.path}");
+    // var request = http.MultipartRequest(
+    //   'POST',
+    //   Uri.parse(baseUrl+'api/pv'),
+    // );
+    request.headers['Authorization'] = 'Bearer ${widget.accessToken}';
     request.fields['nom'] = nom;
     request.fields['prenom'] = prenom;
     request.fields['genre'] = genre;
@@ -164,21 +156,16 @@ class _EtudiantFormState extends State<EtudiantForm> {
     request.fields['telephone'] = telephone.toString();
     request.fields['nationalite'] = nationalite;
     request.fields['date_insecription'] = date_insecription.toIso8601String();
-    var file = await http.MultipartFile.fromPath(
-      'file',
-      photo.path,
-      contentType: MediaType('image', 'jpeg'),
-    );
-    request.files.add(file);
-    //request.files.add(http.MultipartFile('file', photo!.readAsBytes().asStream(), photo!.lengthSync(), filename: 'filename.jpg'));
-
+    request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+    print("image path");
+    print(imageFile.path);
     var response = await request.send();
     if (response.statusCode == 200) {
-        print("Image uploaded successfully");
-        // ... do something ...
-      } else {
-        print('Error uploading image: ${response.statusCode}');
-      }
+      String result = await response.stream.bytesToString();
+      print(result);
+    }else {
+      print('Error uploading image: ${response.statusCode}');
+    }
 
   }
 
@@ -520,18 +507,18 @@ class _EtudiantFormState extends State<EtudiantForm> {
                                 print(_image!.name) ;
                                 print(_image!) ;
                                 print(photoController.text) ;
-                                 await save(
+                                await save(
 
                                   id,
                                   nomController.text,
-                                  prenomController.text, File(_image!.path),
+                                  prenomController.text,
                                   genreController.text,
                                   DateTime.parse(date_NController.text),
                                   lieu_nController.text,
                                   emailController.text,
                                   idtel,
                                   nationaliteController.text,
-                                  DateTime.parse(date_insecriptionController.text),
+                                  DateTime.parse(date_insecriptionController.text),File(_image!.path),
 
                                 );
 

@@ -47,8 +47,8 @@ class _EtudiantHomeState extends State<EtudiantHome> {
       var telephone = u['telephone'];
       var nationalite = u['nationalite'];
       var date_insecription = DateFormat('yyyy-MM-dd').parse(u['date_insecription']);
-     etudiants.add(Etudiant(id, nom, prenom,photo,genre, date_N,lieu_n,email,telephone,nationalite,date_insecription));
-      }
+      etudiants.add(Etudiant(id, nom, prenom,photo,genre, date_N,lieu_n,email,telephone,nationalite,date_insecription));
+    }
     return etudiants;
   }
 
@@ -107,12 +107,12 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       MasterPage(
-                                        index: 0,  accessToken: widget.accessToken,
+                                          index: 0,  accessToken: widget.accessToken,
 
-                                        child:
-                                        EtudiantForm(id: 0, nom: '', prenom: '', photo: '', genre: '', date_N:DateTime.parse('0000-00-00 00:00:00'), lieu_n: '', email: '', telephone: 0, nationalite: '', date_insecription:DateTime.parse('0000-00-00 00:00:00'), accessToken: widget.accessToken,)
-                                        ),
+                                          child:
+                                          EtudiantForm(id: 0, nom: '', prenom: '', photo: '', genre: '', date_N:DateTime.parse('0000-00-00 00:00:00'), lieu_n: '', email: '', telephone: 0, nationalite: '', date_insecription:DateTime.parse('0000-00-00 00:00:00'), accessToken: widget.accessToken,)
                                       ),
+                                ),
                                 // ),
                               );
                             },
@@ -188,20 +188,10 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                                         Avatar(
                                                           margin: EdgeInsets.only(right: 20),
                                                           size: 60,
-                                                          image: 'images/notification1.jpg',
+                                                          image: 'images/etudiants/'+etudiant.photo,
                                                         ),
                                                         Text(
                                                           etudiant.nom,
-                                                          style: Theme.of(context).textTheme.button,
-                                                        ),
-                                                        SizedBox(width: 8),
-                                                        Text(
-                                                          etudiant.prenom,
-                                                          style: Theme.of(context).textTheme.button,
-                                                        ),
-                                                        SizedBox(width: 8),
-                                                        Text(
-                                                          etudiant.genre,
                                                           style: Theme.of(context).textTheme.button,
                                                         ),
                                                         SizedBox(width: 8),
@@ -211,23 +201,23 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                                               context,
                                                               MaterialPageRoute(
                                                                 builder: (context) => MasterPage(
-                                                                  index: 0,  accessToken: widget.accessToken
-                                                                  ,
-                                                                  child:
-                                                                  EtudiantForm(
-                                                                    id: etudiant.id,
-                                                                    nom: etudiant.nom,
-                                                                    prenom: etudiant.prenom,
-                                                                    photo: etudiant.photo,
-                                                                    genre: etudiant.genre,
-                                                                    date_N: etudiant.date_N,
-                                                                    lieu_n: etudiant.lieu_n,
-                                                                    email: etudiant.email,
-                                                                    telephone: etudiant.telephone,
-                                                                    nationalite: etudiant.nationalite,
-                                                                    date_insecription: etudiant.date_insecription,
-                                                                    accessToken: widget.accessToken,
-                                                                  )
+                                                                    index: 0,  accessToken: widget.accessToken
+                                                                    ,
+                                                                    child:
+                                                                    EtudiantForm(
+                                                                      id: etudiant.id,
+                                                                      nom: etudiant.nom,
+                                                                      prenom: etudiant.prenom,
+                                                                      photo: etudiant.photo,
+                                                                      genre: etudiant.genre,
+                                                                      date_N: etudiant.date_N,
+                                                                      lieu_n: etudiant.lieu_n,
+                                                                      email: etudiant.email,
+                                                                      telephone: etudiant.telephone,
+                                                                      nationalite: etudiant.nationalite,
+                                                                      date_insecription: etudiant.date_insecription,
+                                                                      accessToken: widget.accessToken,
+                                                                    )
 
                                                                 ),),
                                                             );

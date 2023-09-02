@@ -5,5 +5,7 @@ class User{
   final String email;
   final String pswd;
   final String role;
-  User(this.id,this.nom,this.prenom,this.email,this.pswd,this.role);
+  final String photo;
+  final int superviseur_id;
+  User(this.id,this.nom,this.prenom,this.email,this.pswd,this.role,this.photo,this.superviseur_id);
 }
