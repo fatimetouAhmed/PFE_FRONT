@@ -1,8 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pfe_front_flutter/screens/lists/listdepartement.dart';
 import 'package:pfe_front_flutter/screens/superviseur/GridViewWidgetDepartement.dart';
 import 'package:pfe_front_flutter/screens/surveillant_screen.dart';
+import 'package:pfe_front_flutter/screens/Admin_screen.dart';
+import 'package:pfe_front_flutter/screens/Screen_superv.dart';
+import 'package:pfe_front_flutter/screens/SurveillantSalleScreen.dart';
+
 import '../bar/masterpageadmin.dart';
 import '../bar/masterpagesuperviseur.dart';
 import '../components/page_title_bar.dart';
@@ -12,9 +17,9 @@ import '../constants.dart';
 import '../widgets/rounded_button.dart';
 import '../widgets/rounded_input_field.dart';
 import '../widgets/rounded_password_field.dart';
-import 'lists/listetudiant.dart';
 import 'lists/notifications.dart';
 import 'package:pfe_front_flutter/consturl.dart';
+
 class LoginScreen extends StatelessWidget {
   final String accessToken;
   LoginScreen({Key? key, required this.accessToken}) : super(key: key);
@@ -24,7 +29,7 @@ class LoginScreen extends StatelessWidget {
   int id_user=0;
   Future<int> fetchUserId(String accessToken1) async {
     var headers = {
-      "Authorization": "Bearer '$accessToken1'",
+      "Authorization": "Bearer $accessToken1",
     };
     var url = Uri.parse(baseUrl+'current_user_id');
 
@@ -70,6 +75,26 @@ class LoginScreen extends StatelessWidget {
     }
   }
 
+  Future<Map<String, dynamic>> fetchSurveillantInfo(String accessToken) async {
+    var headers = {
+      "Authorization": "Bearer $accessToken",
+    };
+    var url = Uri.parse(baseUrl+'get_surveillant_info');
+
+    try {
+      var response = await http.get(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        dynamic jsonData = json.decode(response.body);
+        return jsonData; // Retourne les informations du surveillant sous forme de Map
+      } else {
+        throw Exception('Échec de la récupération des informations du surveillant');
+      }
+    } catch (e) {
+      throw Exception('Erreur lors de la récupération des informations du surveillant : $e');
+    }
+  }
+
   Future<void> checkAccess(BuildContext context, String accessToken) async {
     List<String> urlsToCheck = [
       baseUrl+'surveillant',
@@ -98,25 +123,30 @@ class LoginScreen extends StatelessWidget {
     }
     // id_user=await http.get();
     if (accessGranted) {
-      // var response = await http.get(
-      //   Uri.parse('http://127.0.0.1:8000/token'),
-      //   headers: {
-      //     'Authorization': 'Bearer $accessToken',
-      //   },
-      // );
-      //
-      // if (response.statusCode == 200) {
-      //   dynamic jsonData = json.decode(response.body);
-      //   id_user=jsonData;
-      // }
+
       // Envoyer l'utilisateur vers un écran spécifique en fonction de la validUrl
+
       if (validUrl == baseUrl+'surveillant') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>CameraScreen(accessToken: accessToken),
-          ),
-        );
+        var surveillantInfo = await fetchSurveillantInfo(accessToken);
+        if (surveillantInfo['typecompte'] == 'principale') {
+          // Redirigez vers l'écran de la caméra
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CameraScreen(accessToken: accessToken),
+            ),
+          );} else if (surveillantInfo['typecompte'] == 'salle') {
+          // Redirigez vers l'écran du surveillant de salle
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SurveillantSalleScreen(
+                accessToken: accessToken,
+              ),
+            ),
+          );
+        }
+
       } else if (validUrl == baseUrl+'superv') {
         print(id_user);
         id_user=await fetchUserId(accessToken);
@@ -135,7 +165,7 @@ class LoginScreen extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => MasterPage(
                 index: 0,
-                child: EtudiantHome(accessToken: accessToken),accessToken: accessToken
+                child: Notifications(accessToken: accessToken),accessToken: accessToken
             ),
           ),
         );
@@ -160,6 +190,7 @@ class LoginScreen extends StatelessWidget {
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

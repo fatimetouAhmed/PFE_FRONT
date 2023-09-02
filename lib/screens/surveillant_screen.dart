@@ -1,10 +1,9 @@
 import 'dart:io';
-import 'package:pfe_front_flutter/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
-
-import '../consturl.dart';
+import 'package:pfe_front_flutter/screens/login_screen.dart';
+import 'package:pfe_front_flutter/consturl.dart';
 
 class CameraScreen extends StatefulWidget {
   final String accessToken;
@@ -18,46 +17,45 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   XFile? _image;
   final ImagePicker _picker = ImagePicker();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController nniController = TextEditingController();
+  TextEditingController telController = TextEditingController();
+  bool showForm = false;
 
   Future getImage() async {
     var image = await _picker.pickImage(source: ImageSource.camera);
     setState(() {
       _image = image;
       print(_image);
+      showForm = true; // Passer au formulaire après avoir pris la photo
     });
   }
 
-  Future<void> uploadImage(int id,String nom,
-      String prenom,
-      String genre,
-      DateTime date_N,
-      String lieu_n,
-      String email,
-      int telephone,
-      String nationalite,
-      DateTime date_insecription,File imageFile) async {
-    //print("Image path: ${imageFile.path}");
+  Future<void> uploadImage(
+      File imageFile, String description, String nni, int tel) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse(baseUrl+'api/pv'),
+      Uri.parse(baseUrl + 'api/pv'),
     );
     request.headers['Authorization'] = 'Bearer ${widget.accessToken}';
-    request.fields['nom'] = nom;
-    request.fields['prenom'] = prenom;
-    request.fields['genre'] = genre;
-    request.fields['date_N'] = date_N.toIso8601String();
-    request.fields['lieu_n'] = lieu_n;
-    request.fields['email'] = email;
-    request.fields['telephone'] = telephone.toString();
-    request.fields['nationalite'] = nationalite;
-    request.fields['date_insecription'] = date_insecription.toIso8601String();
     request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
-    print("image path");
-    print(imageFile.path);
+    request.fields['description'] = description; // Description
+    request.fields['nni'] = nni; // NNI (string)
+    request.fields['tel'] = tel.toString(); // Numéro de téléphone (int)
+    print("photo: ${imageFile.path}");
+
     var response = await request.send();
     if (response.statusCode == 200) {
       String result = await response.stream.bytesToString();
-      showAlertDialog(context, 'Prediction result', result);
+      showAlertDialog(context, 'Résultat de la prédiction', result);
+      // Réinitialisez le formulaire et l'image après l'envoi réussi
+      setState(() {
+        showForm = false;
+        _image = null;
+        descriptionController.clear();
+        nniController.clear();
+        telController.clear();
+      });
     }
   }
 
@@ -66,12 +64,11 @@ class _CameraScreenState extends State<CameraScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Surveillant'),
-        backgroundColor: Colors.blue, // Couleur bleue pour l'app bar
+        backgroundColor: Colors.blue,
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
-              // Vous pouvez mettre ici le code pour déconnecter l'utilisateur et aller à la page de connexion
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -83,40 +80,82 @@ class _CameraScreenState extends State<CameraScreen> {
         ],
       ),
       body: Center(
-        child: _image == null
+        child: showForm
+            ? Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextFormField(
+              controller: descriptionController,
+              decoration: InputDecoration(
+                labelText: 'Description',
+              ),
+            ),
+            TextFormField(
+              controller: nniController,
+              decoration: InputDecoration(
+                labelText: 'NNI',
+              ),
+            ),
+            TextFormField(
+              controller: telController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Numéro de téléphone',
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Appuyez sur ce bouton pour télécharger la photo et les informations
+                uploadImage(File(_image!.path), descriptionController.text,
+                    nniController.text, int.parse(telController.text));
+              },
+              child: Text('Enregistrer'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Appuyez sur ce bouton pour annuler et revenir à la capture photo
+                setState(() {
+                  showForm = false;
+                });
+              },
+              child: Text('Annuler'),
+            ),
+          ],
+        )
+            : _image == null
             ? Text(
-          'Prendre une photo',
+          'Appuyez sur le bouton + pour ajouter une description et une photo',
           style: TextStyle(fontSize: 18.0),
         )
             : Image.file(File(_image!.path)),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          getImage().then((_) => uploadImage(3,'sidi','ahmed','m',DateTime.parse('2023-09-14 00:00:00.000'),'mmm','kklk',090990,'nmnmnm',DateTime.parse('2023-09-14 00:00:00.000'),File(_image!.path)));
+          getImage();
         },
-        child: Icon(Icons.add_a_photo), // Icône de la caméra
+        child: Icon(Icons.add),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // Bouton de la caméra en bas à droite
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
-}
 
-void showAlertDialog(BuildContext context, String title, String message) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: <Widget>[
-          ElevatedButton(
-            child: Text("OK"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
+  void showAlertDialog(BuildContext context, String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            ElevatedButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
