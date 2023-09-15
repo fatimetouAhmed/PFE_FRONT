@@ -79,7 +79,7 @@ class LoginScreen extends StatelessWidget {
     var headers = {
       "Authorization": "Bearer $accessToken",
     };
-    var url = Uri.parse(baseUrl+'get_surveillant_info');
+    var url = Uri.parse(baseUrl+'get_surveillant_info/');
 
     try {
       var response = await http.get(url, headers: headers);
