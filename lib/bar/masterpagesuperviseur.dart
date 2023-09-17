@@ -97,8 +97,10 @@ class _MasterPageSupeurviseurState extends State<MasterPageSupeurviseur> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
      // appBar: CustomAppBar(),
-      body: Container(
-      child: Scaffold(
+      body:
+      Container(
+      child:
+      Scaffold(
       backgroundColor: Colors.grey[100],
 
       body: SingleChildScrollView(

@@ -79,6 +79,9 @@ flutter:
   assets:
     - images/
     - images/etudiants/
+    - images/users/
+    - images/notifications/
+    - images/pv/
     - images/history1.jpg
     - images/notification1.jpg
     - images/notification2.jpg

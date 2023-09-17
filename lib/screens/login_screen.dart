@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pfe_front_flutter/screens/lists/listdepartement.dart';
 import 'package:pfe_front_flutter/screens/superviseur/GridViewWidgetDepartement.dart';
-import 'package:pfe_front_flutter/screens/surveillant_screen.dart';
+// import 'package:pfe_front_flutter/screens/surveillant_screen.dart';
 import 'package:pfe_front_flutter/screens/Admin_screen.dart';
 import 'package:pfe_front_flutter/screens/Screen_superv.dart';
 import 'package:pfe_front_flutter/screens/SurveillantSalleScreen.dart';
+import 'package:pfe_front_flutter/screens/surveillant/home.dart';
 
 import '../bar/masterpageadmin.dart';
 import '../bar/masterpagesuperviseur.dart';
+import '../bar/masterpagesurveillant.dart';
 import '../components/page_title_bar.dart';
 import '../components/under_part.dart';
 import '../components/upside.dart';
@@ -133,7 +135,10 @@ class LoginScreen extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CameraScreen(accessToken: accessToken),
+              builder: (context) => MasterPageSurveillant(accessToken: accessToken,
+              index:0,
+              child: CameraScreen(accessToken: accessToken),)
+                  ,
             ),
           );} else if (surveillantInfo['typecompte'] == 'salle') {
           // Redirigez vers l'écran du surveillant de salle

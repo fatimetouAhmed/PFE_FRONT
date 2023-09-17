@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../bar/masterpageadmin.dart';
@@ -7,14 +8,21 @@ import '../../models/filliere.dart';
 import '../../models/user.dart';
 import '../lists/listfiliere.dart';
 import 'package:quickalert/quickalert.dart';
-
+import 'package:image_picker/image_picker.dart';
 import '../lists/listuser.dart';
 class UserForm extends StatefulWidget {
+  final int id;
+  final String nom;
+  final String prenom;
+  final String email;
+  final String pswd;
+  final String role;
+  final String photo;
+  final int superviseur_id;
   final String accessToken;
-
-  final User user;
-
-  UserForm({Key? key, required this.user,required this.accessToken}) : super(key: key);
+  UserForm({Key? key, required this.id, required this.nom,
+    required this.prenom, required this.email, required this.pswd,
+    required this.role, required this.photo, required this.superviseur_id,required this.accessToken,}) : super(key: key);
 
   @override
   _UserFormState createState() => _UserFormState();
@@ -33,8 +41,8 @@ class _UserFormState extends State<UserForm> {
   FocusNode prenom = FocusNode();
   FocusNode email = FocusNode();
   FocusNode pswd = FocusNode();
- // FocusNode role = FocusNode();
-  FocusNode photo = FocusNode();
+  //FocusNode role = FocusNode();
+  //FocusNode photo = FocusNode();
   String? selectedOption;
   List<String> superviseurList = [];
   int? fetchedId;
@@ -46,20 +54,29 @@ class _UserFormState extends State<UserForm> {
   ];
   String selectedRole = "admin";
   int? idSup=0;
+  XFile? _image;
+  final ImagePicker _picker = ImagePicker();
+
+  Future getImage() async {
+    var image = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
+  }
  // int? fetchedId;
   @override
   void initState() {
     super.initState();
     fetchDepartements().then((_) {
       setState(() {
-        idController.text = this.widget.user.id.toString();
-        nomController.text = this.widget.user.nom;
-        prenomController.text = this.widget.user.prenom;
-        emailController.text = this.widget.user.email;
-        pswdController.text = this.widget.user.pswd;
-        roleController.text = this.widget.user.role;
-        photoController.text = this.widget.user.photo;
-        superviseur_idController.text = this.widget.user.superviseur_id.toString();
+        idController.text = this.widget.id.toString();
+        nomController.text = this.widget.nom;
+        prenomController.text = this.widget.prenom;
+        emailController.text = this.widget.email;
+        pswdController.text = this.widget.pswd;
+        roleController.text = this.widget.role;
+        photoController.text = this.widget.photo;
+        superviseur_idController.text = this.widget.superviseur_id.toString();
       });
     });
   }
@@ -123,48 +140,46 @@ class _UserFormState extends State<UserForm> {
 
     return null;
   }
+  Future<void> save(
+      int id,
+       String nom, String prenom, String email, String pswd,
+       String role,
+       int superviseur_id,
+      File imageFile) async {
+    try {
+      var headers = {
+        "Authorization": "Bearer ${widget.accessToken}",
+      };
+      var request;
+      if (id == 0) {
+        request = http.MultipartRequest('POST', Uri.parse(baseUrl + 'users/registeruser/'));
+      } else {
+        request = http.MultipartRequest('PUT', Uri.parse(baseUrl + 'users/$id'));
+      }
 
-  Future<void> save(User user) async {
-    var headers = {
-     // "Authorization": "Bearer ${widget.accessToken}",
-      'Content-Type': 'application/json;charset=UTF-8',
+      request.headers.addAll(headers);
+      request.fields['nom'] = nom;
+      request.fields['prenom'] = prenom;
+      request.fields['email'] = email;
+      request.fields['pswd'] = pswd;
+      request.fields['role'] = role;
+      request.fields['superviseur_id'] = superviseur_id.toString();
+      request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
 
-    };
-    var headers2 = {
-      "Authorization": "Bearer ${widget.accessToken}",
-      'Content-Type': 'application/json;charset=UTF-8',
-
-    };
-    if (user.id == 0) {
-      await http.post(
-        Uri.parse(baseUrl+'registeruser/'),headers: headers,
-
-        body: jsonEncode(<String, dynamic>{
-          'nom': user.nom,
-          'prenom': user.prenom,
-          'email': user.email,
-          'pswd': user.pswd,
-          'role': user.role,
-          'photo': user.photo,
-          'superviseur_id': user.superviseur_id.toString(),
-        }),
-      );
-    } else {
-     await http.put(
-        Uri.parse(baseUrl+ user.id.toString()),headers: headers2,
-        body: jsonEncode(<String, dynamic>{
-          'nom': user.nom,
-          'prenom': user.prenom,
-          'email': user.email,
-          'pswd': user.pswd,
-          'role': user.role,
-          'photo': user.photo,
-          'superviseur_id': user.superviseur_id.toString(),
-        }),
-      );
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        String result = await response.stream.bytesToString();
+        print(result);
+      } else {
+        print('Error uploading image: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
     }
   }
-  int? idsup=0;
+
+
+  //int? idsup=0;
   @override
   Widget build(BuildContext context) {
     return   Scaffold(
@@ -358,20 +373,18 @@ class _UserFormState extends State<UserForm> {
                             child:
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: TextField(
-                                keyboardType: TextInputType.text,
-                                focusNode: photo,
-                                controller: photoController,
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                                  labelText: 'photo',
-                                  labelStyle: TextStyle(fontSize: 17, color: Colors.grey.shade500),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  getImage().then((_) => photoController.text=_image!.path.toString());
+                                  print(_image!.path) ;
+                                },
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.add_a_photo), // Icône de la caméra
+                                    // SizedBox(width: 8), // Espacement entre l'icône et le texte
+                                    // Text('Prendre une photo'),
+                                  ],
                                 ),
                               ),
                             ),
@@ -449,17 +462,14 @@ class _UserFormState extends State<UserForm> {
                               if (id != null ) {
                                 if(idSup!=null) {
                                   await save(
-                                    User(
-                                      id,
+                                     id,
                                       nomController.text,
                                       prenomController.text,
                                       emailController.text,
                                       pswdController.text,
                                       roleController.text,
-                                      photoController.text,
-                                      idSup,
-
-                                    ),
+                                       idSup,
+                                    File(_image!.path),
                                   );
                                   Navigator.push(
                                     context,
@@ -477,17 +487,17 @@ class _UserFormState extends State<UserForm> {
                                 }
                                 else {
                                   await save(
-                                    User(
+
                                       id,
                                       nomController.text,
                                       prenomController.text,
                                       emailController.text,
                                       pswdController.text,
                                       roleController.text,
-                                      photoController.text,
-                                      0,
+                                       0,
+                                    File(_image!.path),
 
-                                    ),
+
                                   );
                                   Navigator.push(
                                     context,

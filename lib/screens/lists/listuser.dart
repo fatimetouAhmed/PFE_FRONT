@@ -90,12 +90,10 @@ class _ListUserState extends State<ListUser> {
                                 builder: (context) =>
                                     MasterPage(
                                       index: 0,  accessToken: widget.accessToken,
-
                                       child:
-                                      UserForm(user: User(0,'','','', '','','',0),  accessToken: widget.accessToken
+                                      UserForm(id:0,nom:'',prenom: '',email: '',pswd: '',role:'',photo: '',superviseur_id: 0, accessToken: widget.accessToken,)
                                       ),
                                     ),
-                              ),
                               // ),
                             );
                           },
@@ -168,15 +166,20 @@ class _ListUserState extends State<ListUser> {
                                                   child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
+                                                      Avatar(
+                                                        margin: EdgeInsets.only(right: 20),
+                                                        size: 60,
+                                                        image: 'images/users/'+user.photo,
+                                                      ),
                                                       Text(
                                                         user.nom,
                                                         style: Theme.of(context).textTheme.button,
                                                       ),
-                                                      SizedBox(width: 8),
-                                                      Text(
-                                                        user.prenom,
-                                                        style: Theme.of(context).textTheme.button,
-                                                      ),
+                                                      // SizedBox(width: 8),
+                                                      // Text(
+                                                      //   user.prenom,
+                                                      //   style: Theme.of(context).textTheme.button,
+                                                      // ),
                                                       SizedBox(width: 8),
                                                       GestureDetector(
                                                         onTap: () {
@@ -188,8 +191,9 @@ class _ListUserState extends State<ListUser> {
 
                                                                 child:
                                                                 UserForm(
-                                                                    user: user,  accessToken: widget.accessToken
-
+                                                                    id: user.id,
+                                                                     nom: user.nom, prenom: user.prenom, email: user.email, pswd: '', role: user.role,
+                                                                  photo: user.photo, superviseur_id:user.superviseur_id,accessToken: widget.accessToken,
                                                                 ),),
 
                                                             ),
@@ -485,4 +489,27 @@ Widget _head() {
       )
     ],
   );
+}
+
+class Avatar extends StatelessWidget {
+  final double size;
+  final image;
+  final EdgeInsets margin;
+  Avatar({this.image, this.size = 50, this.margin = const EdgeInsets.all(0)});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: margin,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: new BoxDecoration(
+          shape: BoxShape.circle,
+          image: new DecorationImage(
+            image: AssetImage(image),
+          ),
+        ),
+      ),
+    );
+  }
 }
