@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pfe_front_flutter/bar/masterpagesuperviseur.dart';
 import 'package:pfe_front_flutter/screens/lists/listsurveillant.dart';
+import '../../bar/masterpageadmin.dart';
 import '../../consturl.dart';
 import '../../models/surveillance.dart';
 import 'package:quickalert/quickalert.dart';
@@ -22,6 +23,9 @@ class _SurveillanceFormState extends State<SurveillanceForm> {
   TextEditingController date_finController =new TextEditingController();
   TextEditingController surveillant_idController = new TextEditingController();
   TextEditingController salle_idController = new TextEditingController();
+
+  FocusNode date_deb = FocusNode();
+  FocusNode date_fin = FocusNode();
   String? selectedOption1;
   String? selectedOption2;
   List<String> surveillantList = [];
@@ -81,9 +85,10 @@ int id=0;
 
     return null;
   }
+
   Future<List<Surveillance>> fetchSurveillances(int id) async {
     var response = await http.get(
-      Uri.parse(baseUrl+'surveillances/surveillance/'),
+      Uri.parse(baseUrl+'surveillances/'),
       headers: {
         'Authorization': 'Bearer ${widget.accessToken}', // Add the authorization token to the headers
       },
@@ -98,9 +103,17 @@ int id=0;
     if (jsonList is List) {
       var surveillances = <Surveillance>[];
       for (var u in jsonList) {
+        print(u); // Affiche les données pour déboguer
+
         var DateDeb = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['date_debut']);
         var DateFin = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['date_fin']);
-        surveillances.add(Surveillance(u['id'], DateDeb, DateFin, u['surveillant_id'], u['salle_id']));
+
+        print(DateDeb);
+        print(DateFin);
+
+        surveillances.add(Surveillance(
+            u['id'], DateDeb, DateFin, u['surveillant_id'], u['salle_id'], u['superviseur'], u['departement']
+        ));
       }
       return surveillances;
     } else {
@@ -175,10 +188,10 @@ int id=0;
         },
 
         body: jsonEncode(<String, dynamic>{
-          'date_deb': surveillance.date_debut.toIso8601String(),
+          'date_debut': surveillance.date_debut.toIso8601String(),
           'date_fin': surveillance.date_fin.toIso8601String(),
-          'surveillant_id': surveillance.surveillant_id.toString(),
-          'salle_id': surveillance.salle_id.toString(),
+          'surveillant_id': surveillance.surveillant_id,
+          'salle_id': surveillance.salle_id,
         }),
       );
     } else {
@@ -188,10 +201,10 @@ int id=0;
           'Content-Type': 'application/json;charset=UTF-8',
         },
         body: jsonEncode(<String, dynamic>{
-          'date_deb': surveillance.date_debut.toIso8601String(),
+          'date_debut': surveillance.date_debut.toIso8601String(),
           'date_fin': surveillance.date_fin.toIso8601String(),
-          'surveillant_id': surveillance.surveillant_id.toString(),
-          'salle_id': surveillance.salle_id.toString(),
+          'surveillant_id': surveillance.surveillant_id,
+          'salle_id': surveillance.salle_id,
         }),
       );
     }
@@ -200,6 +213,308 @@ int id=0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
+      body: SafeArea(
+        child: Stack(
+          alignment: AlignmentDirectional.center,
+          children: [
+
+            background_container(context),
+            Positioned(
+              top: 120,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                ),
+                height: 400,
+                width: 370,
+                child: Form(
+                  child: Column(
+                    children: [
+                      Visibility(
+                        visible: false,
+                        child: TextFormField(
+                          decoration: InputDecoration(hintText: 'Entrez id'),
+                          controller: idController,
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              width: 2,
+                              color: Color(0xffC5C5C5),
+                            ),
+                          ),
+                          child: DropdownButton<String>(
+                            value: selectedOption1,
+                            onChanged: (String? newValue) async {
+                              print(selectedOption1);
+                              setState(() {
+                                selectedOption1 = newValue!;
+                              });
+
+                              if (selectedOption1 != null) {
+                                int? id = await fetchSurveillanceId(selectedOption1!);
+                                print(id);
+                                surveillant_idController.text = id.toString();
+                              }
+                            },
+                            items: surveillantList.map((e) => DropdownMenuItem(
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  e,
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
+                              value: e,
+                            )).toList(),
+                            selectedItemBuilder: (BuildContext context) => surveillantList.map((e) => Text(e)).toList(),
+                            hint: Padding(
+                              padding: const EdgeInsets.only(top: 12),
+                              child: Text(
+                                'Surveillance',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                            dropdownColor: Colors.white,
+                            isExpanded: true,
+                            underline: Container(),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              width: 2,
+                              color: Color(0xffC5C5C5),
+                            ),
+                          ),
+                          child: DropdownButton<String>(
+                            value: selectedOption2,
+                            onChanged: (String? newValue) async {
+                              print(selectedOption2);
+                              setState(() {
+                                selectedOption2 = newValue!;
+                              });
+
+                              if (selectedOption2 != null) {
+                                int? id = await fetchSallesId(selectedOption2!);
+                                print(id);
+                                salle_idController.text = id.toString();
+                              }
+                            },
+                            items: salleList.map((e) => DropdownMenuItem(
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  e,
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
+                              value: e,
+                            )).toList(),
+                            selectedItemBuilder: (BuildContext context) => salleList.map((e) => Text(e)).toList(),
+                            hint: Padding(
+                              padding: const EdgeInsets.only(top: 12),
+                              child: Text(
+                                'Departement',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                            dropdownColor: Colors.white,
+                            isExpanded: true,
+                            underline: Container(),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: TextField(
+                          keyboardType: TextInputType.datetime,
+                          focusNode: date_deb,
+                          controller: date_debController,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                            labelText: 'Date_deb',
+                            icon: Icon(Icons.calendar_today),
+                            labelStyle: TextStyle(fontSize: 17, color: Colors.grey.shade500),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                          ),
+                          readOnly: true,  //set it true, so that user will not able to edit text
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context, initialDate: DateTime.now(),
+                                firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                                lastDate: DateTime(2101)
+                            );
+
+                            if(pickedDate != null ){
+                              print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
+                              String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                              print(formattedDate); //formatted date output using intl package =>  2021-03-16
+                              //you can implement different kind of Date Format here according to your requirement
+
+                              setState(() {
+                                date_debController.text = formattedDate; //set output date to TextField value.
+                              });
+                            }else{
+                              print("Date is not selected");
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 30),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: TextField(
+                          keyboardType: TextInputType.datetime,
+                          focusNode: date_fin,
+                          controller: date_finController,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                            labelText: 'date_fin',
+                            icon: Icon(Icons.calendar_today),
+                            labelStyle: TextStyle(fontSize: 17, color: Colors.grey.shade500),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                          ),
+                          readOnly: true,  //set it true, so that user will not able to edit text
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context, initialDate: DateTime.now(),
+                                firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                                lastDate: DateTime(2101)
+                            );
+
+                            if(pickedDate != null ){
+                              print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
+                              String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                              print(formattedDate); //formatted date output using intl package =>  2021-03-16
+                              //you can implement different kind of Date Format here according to your requirement
+
+                              setState(() {
+                                date_finController.text = formattedDate; //set output date to TextField value.
+                              });
+                            }else{
+                              print("Date is not selected");
+                            }
+                          },
+                        ),
+                      ),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () async {
+                          await QuickAlert.show(
+                            context: context,
+                            type: QuickAlertType.success,
+                            text: 'Operation Completed Successfully!',
+                            confirmBtnColor: Colors.blue,
+                          ).then((value) async {
+                            if (value == null) {
+                              int? id = int.tryParse(idController.text);
+                              int? idDep = int.tryParse(surveillant_idController.text);
+                              int? idSup = int.tryParse(salle_idController.text);
+                              if (id != null  && idDep != null&& idSup != null) {
+                                await save(
+                                  Surveillance(
+                                    id,   DateTime.parse(date_debController.text),
+                                    DateTime.parse(date_finController.text),
+                                    idSup,
+                                    idDep,
+                                    '',
+                                    '',
+
+                                  ),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>MasterPage( index: 0,  accessToken: widget.accessToken
+                                        ,child:  ListSurveillance(  accessToken: widget.accessToken
+                                        ),)
+                                  ),
+                                );
+
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Error"),
+                                      content: Text("Invalid ID or Department ID"),
+                                      actions: [
+                                        TextButton(
+                                          child: Text("OK"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            }
+                          });
+
+
+                        },
+
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.blue,
+                          ),
+                          width: 120,
+                          height: 50,
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                              fontFamily: 'f',
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 25),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+      Scaffold(
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           return SingleChildScrollView(
@@ -386,6 +701,8 @@ int id=0;
                                     DateTime.parse(date_finController.text),
                                     idSur,
                                     idSal,
+                                    '',
+                                    ''
                                   ),
                                 );
                                 Navigator.push(
@@ -430,6 +747,50 @@ int id=0;
           );
         },
       ),
+    );
+  }
+
+
+
+  Column background_container(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          height: 240,
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            children: [
+              SizedBox(height: 40),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                // child: Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                child:   Center(
+                  child: Text(
+                    'Adding',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
+                  ),
+                  //   ),
+                  //
+                  // ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:pfe_front_flutter/screens/views/viewsemestre.dart';
 import '../../../constants.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../bar/masterpageadmin.dart';
+import '../../bar/masterpageadmin2.dart';
 import '../../consturl.dart';
 import '../../models/filliere.dart';
 import '../../models/semestre.dart';
@@ -175,16 +177,6 @@ class _ListSemestreState extends State<ListSemestre> {
                                                         style: Theme.of(context).textTheme.button,
                                                       ),
                                                       SizedBox(width: 8),
-                                                      Text(
-                                                        DateFormat('yyyy-MM').format(semestre.date_debut),
-                                                        style: Theme.of(context).textTheme.button,
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                      Text(
-                                                        DateFormat('yyyy-MM').format(semestre.date_fin),
-                                                        style: Theme.of(context).textTheme.button,
-                                                      ),
-                                                      SizedBox(width: 8),
                                                       GestureDetector(
                                                         onTap: () {
                                                           Navigator.push(
@@ -275,9 +267,25 @@ class _ListSemestreState extends State<ListSemestre> {
                                                       topRight: Radius.circular(22),
                                                     ),
                                                   ),
-                                                  child: Text(
-                                                    semestre.id.toString(),
-                                                    style: Theme.of(context).textTheme.button,
+                                                  child: IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_red_eye_outlined,
+                                                      size: 30, // Taille de l'icône
+                                                      color: Colors.white, // Couleur de l'icône
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => MasterPage2(
+                                                            index: 0,  accessToken: widget.accessToken,
+                                                            child:
+                                                            ViewSemestre(  accessToken: widget.accessToken, id: semestre.id,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
                                                 ),
                                               ],

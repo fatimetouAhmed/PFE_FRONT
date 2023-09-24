@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pfe_front_flutter/screens/views/viewfiliere.dart';
 
 import '../../../constants.dart';
 
 import '../../bar/masterpageadmin.dart';
+import '../../bar/masterpageadmin2.dart';
 import '../../consturl.dart';
 import '../../models/filliere.dart';
 import '../forms/filiereform.dart';
@@ -170,11 +172,11 @@ class _ListFiliereState extends State<ListFiliere> {
                                                         filiere.nom,
                                                         style: Theme.of(context).textTheme.button,
                                                       ),
-                                                      SizedBox(width: 8),
-                                                      Text(
-                                                        filiere.departement,
-                                                        style: Theme.of(context).textTheme.button,
-                                                      ),
+                                                      // SizedBox(width: 8),
+                                                      // Text(
+                                                      //   filiere.departement,
+                                                      //   style: Theme.of(context).textTheme.button,
+                                                      // ),
                                                       SizedBox(width: 8),
                                                       GestureDetector(
                                                         onTap: () {
@@ -271,9 +273,25 @@ class _ListFiliereState extends State<ListFiliere> {
                                                       topRight: Radius.circular(22),
                                                     ),
                                                   ),
-                                                  child: Text(
-                                                    filiere.id.toString(),
-                                                    style: Theme.of(context).textTheme.button,
+                                                  child: IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_red_eye_outlined,
+                                                      size: 30, // Taille de l'icône
+                                                      color: Colors.white, // Couleur de l'icône
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => MasterPage2(
+                                                        index: 0,  accessToken: widget.accessToken,
+                                                        child:
+                                                        ViewFiliere(  accessToken: widget.accessToken, id: filiere.id,
+                                                              ),
+                                                        ),
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
                                                 ),
                                               ],

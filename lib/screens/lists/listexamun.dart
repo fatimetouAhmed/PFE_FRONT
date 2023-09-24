@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:pfe_front_flutter/models/examun.dart';
+import 'package:pfe_front_flutter/screens/views/viewexamun.dart';
 import '../../../constants.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../bar/masterpageadmin.dart';
+import '../../bar/masterpageadmin2.dart';
 import '../../consturl.dart';
 import '../forms/examunform.dart';
 
@@ -34,7 +36,7 @@ class _ListExamunState extends State<ListExamun> {
       var heureDeb = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['heure_deb']);
       var heureFin = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['heure_fin']);
 
-      examuns.add(Examun(u['id'],u['type'],heureDeb,heureFin, u['id_mat'], u['id_sal']));
+      examuns.add(Examun(u['id'],u['type'],heureDeb,heureFin, u['id_mat'], u['id_sal'], u['matiere'], u['salle']));
     }
     print(examuns);
     return examuns;
@@ -95,7 +97,7 @@ class _ListExamunState extends State<ListExamun> {
                                       index: 0,  accessToken: widget.accessToken,
 
                                         child:
-                                      ExamunForm(examun: Examun(0, '', DateTime.parse('0000-00-00 00:00:00'),DateTime.parse('0000-00-00 00:00:00'), 0, 0),  accessToken: widget.accessToken
+                                      ExamunForm(examun: Examun(0, '', DateTime.parse('0000-00-00 00:00:00'),DateTime.parse('0000-00-00 00:00:00'), 0, 0,'',''),  accessToken: widget.accessToken
                                       ),
 
                                     ),
@@ -176,18 +178,18 @@ class _ListExamunState extends State<ListExamun> {
                                                         examun.type,
                                                         style: Theme.of(context).textTheme.button,
                                                       ),
-                                                      SizedBox(width: 8),
-                                                      Text(
-                                                        DateFormat('HH:mm').format(examun.heure_deb),
-                                                        style: Theme.of(context).textTheme.button,
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                      Text(
-                                                        // DateFormat('yyyy-MM-dd HH:mm:ss').format(examun.heure_fin),
-                                                        // DateFormat('MM-dd HH:mm').format(examun.heure_fin),
-                                                        DateFormat('HH:mm').format(examun.heure_fin),
-                                                        style: Theme.of(context).textTheme.button,
-                                                      ),
+                                                      // SizedBox(width: 8),
+                                                      // Text(
+                                                      //   DateFormat('HH:mm').format(examun.heure_deb),
+                                                      //   style: Theme.of(context).textTheme.button,
+                                                      // ),
+                                                      // SizedBox(width: 8),
+                                                      // Text(
+                                                      //   // DateFormat('yyyy-MM-dd HH:mm:ss').format(examun.heure_fin),
+                                                      //   // DateFormat('MM-dd HH:mm').format(examun.heure_fin),
+                                                      //   DateFormat('HH:mm').format(examun.heure_fin),
+                                                      //   style: Theme.of(context).textTheme.button,
+                                                      // ),
                                                       SizedBox(width: 8),
                                                       GestureDetector(
                                                         onTap: () {
@@ -279,9 +281,25 @@ class _ListExamunState extends State<ListExamun> {
                                                       topRight: Radius.circular(22),
                                                     ),
                                                   ),
-                                                  child: Text(
-                                                    examun.id.toString(),
-                                                    style: Theme.of(context).textTheme.button,
+                                                  child: IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_red_eye_outlined,
+                                                      size: 30, // Taille de l'icône
+                                                      color: Colors.white, // Couleur de l'icône
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => MasterPage2(
+                                                            index: 0,  accessToken: widget.accessToken,
+                                                            child:
+                                                            ViewExamun(  accessToken: widget.accessToken, id: examun.id,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
                                                 ),
                                               ],

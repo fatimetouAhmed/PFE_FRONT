@@ -60,9 +60,10 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
       var id = u['id'];
       var id_mat = u['id_mat'];
       var id_etu = u['id_etu'];
-
+      var etudiant = u['etudiant'];
+      var matiere = u['matiere'];
       if (id != null && id_mat != null && id_etu!= null ) {
-        etudiermats.add(EtudierMat(id,  id_etu,id_mat));
+        etudiermats.add(EtudierMat(id,  id_etu,id_mat,etudiant,matiere));
       } else {
         print('Incomplete data for Filiere object');
       }
@@ -304,6 +305,8 @@ class _EtudierMatFormState extends State<EtudierMatForm> {
                                     id,
                                     idmat,
                                     idEtu,
+                                    '',
+                                    ''
                                   ),
                                 );
                                 Navigator.push(

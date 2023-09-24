@@ -37,7 +37,7 @@ class _GridViewWidgetExamunState extends State<GridViewWidgetExamun> {
       var heureDeb = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['heure_deb']);
       var heureFin = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['heure_fin']);
 
-      examuns.add(Examun(u['id'],u['type'],heureDeb,heureFin, u['id_mat'], u['id_sal']));}
+      examuns.add(Examun(u['id'],u['type'],heureDeb,heureFin, u['id_mat'], u['id_sal'],'',''));}
     return examuns;
   }
 

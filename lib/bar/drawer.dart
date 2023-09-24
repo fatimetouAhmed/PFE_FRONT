@@ -3,12 +3,15 @@ import 'package:pfe_front_flutter/screens/lists/listetudiant.dart';
 import 'package:pfe_front_flutter/screens/lists/listmatiere.dart';
 import 'package:pfe_front_flutter/screens/lists/listsemestre.dart';
 import 'package:pfe_front_flutter/screens/lists/listsemestre_etudiant.dart';
+import '../screens/lists/listedepartementsuperviseur.dart';
+import '../screens/lists/listesemestre_matiere.dart';
 import '../screens/lists/listetudiermat.dart';
 import '../screens/lists/listexamun.dart';
 import '../screens/lists/listmatiere.dart';
 import '../screens/lists/listdepartement.dart';
 import '../screens/lists/listfiliere.dart';
 import '../screens/lists/listsalle.dart';
+import '../screens/lists/listsurveillant.dart';
 import '../screens/lists/listuser.dart';
 import '../screens/login_screen.dart';
 import 'masterpageadmin.dart';
@@ -32,11 +35,6 @@ class NavBar extends StatelessWidget{
               color: Colors.pinkAccent,
               image: DecorationImage(image: AssetImage('images/img.jpg'),fit: BoxFit.cover)
             ),
-          ),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
-            onTap: ()=>print('Home'),
           ),
           ListTile(
             leading: Icon(Icons.person),
@@ -81,11 +79,6 @@ class NavBar extends StatelessWidget{
                     index: 0,
                     child: MatiereHome(  accessToken: accessToken
                     ),accessToken: accessToken,
-                    // HomeMatiere(
-                    //   widgetName: ListMatiere(),
-                    //   title: 'List',
-                    //   index: 0,
-                    // ),
                   ),
                 ),
               );
@@ -144,6 +137,22 @@ class NavBar extends StatelessWidget{
             },
           ),
           ListTile(
+            leading: Icon(Icons.playlist_add),
+            title: Text('Surveillance'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MasterPage(
+                    index: 0,accessToken: accessToken,
+                    child: ListSurveillance(  accessToken: accessToken
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.blind_outlined),
             title: Text('Departements'),
             onTap: () {
@@ -159,7 +168,38 @@ class NavBar extends StatelessWidget{
               );
             },
           ),
-
+          ListTile(
+            leading: Icon(Icons.keyboard),
+            title: Text('Semestre Matiere'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MasterPage(
+                    index: 0,
+                    child: ListSemestre_Matiere(  accessToken:accessToken
+                    ),accessToken: accessToken,
+                  ),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.receipt),
+            title: Text('Departement Superviseur'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MasterPage(
+                    index: 0,
+                    child: ListDepartementSuperviseur(  accessToken: accessToken
+                    ),accessToken: accessToken,
+                  ),
+                ),
+              );
+            },
+          ),
           ListTile(
             leading: Icon(Icons.playlist_add),
             title: Text('Examuns'),
@@ -178,7 +218,7 @@ class NavBar extends StatelessWidget{
           ),
           ListTile(
             leading: Icon(Icons.playlist_add),
-            title: Text('EtidierMat'),
+            title: Text('Etidier Matiere'),
             onTap: () {
               Navigator.push(
                 context,
@@ -194,7 +234,7 @@ class NavBar extends StatelessWidget{
           ),
           ListTile(
             leading: Icon(Icons.keyboard),
-            title: Text('Semestre_Etudiant'),
+            title: Text('Semestre Etudiant'),
             onTap: () {
               Navigator.push(
                 context,

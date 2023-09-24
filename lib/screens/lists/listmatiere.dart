@@ -3,7 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import 'package:pfe_front_flutter/screens/forms/addmatiereform.dart';
+import 'package:pfe_front_flutter/screens/views/viewmatiere.dart';
 import '../../../constants.dart';
+import '../../bar/masterpageadmin2.dart';
 import '../../consturl.dart';
 import '../../models/matiere.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -185,16 +187,7 @@ class _MatiereHomeState extends State<MatiereHome> {
                                                           matiere.libelle,
                                                           style: Theme.of(context).textTheme.button,
                                                         ),
-                                                        SizedBox(width: 8),
-                                                        Text(
-                                                          matiere.nbre_heure.toString(),
-                                                          style: Theme.of(context).textTheme.button,
-                                                        ),
-                                                        SizedBox(width: 8),
-                                                        Text(
-                                                          matiere.credit.toString(),
-                                                          style: Theme.of(context).textTheme.button,
-                                                        ),
+
                                                         SizedBox(width: 8),
                                                         GestureDetector(
                                                           onTap: () {
@@ -289,9 +282,25 @@ class _MatiereHomeState extends State<MatiereHome> {
                                                         topRight: Radius.circular(22),
                                                       ),
                                                     ),
-                                                    child: Text(
-                                                      matiere.id.toString(),
-                                                      style: Theme.of(context).textTheme.button,
+                                                    child: IconButton(
+                                                      icon: Icon(
+                                                        Icons.remove_red_eye_outlined,
+                                                        size: 30, // Taille de l'icône
+                                                        color: Colors.white, // Couleur de l'icône
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) => MasterPage2(
+                                                              index: 0,  accessToken: widget.accessToken,
+                                                              child:
+                                                              ViewMatiere(  accessToken: widget.accessToken, id: matiere.id,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
                                                     ),
                                                   ),
                                                 ],

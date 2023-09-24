@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pfe_front_flutter/bar/sidebaradmin.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import '../screens/admin/Departement.dart';
+import '../screens/admin/stats.dart';
 import '../screens/lists/historiques.dart';
 import '../screens/lists/notifications.dart';
 import 'appbar.dart';
@@ -33,11 +34,10 @@ class _MasterPageState extends State<MasterPage> {
       _currentIndex = selectedIndex;
       switch (selectedIndex) {
         case 0:
-          _currentWidget = Notifications(accessToken: widget.accessToken);
+          _currentWidget = BarChartAPI();
           break;
         case 1:
-        // Replace this with your desired widget for index 1
-        // For example: _currentWidget = YourCustomWidget();
+          _currentWidget = Notifications(accessToken: widget.accessToken);
           break;
         case 2:
           _currentWidget = Historiques();
@@ -64,6 +64,7 @@ class _MasterPageState extends State<MasterPage> {
         index: _currentIndex,
         height: 60.0,
         items: <Widget>[
+          Icon(Icons.home, size: 30),
           Stack(
             alignment: Alignment.center,
             children: [
@@ -100,7 +101,7 @@ class _MasterPageState extends State<MasterPage> {
             ],
           ),
 
-          Icon(Icons.home, size: 30),
+
           Icon(Icons.history, size: 30),
           Icon(Icons.archive, size: 30),
         ],

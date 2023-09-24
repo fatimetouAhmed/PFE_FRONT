@@ -6,7 +6,9 @@ import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import 'package:pfe_front_flutter/bar/masterpagesuperviseur.dart';
 import 'package:pfe_front_flutter/models/surveillance.dart';
 import 'package:pfe_front_flutter/screens/forms/departementform.dart';
+import 'package:pfe_front_flutter/screens/views/viewsurveillance.dart';
 import '../../../constants.dart';
+import '../../bar/masterpageadmin2.dart';
 import '../../consturl.dart';
 import '../../models/departement.dart';
 import '../forms/surveillanceform.dart';
@@ -42,7 +44,7 @@ class _ListSurveillanceState extends State<ListSurveillance> {
       "Authorization": "Bearer ${widget.accessToken}",
     };
 
-    var response = await http.get(Uri.parse(baseUrl+'surveillances/surveillance'), headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'surveillances/'), headers: headers);
     if (response.statusCode != 200) {
       // Handle the error when the API request is not successful (e.g., status code is not 200 OK).
       throw Exception('Failed to fetch surveillances.');
@@ -53,10 +55,20 @@ class _ListSurveillanceState extends State<ListSurveillance> {
     if (jsonList is List) {
       var surveillances = <Surveillance>[];
       for (var u in jsonList) {
+        print(u); // Affiche les données pour déboguer
+
         var DateDeb = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['date_debut']);
         var DateFin = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['date_fin']);
-        surveillances.add(Surveillance(u['id'], DateDeb, DateFin, u['surveillant_id'], u['salle_id']));
+
+        print(DateDeb);
+        print(DateFin);
+
+        surveillances.add(Surveillance(
+            u['id'], DateDeb, DateFin, u['surveillant_id'], u['salle_id'], u['superviseur'], u['departement']
+        ));
       }
+
+
       return surveillances;
     } else {
       // Handle the case when the JSON response is not a list.
@@ -143,7 +155,7 @@ class _ListSurveillanceState extends State<ListSurveillance> {
                                         accessToken:widget.accessToken,
                                         index: 0,
                                         child:
-                                        SurveillanceForm(surveillance: Surveillance(0,  DateTime.parse('0000-00-00 00:00:00'), DateTime.parse('0000-00-00 00:00:00'),0,0), accessToken: widget.accessToken,),
+                                        SurveillanceForm(surveillance: Surveillance(0,  DateTime.parse('0000-00-00 00:00:00'), DateTime.parse('0000-00-00 00:00:00'),0,0,'',''), accessToken: widget.accessToken,),
                                       ),
                                 ),
                                 // ),
@@ -219,12 +231,7 @@ class _ListSurveillanceState extends State<ListSurveillance> {
                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
                                                         Text(
-                                                          DateFormat('HH:mm').format(surveillance.date_debut),
-                                                          style: Theme.of(context).textTheme.button,
-                                                        ),
-                                                        SizedBox(width: 8),
-                                                        Text(
-                                                          DateFormat('HH:mm').format(surveillance.date_fin),
+                                                          surveillance.surveillant,
                                                           style: Theme.of(context).textTheme.button,
                                                         ),
                                                         SizedBox(width: 8),
@@ -243,7 +250,7 @@ class _ListSurveillanceState extends State<ListSurveillance> {
                                                             Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
-                                                                builder: (context) => MasterPageSupeurviseur(accessToken:widget.accessToken,
+                                                                builder: (context) => MasterPage(accessToken:widget.accessToken,
                                                                   index: 0,
                                                                   child:
                                                                   SurveillanceForm(
@@ -292,7 +299,7 @@ class _ListSurveillanceState extends State<ListSurveillance> {
                                                                     Navigator.push(
                                                                       context,
                                                                       MaterialPageRoute(
-                                                                        builder: (context) => MasterPageSupeurviseur(
+                                                                        builder: (context) => MasterPage(
                                                                           child: ListSurveillance(accessToken: widget.accessToken,),accessToken: widget.accessToken,index: 0,
                                                                         ),
                                                                       ),
@@ -329,9 +336,25 @@ class _ListSurveillanceState extends State<ListSurveillance> {
                                                         topRight: Radius.circular(22),
                                                       ),
                                                     ),
-                                                    child: Text(
-                                                      surveillance.id.toString(),
-                                                      style: Theme.of(context).textTheme.button,
+                                                    child: IconButton(
+                                                      icon: Icon(
+                                                        Icons.remove_red_eye_outlined,
+                                                        size: 30, // Taille de l'icône
+                                                        color: Colors.white, // Couleur de l'icône
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) => MasterPage2(
+                                                              index: 0,  accessToken: widget.accessToken,
+                                                              child:
+                                                              ViewSurveillance(  accessToken: widget.accessToken, id:surveillance.id,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
                                                     ),
                                                   ),
                                                 ],

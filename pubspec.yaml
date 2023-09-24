@@ -51,6 +51,7 @@ dependencies:
   animated_bottom_navigation_bar: ^1.2.0
   http_parser: ^4.0.2
   dio: ^4.0.0
+  d_chart: ^2.6.2
 #  file: ^7.0.0
 
 dev_dependencies:

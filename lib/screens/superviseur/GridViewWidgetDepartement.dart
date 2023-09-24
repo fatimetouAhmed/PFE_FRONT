@@ -32,7 +32,7 @@ class _GridViewWidgetState extends State<GridViewWidget> {
     for (var u in jsonDecode(response.body)) {
       var date_debut = DateFormat('yyyy-MM-dd').parse(u['date_debut']);
       var date_fin = DateFormat('yyyy-MM-dd').parse(u['date_fin']);// Adjust the date format here
-      departements.add(DepartementsSuperviseurs(u['id'],u['id_sup'],u['id_dep'], u['departement'], date_debut,date_fin));
+      departements.add(DepartementsSuperviseurs(u['id'],u['id_sup'],u['id_dep'],'', u['departement'], date_debut,date_fin));
     }
     return departements;
   }

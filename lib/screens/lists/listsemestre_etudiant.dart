@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pfe_front_flutter/screens/forms/semestre_etudiant.dart';
+import 'package:pfe_front_flutter/screens/views/viewsemestreetudiant.dart';
 import '../../../constants.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../bar/masterpageadmin.dart';
+import '../../bar/masterpageadmin2.dart';
 import '../../consturl.dart';
 import '../../models/semestre_etudiant.dart';
 
@@ -24,10 +26,10 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse(baseUrl+'semestre_etudiants/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'semestre_etudiants/read/'),headers: headers);
     var semestre_etudiants = <Semestre_Etudiant>[];
     for (var u in jsonDecode(response.body)) {
-      semestre_etudiants.add(Semestre_Etudiant(u['id'], u['id_sem'], u['id_etu']));
+      semestre_etudiants.add(Semestre_Etudiant(u['id'], u['id_sem'], u['id_etu'],u['semestre'],u['etudiant']));
     }
    // print(semestre_etudiants);
     return semestre_etudiants;
@@ -87,7 +89,7 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
                                     MasterPage(
                                       index: 0,accessToken: widget.accessToken,
                                       child:
-                                      Semestre_EtudiantForm(semestre_etudiant: Semestre_Etudiant(0,0,0),  accessToken: widget.accessToken
+                                      Semestre_EtudiantForm(semestre_etudiant: Semestre_Etudiant(0,0,0,'',''),  accessToken: widget.accessToken
                                       ),
                                     ),
                               ),
@@ -164,14 +166,14 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
                                                       Text(
-                                                        semestre_etudiant.id_sem.toString(),
+                                                        semestre_etudiant.semestre,
                                                         style: Theme.of(context).textTheme.button,
                                                       ),
-                                                      SizedBox(width: 8),
-                                                      Text(
-                                                        semestre_etudiant.id_etu.toString(),
-                                                        style: Theme.of(context).textTheme.button,
-                                                      ),
+                                                     // SizedBox(width: 8),
+                                                      // Text(
+                                                      //   semestre_etudiant.id_etu.toString(),
+                                                      //   style: Theme.of(context).textTheme.button,
+                                                      // ),
                                                       SizedBox(width: 8),
                                                       GestureDetector(
                                                         onTap: () {
@@ -263,9 +265,25 @@ class _ListSemestre_EtudiantState extends State<ListSemestre_Etudiant> {
                                                       topRight: Radius.circular(22),
                                                     ),
                                                   ),
-                                                  child: Text(
-                                                    semestre_etudiant.id.toString(),
-                                                    style: Theme.of(context).textTheme.button,
+                                                  child: IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_red_eye_outlined,
+                                                      size: 30, // Taille de l'icône
+                                                      color: Colors.white, // Couleur de l'icône
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => MasterPage2(
+                                                            index: 0,  accessToken: widget.accessToken,
+                                                            child:
+                                                            ViewSemestreEtudiant(  accessToken: widget.accessToken, id:semestre_etudiant .id,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
                                                 ),
                                               ],

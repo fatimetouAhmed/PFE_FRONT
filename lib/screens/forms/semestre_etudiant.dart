@@ -51,7 +51,7 @@ class _Semestre_EtudiantFormState extends State<Semestre_EtudiantForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse(baseUrl+'filieres/semestre_etudiants/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'semestre_etudiants/read/'),headers: headers);
     var semestre_etudiants = <Semestre_Etudiant>[];
     var jsonResponse = jsonDecode(response.body);
 
@@ -59,9 +59,10 @@ class _Semestre_EtudiantFormState extends State<Semestre_EtudiantForm> {
       var id = u['id'];
       var id_sem = u['id_sem'];
       var id_etu = u['id_etu'];
-
+      var semestre = u['semestre'];
+      var etudiant = u['etudiant'];
       if (id != null && id_sem != null && id_etu!= null ) {
-        semestre_etudiants.add(Semestre_Etudiant(id, id_sem, id_etu));
+        semestre_etudiants.add(Semestre_Etudiant(id, id_sem, id_etu,semestre,etudiant));
       } else {
         print('Incomplete data for Filiere object');
       }
@@ -305,6 +306,8 @@ class _Semestre_EtudiantFormState extends State<Semestre_EtudiantForm> {
                                     id,
                                     idSem,
                                     idEtu,
+                                    '',
+                                    ''
                                   ),
                                 );
                                 Navigator.push(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pfe_front_flutter/screens/views/viewuser.dart';
 
 import '../../../constants.dart';
 
@@ -31,7 +32,7 @@ class _ListUserState extends State<ListUser> {
     var response = await http.get(Uri.parse(baseUrl+'user_data/'),headers: headers);
     var users = <User>[];
     for (var u in jsonDecode(response.body)) {
-      users.add(User(u['id'], u['nom'], u['prenom'],u['email'],'', u['role'], u['photo'],0));
+      users.add(User(u['id'], u['nom'], u['prenom'],u['email'],'', u['role'], u['photo'],0,''));
     }
     print(users);
     return users;
@@ -91,7 +92,7 @@ class _ListUserState extends State<ListUser> {
                                     MasterPage(
                                       index: 0,  accessToken: widget.accessToken,
                                       child:
-                                      UserForm(id:0,nom:'',prenom: '',email: '',pswd: '',role:'',photo: '',superviseur_id: 0, accessToken: widget.accessToken,)
+                                      UserForm(id:0,nom:'',prenom: '',email: '',pswd: '',role:'',photo: '',superviseur_id: 0, accessToken: widget.accessToken, typecompte: '',)
                                       ),
                                     ),
                               // ),
@@ -193,7 +194,7 @@ class _ListUserState extends State<ListUser> {
                                                                 UserForm(
                                                                     id: user.id,
                                                                      nom: user.nom, prenom: user.prenom, email: user.email, pswd: '', role: user.role,
-                                                                  photo: user.photo, superviseur_id:user.superviseur_id,accessToken: widget.accessToken,
+                                                                  photo: user.photo, superviseur_id:user.superviseur_id,accessToken: widget.accessToken, typecompte: user.typecompte,
                                                                 ),),
 
                                                             ),
@@ -277,10 +278,23 @@ class _ListUserState extends State<ListUser> {
                                                       topRight: Radius.circular(22),
                                                     ),
                                                   ),
-                                                  child: Text(
-                                                    user.id.toString(),
-                                                    style: Theme.of(context).textTheme.button,
-                                                  ),
+                                                  child: IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_red_eye_outlined,
+                                                      size: 30, // Taille de l'icône
+                                                      color: Colors.white, // Couleur de l'icône
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ViewUser(  accessToken: widget.accessToken, id: user.id,
+                                                              ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  )
                                                 ),
                                               ],
                                             ),

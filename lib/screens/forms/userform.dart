@@ -19,10 +19,11 @@ class UserForm extends StatefulWidget {
   final String role;
   final String photo;
   final int superviseur_id;
+  final String typecompte;
   final String accessToken;
-  UserForm({Key? key, required this.id, required this.nom,
+  UserForm( {Key? key, required this.id, required this.nom,
     required this.prenom, required this.email, required this.pswd,
-    required this.role, required this.photo, required this.superviseur_id,required this.accessToken,}) : super(key: key);
+    required this.role, required this.photo, required this.superviseur_id,required this.accessToken, required this.typecompte,}) : super(key: key);
 
   @override
   _UserFormState createState() => _UserFormState();
@@ -37,6 +38,7 @@ class _UserFormState extends State<UserForm> {
   TextEditingController roleController = new TextEditingController();
   TextEditingController photoController = new TextEditingController();
   TextEditingController superviseur_idController = new TextEditingController();
+  TextEditingController compteController = new TextEditingController();
   FocusNode nom = FocusNode();
   FocusNode prenom = FocusNode();
   FocusNode email = FocusNode();
@@ -53,6 +55,12 @@ class _UserFormState extends State<UserForm> {
     "surveillant"
   ];
   String selectedRole = "admin";
+  String? selectedOption2;
+  List<String> compteList = [
+    "principale",
+    "salle"
+  ];
+  String selectedCompte = "principale";
   int? idSup=0;
   XFile? _image;
   final ImagePicker _picker = ImagePicker();
@@ -98,7 +106,7 @@ class _UserFormState extends State<UserForm> {
       var photo=u['photo'];
 
       if (id != null && nom != null && prenom != null && email != null && role != null && photo != null) {
-        users.add(User(id, nom, prenom, email,'', role,photo,0));
+        users.add(User(id, nom, prenom, email,'', role,photo,0,''));
       } else {
         print('Incomplete data for Filiere object');
       }
@@ -141,48 +149,88 @@ class _UserFormState extends State<UserForm> {
     return null;
   }
   Future<void> save(
-      int id,
-       String nom, String prenom, String email, String pswd,
-       String role,
-       int superviseur_id,
-      File imageFile) async {
-    try {
-      var headers = {
-        "Authorization": "Bearer ${widget.accessToken}",
-      };
-      var request;
-      if (id == 0) {
-        request = http.MultipartRequest('POST', Uri.parse(baseUrl + 'users/registeruser/'));
-      } else {
-        request = http.MultipartRequest('PUT', Uri.parse(baseUrl + 'users/$id'));
-      }
-
-      request.headers.addAll(headers);
-      request.fields['nom'] = nom;
-      request.fields['prenom'] = prenom;
-      request.fields['email'] = email;
-      request.fields['pswd'] = pswd;
-      request.fields['role'] = role;
-      request.fields['superviseur_id'] = superviseur_id.toString();
-      request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
-
-      var response = await request.send();
-      if (response.statusCode == 200) {
-        String result = await response.stream.bytesToString();
-        print(result);
-      } else {
-        print('Error uploading image: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
+  int id,
+   String nom, String prenom, String email, String pswd,
+   String role,
+   int superviseur_id,String typecompte
+   ,File imageFile) async {
+    var request;
+    if (id == 0) {
+    request = http.MultipartRequest('POST', Uri.parse(baseUrl+'users/registeruser/'));
     }
+    else {
+      request = http.MultipartRequest('PUT', Uri.parse(baseUrl + 'users/$id'));
+    }
+    //print("Image path: ${imageFile.path}");
+    // var request = http.MultipartRequest(
+    //   'POST',
+    //   Uri.parse(baseUrl+'api/pv'),
+    // );
+    request.headers['Authorization'] = 'Bearer ${widget.accessToken}';
+    request.fields['nom'] = nom;
+    request.fields['prenom'] = prenom;
+    request.fields['email'] = email;
+    request.fields['pswd'] = pswd;
+    request.fields['role'] = role;
+    request.fields['typecompte'] = typecompte;
+    request.fields['superviseur_id'] = superviseur_id.toString();
+    request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+    print("image path");
+    print(imageFile.path);
+    var response = await request.send();
+    if (response.statusCode == 200) {
+      String result = await response.stream.bytesToString();
+      print(result);
+    }else {
+      print('Error uploading image: ${response.statusCode}');
+    }
+
   }
+  // Future<void> save(
+  //     // int id,
+  //     //  String nom, String prenom, String email, String pswd,
+  //     //  String role,
+  //     //  int superviseur_id,String typecompte,
+  //     File imageFile) async {
+  //   // try {
+  //     var headers = {
+  //       "Authorization": "Bearer ${widget.accessToken}",
+  //     };
+  //     var request;
+  //     print(nom);
+  //     // if (id == 0) {
+  //       request = http.MultipartRequest('POST', Uri.parse(baseUrl+'users/registeruser/'));
+  //     // }
+  //     // else {
+  //     //   request = http.MultipartRequest('PUT', Uri.parse(baseUrl + 'users/$id'));
+  //     // }
+  //     request.headers.addAll(headers);
+  //     // request.fields['nom'] = nom;
+  //     // request.fields['prenom'] = prenom;
+  //     // request.fields['email'] = email;
+  //     // request.fields['pswd'] = pswd;
+  //     // request.fields['role'] = role;
+  //     // request.fields['typecompte'] = typecompte;
+  //     // request.fields['superviseur_id'] = superviseur_id.toString();
+  //     request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+  //     print("image path");
+  //     print(imageFile.path);
+  //     var response = await request.send();
+  //     if (response.statusCode == 200) {
+  //       String result = await response.stream.bytesToString();
+  //       print(result);
+  //     }else {
+  //       print('Error uploading image: ${response.statusCode}');
+  //     }
+  //
+  // }
 
 
   //int? idsup=0;
   @override
   Widget build(BuildContext context) {
-    return   Scaffold(
+    return
+      Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: SafeArea(
         child: Stack(
@@ -375,9 +423,14 @@ class _UserFormState extends State<UserForm> {
                               padding: const EdgeInsets.symmetric(horizontal: 20),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  getImage().then((_) => photoController.text=_image!.path.toString());
-                                  print(_image!.path) ;
+                                  getImage().then((image) {
+                                    if (image != null) {
+                                      photoController.text = image.path.toString();
+                                      print(image.path);
+                                    }
+                                  });
                                 },
+
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
@@ -392,59 +445,124 @@ class _UserFormState extends State<UserForm> {
                         ],
                       ),
                       SizedBox(height: 15),
-                      Visibility(
-                        visible: selectedRole == "surveillant",
-                        child:    Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 15),
-                            width: 300,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                width: 2,
-                                color: Color(0xffC5C5C5),
-                              ),
-                            ),
-                            child: DropdownButton<String>(
-                              value: selectedOption,
-                              onChanged: (String? newValue) async {
-                                print(selectedOption);
-                                setState(() {
-                                  selectedOption = newValue!;
-                                });
-
-                                if (selectedOption != null) {
-                                  int? id = await fetchSupervieursId(selectedOption!);
-                                  print(id);
-                                  superviseur_idController.text = id.toString();
-                                }
-                              },
-                              items: superviseurList.map((e) => DropdownMenuItem(
+                      Row( // Wrapping the first two Padding widgets in a Row
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child:
+                            Visibility(
+                              visible: selectedRole == "surveillant",
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 15),
                                 child: Container(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    e,
-                                    style: TextStyle(fontSize: 18),
+                                  padding: EdgeInsets.symmetric(horizontal: 15),
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      width: 2,
+                                      color: Color(0xffC5C5C5),
+                                    ),
+                                  ),
+                                  child: DropdownButton<String>(
+                                    value: selectedOption2,
+                                    onChanged: (String? newValue) async {
+                                      print(selectedOption2);
+                                      setState(() {
+                                        selectedOption2 = newValue!;
+                                      });
+
+                                      if (selectedOption2 != null) {
+                                        print(selectedOption2);
+                                        selectedCompte = newValue!;
+                                        compteController.text = selectedOption2!;
+                                      }
+                                    },
+                                    items: compteList.map((e) => DropdownMenuItem(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          e,
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                      ),
+                                      value: e,
+                                    )).toList(),
+                                    selectedItemBuilder: (BuildContext context) => compteList.map((e) => Text(e)).toList(),
+                                    hint: Padding(
+                                      padding: const EdgeInsets.only(top: 12),
+                                      child: Text(
+                                        'Type de Compte',
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    ),
+                                    dropdownColor: Colors.white,
+                                    isExpanded: true,
+                                    underline: Container(),
                                   ),
                                 ),
-                                value: e,
-                              )).toList(),
-                              selectedItemBuilder: (BuildContext context) => superviseurList.map((e) => Text(e)).toList(),
-                              hint: Padding(
-                                padding: const EdgeInsets.only(top: 12),
-                                child: Text(
-                                  'Superviseur',
-                                  style: TextStyle(color: Colors.grey),
+                              ),),
+                          ),
+                          SizedBox(width: 6), // Adjust the spacing between the two fields
+                          Expanded(
+                            child:
+                            Visibility(
+                              visible: selectedRole == "surveillant",
+                              child:    Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 15),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 15),
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      width: 2,
+                                      color: Color(0xffC5C5C5),
+                                    ),
+                                  ),
+                                  child: DropdownButton<String>(
+                                    value: selectedOption,
+                                    onChanged: (String? newValue) async {
+                                      print(selectedOption);
+                                      setState(() {
+                                        selectedOption = newValue!;
+                                      });
+
+                                      if (selectedOption != null) {
+                                        int? id = await fetchSupervieursId(selectedOption!);
+                                        print(id);
+                                        superviseur_idController.text = id.toString();
+                                      }
+                                    },
+                                    items: superviseurList.map((e) => DropdownMenuItem(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          e,
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                      ),
+                                      value: e,
+                                    )).toList(),
+                                    selectedItemBuilder: (BuildContext context) => superviseurList.map((e) => Text(e)).toList(),
+                                    hint: Padding(
+                                      padding: const EdgeInsets.only(top: 12),
+                                      child: Text(
+                                        'Superviseur',
+                                        style: TextStyle(color: Colors.grey),
+                                      ),
+                                    ),
+                                    dropdownColor: Colors.white,
+                                    isExpanded: true,
+                                    underline: Container(),
+                                  ),
                                 ),
                               ),
-                              dropdownColor: Colors.white,
-                              isExpanded: true,
-                              underline: Container(),
                             ),
                           ),
-                        ),
+                        ],
                       ),
+
 
                       Spacer(),
                       GestureDetector(
@@ -458,7 +576,8 @@ class _UserFormState extends State<UserForm> {
                             if (value == null) {
                               int? id = int.tryParse(idController.text);
                               int? idSup = int.tryParse(superviseur_idController.text);
-
+                              print(_image!.name) ;
+                              print(_image!) ;
                               if (id != null ) {
                                 if(idSup!=null) {
                                   await save(
@@ -469,6 +588,7 @@ class _UserFormState extends State<UserForm> {
                                       pswdController.text,
                                       roleController.text,
                                        idSup,
+                                      compteController.text,
                                     File(_image!.path),
                                   );
                                   Navigator.push(
@@ -495,6 +615,7 @@ class _UserFormState extends State<UserForm> {
                                       pswdController.text,
                                       roleController.text,
                                        0,
+                                    compteController.text,
                                     File(_image!.path),
 
 

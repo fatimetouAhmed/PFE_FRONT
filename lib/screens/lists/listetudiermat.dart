@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pfe_front_flutter/models/etudiermat.dart';
+import 'package:pfe_front_flutter/screens/views/viewetudiermat.dart';
 import '../../../constants.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../../bar/masterpageadmin.dart';
+import '../../bar/masterpageadmin2.dart';
 import '../../consturl.dart';
 import '../forms/etudiermatform.dart';
 
@@ -38,7 +40,7 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
 
     var etudiers = <EtudierMat>[];
     for (var u in jsonDecode(response.body)) {
-      etudiers.add(EtudierMat(u['id'],u['id_mat'], u['id_etu']));
+      etudiers.add(EtudierMat(u['id'],u['id_mat'], u['id_etu'], u['etudiant'], u['matiere']));
     }
     print(etudiers);
     return etudiers;
@@ -98,7 +100,7 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
                                     MasterPage(
                                       index: 0,
                                       child:
-                                      EtudierMatForm(etudierMat: EtudierMat(0,0,0),  accessToken: widget.accessToken
+                                      EtudierMatForm(etudierMat: EtudierMat(0,0,0,'',''),  accessToken: widget.accessToken
                                       ),accessToken: widget.accessToken,
                                     ),
                               ),
@@ -175,12 +177,7 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
                                                       Text(
-                                                        etudier.id_mat.toString(),
-                                                        style: Theme.of(context).textTheme.button,
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                      Text(
-                                                        etudier.id_etu.toString(),
+                                                        etudier.matiere,
                                                         style: Theme.of(context).textTheme.button,
                                                       ),
                                                       SizedBox(width: 8),
@@ -278,9 +275,25 @@ class _ListEtudierMatState extends State<ListEtudierMat> {
                                                       topRight: Radius.circular(22),
                                                     ),
                                                   ),
-                                                  child: Text(
-                                                    etudier.id.toString(),
-                                                    style: Theme.of(context).textTheme.button,
+                                                  child: IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_red_eye_outlined,
+                                                      size: 30, // Taille de l'icône
+                                                      color: Colors.white, // Couleur de l'icône
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => MasterPage2(
+                                                            index: 0,  accessToken: widget.accessToken,
+                                                            child:
+                                                            ViewEtudierMatiere(  accessToken: widget.accessToken, id: etudier.id,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
                                                 ),
                                               ],

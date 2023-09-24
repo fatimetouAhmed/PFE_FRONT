@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
 import 'package:pfe_front_flutter/screens/forms/addmatiereform.dart';
+import 'package:pfe_front_flutter/screens/views/viewetudiant.dart';
 import '../../../constants.dart';
 import '../../consturl.dart';
 import '../../models/etudiant.dart';
@@ -299,10 +300,24 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                                         topRight: Radius.circular(22),
                                                       ),
                                                     ),
-                                                    child: Text(
-                                                      etudiant.id.toString(),
-                                                      style: Theme.of(context).textTheme.button,
-                                                    ),
+                                                    child:
+                                                    IconButton(
+                                                      icon: Icon(
+                                                        Icons.remove_red_eye_outlined,
+                                                        size: 30, // Taille de l'icône
+                                                        color: Colors.white, // Couleur de l'icône
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                            ViewEtudiant(  accessToken: widget.accessToken, id: etudiant.id,
+                                                              ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    )
                                                   ),
                                                 ],
                                               ),

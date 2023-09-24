@@ -73,9 +73,10 @@ class _ExamunFormState extends State<ExamunForm> {
       var heure_fin = u['heure_fin'];
       var id_mat = u['id_mat'];
       var id_sal = u['id_sal'];
-
+      var matiere = u['matiere'];
+      var salle = u['salle'];
       if (id != null && type!= null && heure_deb!= null && heure_fin!= null && id_mat != null && id_sal!= null ) {
-        examuns.add(Examun(id,type,heure_deb,heure_fin, id_mat, id_sal));
+        examuns.add(Examun(id,type,heure_deb,heure_fin, id_mat, id_sal,matiere,salle));
       } else {
         print('Incomplete data for Filiere object');
       }
@@ -437,6 +438,8 @@ class _ExamunFormState extends State<ExamunForm> {
                                     DateTime.parse(heure_finController.text),
                                     idMat,
                                     idSal,
+                                    '',
+                                    ''
                                   ),
                                 );
                                 Navigator.push(
