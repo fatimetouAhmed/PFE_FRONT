@@ -156,16 +156,12 @@ class _UserFormState extends State<UserForm> {
    ,File imageFile) async {
     var request;
     if (id == 0) {
-    request = http.MultipartRequest('POST', Uri.parse(baseUrl+'users/registeruser/'));
+    request = http.MultipartRequest('POST', Uri.parse(baseUrl+'registeruser/'));
     }
     else {
-      request = http.MultipartRequest('PUT', Uri.parse(baseUrl + 'users/$id'));
+      request = http.MultipartRequest('PUT', Uri.parse(baseUrl + 'updateuser/{user_id}'));
     }
-    //print("Image path: ${imageFile.path}");
-    // var request = http.MultipartRequest(
-    //   'POST',
-    //   Uri.parse(baseUrl+'api/pv'),
-    // );
+
     request.headers['Authorization'] = 'Bearer ${widget.accessToken}';
     request.fields['nom'] = nom;
     request.fields['prenom'] = prenom;
@@ -186,47 +182,7 @@ class _UserFormState extends State<UserForm> {
     }
 
   }
-  // Future<void> save(
-  //     // int id,
-  //     //  String nom, String prenom, String email, String pswd,
-  //     //  String role,
-  //     //  int superviseur_id,String typecompte,
-  //     File imageFile) async {
-  //   // try {
-  //     var headers = {
-  //       "Authorization": "Bearer ${widget.accessToken}",
-  //     };
-  //     var request;
-  //     print(nom);
-  //     // if (id == 0) {
-  //       request = http.MultipartRequest('POST', Uri.parse(baseUrl+'users/registeruser/'));
-  //     // }
-  //     // else {
-  //     //   request = http.MultipartRequest('PUT', Uri.parse(baseUrl + 'users/$id'));
-  //     // }
-  //     request.headers.addAll(headers);
-  //     // request.fields['nom'] = nom;
-  //     // request.fields['prenom'] = prenom;
-  //     // request.fields['email'] = email;
-  //     // request.fields['pswd'] = pswd;
-  //     // request.fields['role'] = role;
-  //     // request.fields['typecompte'] = typecompte;
-  //     // request.fields['superviseur_id'] = superviseur_id.toString();
-  //     request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
-  //     print("image path");
-  //     print(imageFile.path);
-  //     var response = await request.send();
-  //     if (response.statusCode == 200) {
-  //       String result = await response.stream.bytesToString();
-  //       print(result);
-  //     }else {
-  //       print('Error uploading image: ${response.statusCode}');
-  //     }
-  //
-  // }
 
-
-  //int? idsup=0;
   @override
   Widget build(BuildContext context) {
     return
@@ -562,8 +518,6 @@ class _UserFormState extends State<UserForm> {
                           ),
                         ],
                       ),
-
-
                       Spacer(),
                       GestureDetector(
                         onTap: () async {
