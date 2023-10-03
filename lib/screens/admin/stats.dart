@@ -4,7 +4,7 @@ import 'package:d_chart/ordinal/bar.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
+import '../../consturl.dart';
 import 'gender_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -87,14 +87,14 @@ class _BarChartAPIState extends State<BarChartAPI> {
   List<OrdinalData> ordinalList = [];
   Future<void> fetch() async {
     try {
-      final response = await http.get(Uri.parse('http://127.0.0.1:8000/examuns/examun/nom'));
+      final response = await http.get(Uri.parse(baseUrl+'examuns/examun/nom'));
       var jsonResponse = jsonDecode(response.body);
       List<OrdinalData> tempList = []; // Créer une liste temporaire
 
       for (var u in jsonResponse) {
         var id = u['id'];
         var nom = u['type'];
-        final historiqueResponse = await http.get(Uri.parse('http://127.0.0.1:8000/historiques/historique/'+id.toString()));
+        final historiqueResponse = await http.get(Uri.parse(baseUrl+'historiques/historique/'+id.toString()));
 
         if (historiqueResponse.statusCode == 200) {
           dynamic jsonData = json.decode(historiqueResponse.body);

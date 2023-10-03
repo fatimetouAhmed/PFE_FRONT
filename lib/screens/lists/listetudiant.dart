@@ -188,14 +188,24 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                                       children: [
                                                         Avatar(
                                                           margin: EdgeInsets.only(right: 20),
-                                                          size: 60,
+                                                          size: 30,
                                                           image: 'images/etudiants/'+etudiant.photo,
                                                         ),
+                                                        // Text(
+                                                        //   etudiant.prenom,
+                                                        //   style: Theme.of(context).textTheme.button,
+                                                        // ),
                                                         Text(
-                                                          etudiant.nom,
-                                                          style: Theme.of(context).textTheme.button,
+                                                          etudiant.prenom,
+                                                          style: Theme.of(context).textTheme.button?.copyWith(
+                                                            fontSize: 9,
+                                                            fontWeight: FontWeight.bold,
+                                                          ),
                                                         ),
-                                                        SizedBox(width: 8),
+
+
+
+                                                        // SizedBox(width: 8),
                                                         GestureDetector(
                                                           onTap: () {
                                                             Navigator.push(

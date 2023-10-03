@@ -77,65 +77,10 @@ class _ViewUserState extends State<ViewUser> {
               CircleAvatar(
                 radius: 70,
                 child: ClipOval(
-                  child: Image.asset('images/${usersList[0].photo}',height: 150,width: 150,fit: BoxFit.cover,),
+                  child: Image.asset('images/users/${usersList[0].photo}',height: 150,width: 150,fit: BoxFit.cover,),
                 ),
               ),
               SizedBox(height: 20,),
-              // SettingsGroup(
-              //   items: [
-              //     SettingsItem(
-              //       onTap: () {},
-              //       icons: CupertinoIcons.pencil_outline,
-              //       iconStyle: IconStyle(),
-              //       title:
-              //       'Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance',
-              //       subtitle:
-              //       "Make Ziar'App yours Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance Appearance",
-              //       titleMaxLine: 1,
-              //       subtitleMaxLine: 1,
-              //     ),
-              //     SettingsItem(
-              //       onTap: () {},
-              //       icons: Icons.fingerprint,
-              //       iconStyle: IconStyle(
-              //         iconsColor: Colors.white,
-              //         withBackground: true,
-              //         backgroundColor: Colors.red,
-              //       ),
-              //       title: 'Privacy',
-              //       subtitle: "Lock Ziar'App to improve your privacy",
-              //     ),
-              //     SettingsItem(
-              //       onTap: () {},
-              //       icons: Icons.dark_mode_rounded,
-              //       iconStyle: IconStyle(
-              //         iconsColor: Colors.white,
-              //         withBackground: true,
-              //         backgroundColor: Colors.red,
-              //       ),
-              //       title: 'Dark mode',
-              //       subtitle: "Automatic",
-              //       trailing: Switch.adaptive(
-              //         value: false,
-              //         onChanged: (value) {},
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // SettingsGroup(
-              //   items: [
-              //     SettingsItem(
-              //       onTap: () {},
-              //       icons: Icons.info_rounded,
-              //       iconStyle: IconStyle(
-              //         backgroundColor: Colors.purple,
-              //       ),
-              //       title: 'About',
-              //       subtitle: "Learn more about Ziar'App",
-              //     ),
-              //   ],
-              // ),
-              // You can add a settings title
               Expanded(child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30),),

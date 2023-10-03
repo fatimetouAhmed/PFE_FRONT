@@ -169,19 +169,22 @@ class _ListUserState extends State<ListUser> {
                                                     children: [
                                                       Avatar(
                                                         margin: EdgeInsets.only(right: 20),
-                                                        size: 60,
+                                                        size: 30,
                                                         image: 'images/users/'+user.photo,
                                                       ),
                                                       Text(
-                                                        user.nom,
-                                                        style: Theme.of(context).textTheme.button,
+                                                        user.prenom,
+                                                        style: Theme.of(context).textTheme.button?.copyWith(
+                                                          fontSize: 9,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
                                                       ),
                                                       // SizedBox(width: 8),
                                                       // Text(
                                                       //   user.prenom,
                                                       //   style: Theme.of(context).textTheme.button,
                                                       // ),
-                                                      SizedBox(width: 8),
+                                                      // SizedBox(width: 8),
                                                       GestureDetector(
                                                         onTap: () {
                                                           Navigator.push(
@@ -189,7 +192,6 @@ class _ListUserState extends State<ListUser> {
                                                             MaterialPageRoute(
                                                               builder: (context) => MasterPage(
                                                                 index: 0,  accessToken: widget.accessToken,
-
                                                                 child:
                                                                 UserForm(
                                                                     id: user.id,

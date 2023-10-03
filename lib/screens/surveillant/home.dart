@@ -107,7 +107,7 @@ class _CameraScreenState extends State<CameraScreen> {
         )
             : _image == null
             ? Text(
-          'Appuyez sur le bouton + pour ajouter une description et une photo',
+          'Acceil',
           style: TextStyle(fontSize: 18.0),
         )
             : Image.file(File(_image!.path)),

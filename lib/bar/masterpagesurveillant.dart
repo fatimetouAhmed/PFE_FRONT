@@ -11,7 +11,7 @@ import '../screens/login_screen.dart';
 import '../screens/superviseur/GridViewWidgetDepartement.dart';
 import 'appbarsuperviseur.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:pfe_front_flutter/screens/surveillant/home.dart';
 import 'appbarsurveillant.dart';
 
 class MasterPageSurveillant extends StatefulWidget {
@@ -71,7 +71,7 @@ class _MasterPageSurveillantState extends State<MasterPageSurveillant> {
       _currentIndex = selectedIndex;
       switch (selectedIndex) {
         case 0:
-          _currentWidget = PvForm(accessToken: widget.accessToken, id: 0, description: '', nni: '', tel: 0, photo: '',);
+          _currentWidget = CameraScreen(accessToken: widget.accessToken);
           break;
         case 1:
           _currentWidget = PvForm(accessToken: widget.accessToken, id: 0, description: '', nni: '', tel: 0, photo: '',);
