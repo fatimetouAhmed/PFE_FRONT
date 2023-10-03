@@ -167,11 +167,11 @@ class _ListUserState extends State<ListUser> {
                                                   child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
-                                                      Avatar(
+                                                    /*  Avatar(
                                                         margin: EdgeInsets.only(right: 20),
                                                         size: 60,
                                                         image: 'images/users/'+user.photo,
-                                                      ),
+                                                      ),*/
                                                       Text(
                                                         user.nom,
                                                         style: Theme.of(context).textTheme.button,

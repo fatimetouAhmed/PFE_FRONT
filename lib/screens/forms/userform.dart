@@ -159,16 +159,16 @@ class _UserFormState extends State<UserForm> {
     request = http.MultipartRequest('POST', Uri.parse(baseUrl+'registeruser/'));
     }
     else {
-      request = http.MultipartRequest('PUT', Uri.parse(baseUrl + 'updateuser/{user_id}'));
+      request = http.MultipartRequest('PUT', Uri.parse(baseUrl + 'updateuser'));
     }
-
+    request.fields['user_id'] = id.toString();
     request.headers['Authorization'] = 'Bearer ${widget.accessToken}';
     request.fields['nom'] = nom;
     request.fields['prenom'] = prenom;
     request.fields['email'] = email;
     request.fields['pswd'] = pswd;
     request.fields['role'] = role;
-    request.fields['typecompte'] = typecompte;
+   // request.fields['typecompte'] = typecompte;
     request.fields['superviseur_id'] = superviseur_id.toString();
     request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
     print("image path");
