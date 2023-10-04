@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pfe_front_flutter/bar/sidebaradmin.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:pfe_front_flutter/screens/lists/listpv.dart';
 import '../screens/admin/Departement.dart';
 import '../screens/admin/stats.dart';
 import '../screens/lists/historiques.dart';
@@ -43,6 +44,9 @@ class _MasterPageState extends State<MasterPage> {
           _currentWidget = Historiques();
           break;
         case 3:
+          _currentWidget = PvHome(accessToken: widget.accessToken);
+          break;
+        case 4:
           _currentWidget = GridViewWidget(accessToken: widget.accessToken);
           break;
       // Add more cases for other indices if needed
@@ -103,6 +107,7 @@ class _MasterPageState extends State<MasterPage> {
 
 
           Icon(Icons.history, size: 30),
+          Icon(Icons.dangerous, size: 30),
           Icon(Icons.archive, size: 30),
         ],
         color: Colors.white,

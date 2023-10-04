@@ -90,11 +90,11 @@ class _ListUserState extends State<ListUser> {
                               MaterialPageRoute(
                                 builder: (context) =>
                                     MasterPage(
-                                      index: 0,  accessToken: widget.accessToken,
-                                      child:
-                                      UserForm(id:0,nom:'',prenom: '',email: '',pswd: '',role:'',photo: '',superviseur_id: 0, accessToken: widget.accessToken, typecompte: '',)
-                                      ),
+                                        index: 0,  accessToken: widget.accessToken,
+                                        child:
+                                        UserForm(id:0,nom:'',prenom: '',email: '',pswd: '',role:'',photo: '',superviseur_id: 0, accessToken: widget.accessToken, typecompte: '',)
                                     ),
+                              ),
                               // ),
                             );
                           },
@@ -194,8 +194,8 @@ class _ListUserState extends State<ListUser> {
                                                                 index: 0,  accessToken: widget.accessToken,
                                                                 child:
                                                                 UserForm(
-                                                                    id: user.id,
-                                                                     nom: user.nom, prenom: user.prenom, email: user.email, pswd: '', role: user.role,
+                                                                  id: user.id,
+                                                                  nom: user.nom, prenom: user.prenom, email: user.email, pswd: '', role: user.role,
                                                                   photo: user.photo, superviseur_id:user.superviseur_id,accessToken: widget.accessToken, typecompte: user.typecompte,
                                                                 ),),
 
@@ -269,34 +269,34 @@ class _ListUserState extends State<ListUser> {
                                                 ),
                                                 Spacer(),
                                                 Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: kDefaultPadding * 1.5,
-                                                    vertical: kDefaultPadding / 4,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.blue,
-                                                    borderRadius: BorderRadius.only(
-                                                      bottomLeft: Radius.circular(22),
-                                                      topRight: Radius.circular(22),
+                                                    padding: EdgeInsets.symmetric(
+                                                      horizontal: kDefaultPadding * 1.5,
+                                                      vertical: kDefaultPadding / 4,
                                                     ),
-                                                  ),
-                                                  child: IconButton(
-                                                    icon: Icon(
-                                                      Icons.remove_red_eye_outlined,
-                                                      size: 30, // Taille de l'icône
-                                                      color: Colors.white, // Couleur de l'icône
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.blue,
+                                                      borderRadius: BorderRadius.only(
+                                                        bottomLeft: Radius.circular(22),
+                                                        topRight: Radius.circular(22),
+                                                      ),
                                                     ),
-                                                    onPressed: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ViewUser(  accessToken: widget.accessToken, id: user.id,
-                                                              ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  )
+                                                    child: IconButton(
+                                                      icon: Icon(
+                                                        Icons.remove_red_eye_outlined,
+                                                        size: 30, // Taille de l'icône
+                                                        color: Colors.white, // Couleur de l'icône
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ViewUser(  accessToken: widget.accessToken, id: user.id,
+                                                                ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    )
                                                 ),
                                               ],
                                             ),
@@ -407,7 +407,7 @@ Widget _head() {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Total des Filieres',
+                      'Total des Utilisateurs',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,

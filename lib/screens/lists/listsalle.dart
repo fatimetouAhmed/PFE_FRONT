@@ -73,7 +73,7 @@ class _ListSalleState extends State<ListSalle> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Matieres',
+                            'Salles',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 19,
@@ -336,7 +336,7 @@ Widget _head() {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Gestion des Matieres',
+                        'Gestion des Salles',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
@@ -378,7 +378,7 @@ Widget _head() {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Total des Matieres',
+                      'Total des Salles',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,

@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pfe_front_flutter/bar/masterpageadmin.dart';
+import 'package:pfe_front_flutter/models/pv.dart';
 import 'package:pfe_front_flutter/screens/forms/addmatiereform.dart';
 import 'package:pfe_front_flutter/screens/views/viewetudiant.dart';
 import '../../../constants.dart';
@@ -14,57 +15,49 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:http_parser/http_parser.dart'; // Import MediaType class
 
 import '../forms/etudiantform.dart';
-class EtudiantHome extends StatefulWidget {
+import '../views/viewpv.dart';
+class PvHome extends StatefulWidget {
   final String accessToken;
 
-  EtudiantHome({Key? key, required this.accessToken}) : super(key: key);
+  PvHome({Key? key, required this.accessToken}) : super(key: key);
 
 
   @override
-  State<EtudiantHome> createState() => _EtudiantHomeState();
+  State<PvHome> createState() => _PvHomeState();
 }
 
-class _EtudiantHomeState extends State<EtudiantHome> {
+class _PvHomeState extends State<PvHome> {
 
-  List<Etudiant> etudiantsList = [];
+  List<Pv> pvsList = [];
 
-  Future<List<Etudiant>> fetchEtudiants() async {
+  Future<List<Pv>> fetchPvs() async {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse(baseUrl+'etudiants/'),headers: headers);
-    var etudiants = <Etudiant>[];
+    var response = await http.get(Uri.parse(baseUrl+'pv/'),headers: headers);
+    var pvs = <Pv>[];
     var jsonResponse = jsonDecode(response.body);
 
     for (var u in jsonResponse) {
       var id = u['id'];
-      var nom = u['nom'];
-      var prenom = u['prenom'];
       var photo = u['photo'];
-      var genre= u['genre'];
-      var date_N = DateFormat('yyyy-MM-dd').parse(u['date_N']);
-      var lieu_n = u['lieu_n'];
-      var email = u['email'];
-      var telephone = u['telephone'];
-      var nationalite = u['nationalite'];
-      var date_insecription = DateFormat('yyyy-MM-dd').parse(u['date_insecription']);
-      etudiants.add(Etudiant(id, nom, prenom,photo,genre, date_N,lieu_n,email,telephone,nationalite,date_insecription));
+      var description= u['description'];
+      var date_pv = DateFormat('yyyy-MM-dd').parse(u['date_pv']);
+      var nni = u['nni'];
+      var tel = u['tel'].toString();
+      var surveillant = u['surveillant'];
+      pvs.add(Pv(id, photo, description,nni,tel,surveillant,date_pv));
     }
-    return etudiants;
+    return pvs;
   }
 
-  Future delete(id) async {
-    var headers = {
-      "Authorization": "Bearer ${widget.accessToken}",
-    };
-    await http.delete(Uri.parse(baseUrl+'matieres/' + id),headers: headers);
-  }
+
   @override
   void initState() {
     super.initState();
-    fetchEtudiants().then((matieres) {
+    fetchPvs().then((pv) {
       setState(() {
-        this.etudiantsList = matieres;
+        this.pvsList = pv;
       });
     });
 
@@ -93,7 +86,7 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Etudiants',
+                            'Pvs',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 19,
@@ -101,30 +94,6 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                             ),
                           ),
 
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      MasterPage(
-                                          index: 0,  accessToken: widget.accessToken,
-
-                                          child:
-                                          EtudiantForm(id: 0, nom: '', prenom: '', photo: '', genre: '', date_N:DateTime.parse('0000-00-00 00:00:00'), lieu_n: '', email: '', telephone: 0, nationalite: '', date_insecription:DateTime.parse('0000-00-00 00:00:00'), accessToken: widget.accessToken,)
-                                      ),
-                                ),
-                                // ),
-                              );
-                            },
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 40.0,
-                              semanticLabel: 'Add',
-                              weight: 600,
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -137,21 +106,21 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                             horizontal: kDefaultPadding,
                             vertical: kDefaultPadding / 2,
                           ),
-                          child: FutureBuilder<List<Etudiant>>(
-                            future: fetchEtudiants(),
-                            builder: (BuildContext context, AsyncSnapshot<List<Etudiant>> snapshot) {
+                          child: FutureBuilder<List<Pv>>(
+                            future: fetchPvs(),
+                            builder: (BuildContext context, AsyncSnapshot<List<Pv>> snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
                                 return Center(child: CircularProgressIndicator());
                               } else if (snapshot.hasError) {
                                 return Center(child: Text('Error: ${snapshot.error}'));
                               } else {
-                                var etudiants = snapshot.data!;
+                                var pvs = snapshot.data!;
                                 return ListView.separated(
-                                  itemCount: etudiants.length,
+                                  itemCount: pvs.length,
                                   separatorBuilder: (BuildContext context, int index) =>
                                       SizedBox(height: 16), // Spacing of 16 pixels between each item
                                   itemBuilder: (BuildContext context, int index) {
-                                    var etudiant = etudiants[index];
+                                    var pv = pvs[index];
                                     return InkWell(
                                       child: Stack(
                                         alignment: Alignment.bottomCenter,
@@ -188,146 +157,61 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                                       children: [
                                                         Avatar(
                                                           margin: EdgeInsets.only(right: 20),
-                                                          size: 30,
-                                                          image: 'images/etudiants/'+etudiant.photo,
+                                                          size: 40,
+                                                          image: 'images/pv/'+pv.photo,
                                                         ),
                                                         // Text(
                                                         //   etudiant.prenom,
                                                         //   style: Theme.of(context).textTheme.button,
                                                         // ),
                                                         Text(
-                                                          etudiant.prenom,
+                                                          pv.description,
                                                           style: Theme.of(context).textTheme.button?.copyWith(
-                                                            fontSize: 9,
+                                                            fontSize: 15,
                                                             fontWeight: FontWeight.bold,
                                                           ),
                                                         ),
-
-
-
-                                                        // SizedBox(width: 8),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) => MasterPage(
-                                                                    index: 0,  accessToken: widget.accessToken
-                                                                    ,
-                                                                    child:
-                                                                    EtudiantForm(
-                                                                      id: etudiant.id,
-                                                                      nom: etudiant.nom,
-                                                                      prenom: etudiant.prenom,
-                                                                      photo: etudiant.photo,
-                                                                      genre: etudiant.genre,
-                                                                      date_N: etudiant.date_N,
-                                                                      lieu_n: etudiant.lieu_n,
-                                                                      email: etudiant.email,
-                                                                      telephone: etudiant.telephone,
-                                                                      nationalite: etudiant.nationalite,
-                                                                      date_insecription: etudiant.date_insecription,
-                                                                      accessToken: widget.accessToken,
-                                                                    )
-
-                                                                ),),
-                                                            );
-                                                          },
-                                                          child: Icon(
-                                                            Icons.edit,
-                                                            color: Colors.blue,
-                                                            size: 24.0,
-                                                            semanticLabel: 'Edit',
-                                                          ),
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () async {
-                                                            Alert(
-                                                              context: context,
-                                                              type: AlertType.warning,
-                                                              title: "Confirmation",
-                                                              desc: "Are you sure you want to delete this item?",
-                                                              buttons: [
-                                                                DialogButton(
-                                                                  child: Text(
-                                                                    "Cancel",
-                                                                    style: TextStyle(color: Colors.white, fontSize: 18),
-                                                                  ),
-                                                                  onPressed: () {
-                                                                    print("Cancel button clicked");
-                                                                    Navigator.pop(context);
-                                                                  },
-                                                                  color: Colors.red,
-                                                                  radius: BorderRadius.circular(20.0),
-                                                                ),
-                                                                DialogButton(
-                                                                  child: Text(
-                                                                    "Delete",
-                                                                    style: TextStyle(color: Colors.white, fontSize: 18),
-                                                                  ),
-                                                                  onPressed: () async {
-                                                                    await delete(etudiant.id.toString());
-                                                                    setState(() {});
-                                                                    Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                        builder: (context) => MasterPage(
-                                                                          index: 0,  accessToken: widget.accessToken,
-
-                                                                          child: EtudiantHome(  accessToken: widget.accessToken
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                  color: Colors.blue,
-                                                                  radius: BorderRadius.circular(20.0),
-                                                                ),
-                                                              ],
-                                                            ).show();
-                                                          },
-                                                          child: Icon(
-                                                            Icons.delete,
-                                                            color: Colors.red,
-                                                            size: 24.0,
-                                                            semanticLabel: 'Delete',
-                                                          ),
-                                                        ),
-
+                                                        // Text(
+                                                        //   pv.surveillant,
+                                                        //   style: Theme.of(context).textTheme.button?.copyWith(
+                                                        //     fontSize: 15,
+                                                        //     fontWeight: FontWeight.bold,
+                                                        //   ),
+                                                        // ),
                                                       ],
                                                     ),
                                                   ),
                                                   Spacer(),
                                                   Container(
-                                                    padding: EdgeInsets.symmetric(
-                                                      horizontal: kDefaultPadding * 1.5,
-                                                      vertical: kDefaultPadding / 4,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.blue,
-                                                      borderRadius: BorderRadius.only(
-                                                        bottomLeft: Radius.circular(22),
-                                                        topRight: Radius.circular(22),
+                                                      padding: EdgeInsets.symmetric(
+                                                        horizontal: kDefaultPadding * 1.5,
+                                                        vertical: kDefaultPadding / 4,
                                                       ),
-                                                    ),
-                                                    child:
-                                                    IconButton(
-                                                      icon: Icon(
-                                                        Icons.remove_red_eye_outlined,
-                                                        size: 30, // Taille de l'icône
-                                                        color: Colors.white, // Couleur de l'icône
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.blue,
+                                                        borderRadius: BorderRadius.only(
+                                                          bottomLeft: Radius.circular(22),
+                                                          topRight: Radius.circular(22),
+                                                        ),
                                                       ),
-                                                      onPressed: () {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                            ViewEtudiant(  accessToken: widget.accessToken, id: etudiant.id,
-                                                              ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    )
+                                                      child:
+                                                      IconButton(
+                                                        icon: Icon(
+                                                          Icons.remove_red_eye_outlined,
+                                                          size: 30, // Taille de l'icône
+                                                          color: Colors.white, // Couleur de l'icône
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ViewPv(  accessToken: widget.accessToken, id: pv.id,
+                                                                  ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      )
                                                   ),
                                                 ],
                                               ),
@@ -397,7 +281,7 @@ Widget _head() {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Gestion des Etudiants',
+                        'Gestion des PVs',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
@@ -439,7 +323,7 @@ Widget _head() {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Total des Etudiants',
+                      'Total des PVs',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
