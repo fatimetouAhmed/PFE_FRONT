@@ -89,7 +89,7 @@ class _ViewExamunState extends State<ViewExamun> {
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                 ),
-                height: 370,
+                height: 400,
                 width: 340,
                 child:
                 Column(

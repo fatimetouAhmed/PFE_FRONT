@@ -4,14 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:pfe_front_flutter/screens/forms/surveillanceform.dart';
 import '../models/surveillance.dart';
+import '../screens/lists/listpv.dart';
 import '../screens/lists/listsurveillant.dart';
-import '../screens/lists/notifications.dart';
 import '../screens/login_screen.dart';
 import '../screens/superviseur/GridViewWidgetDepartement.dart';
+import '../screens/superviseur/notifications.dart';
 import 'appbarsuperviseur.dart';
 import 'package:http/http.dart' as http;
 
 class MasterPageSupeurviseur extends StatefulWidget {
+
   late final Widget child;
   final String accessToken;
   final int index;
@@ -27,15 +29,23 @@ class MasterPageSupeurviseur extends StatefulWidget {
 }
 
 class _MasterPageSupeurviseurState extends State<MasterPageSupeurviseur> {
-//  Widget _currentWidget = Notifications(accessToken: ''); // Set a default value
+  late Widget _currentWidget ;
+  // = Notifications(accessToken: ''); // Set a default value
+  // int _currentIndex = 0;
+  @override
+  void initState(){
+    super.initState();
+    _currentWidget=this.widget.child;
+    _currentIndex=this.widget.index;
+  }
   int _currentIndex = 0;
   final colors=Colors.blueAccent;
-  @override
-  void initState() {
-    super.initState();
-   // _currentWidget = this.widget.child;
-    _currentIndex = this.widget.index;
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _currentWidget = this.widget.child;
+  //   _currentIndex = this.widget.index;
+  // }
 
   Future<int> fetchCountNotifications() async {
     try {
@@ -67,26 +77,21 @@ class _MasterPageSupeurviseurState extends State<MasterPageSupeurviseur> {
       _currentIndex = selectedIndex;
       switch (selectedIndex) {
         case 0:
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) =>MasterPageSupeurviseur(child:GridViewWidget(id: id_user,accessToken: accessToken,),accessToken: accessToken, index: 0,),
-          //     //HomeSceen(id: id_user,),
-          //   ),
-          // );
-
+          _currentWidget = GridViewWidget(id: 0,accessToken: widget.accessToken,);
           break;
         case 1:
+          _currentWidget = PvHome(accessToken: widget.accessToken);
+          break;
+       case 2:
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => LoginScreen(accessToken: widget.accessToken),
             ),
           );
+        default:
+        // Handle default case or leave empty if not needed
           break;
-      // case 3:
-      //   _currentWidget = SurveillanceForm(surveillance: Surveillance(0,  DateTime.parse('0000-00-00 00:00:00'), DateTime.parse('0000-00-00 00:00:00'),0,0), accessToken: widget.accessToken,);
-      //   break;
       }
     });
   }
@@ -152,13 +157,18 @@ class _MasterPageSupeurviseurState extends State<MasterPageSupeurviseur> {
                 height: 60.0,
                 items: [
                   Icon(Icons.home, size: 30),
+                  Icon(Icons.dangerous, size: 30),
                   Icon(Icons.logout, size: 30),
                 ],
-                onTap: handleDestinationTap,
-                // Rest of the CurvedNavigationBar properties...
-              ),
 
-
+      color: Colors.white,
+      buttonBackgroundColor: Colors.white,
+      backgroundColor: Colors.blueAccent,
+      animationCurve: Curves.easeInOut,
+      animationDuration: Duration(milliseconds: 600),
+        onTap: (index) => handleDestinationTap(index),
+        letIndexChange: (index) => true,
+      ),
       ),
     ),
 

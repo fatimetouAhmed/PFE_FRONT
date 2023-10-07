@@ -142,7 +142,7 @@ class _PvFormState extends State<PvForm> {
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                 ),
-                height: 320,
+                height: 360,
                 width: 370,
                 child: Form(
                   child: Column(

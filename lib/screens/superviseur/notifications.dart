@@ -104,7 +104,7 @@ class _NotificationsState extends State<Notifications> {
                             backgroundColor: Colors.transparent,
                           );
 
-                          if (notification.image.startsWith("images/")) {
+                          if (notification.image.startsWith("images/notifications")) {
                             avatarWidget = CircleAvatar(
                               radius: 30,
                               backgroundImage: AssetImage(notification.image),

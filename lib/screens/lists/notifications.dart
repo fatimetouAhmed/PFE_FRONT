@@ -9,7 +9,6 @@ class Notifications extends StatefulWidget {
   final String accessToken;
 
   Notifications({Key? key, required this.accessToken}) : super(key: key);
-  //Notifications({Key? key}) : super(key: key);
 
   @override
   _NotificationsState createState() => _NotificationsState();
@@ -23,7 +22,7 @@ class _NotificationsState extends State<Notifications> {
       "Content-Type": "application/json; charset=utf-8",
       // "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse(baseUrl+'notifications/notifications/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'notifications/admin'),headers: headers);
     var data = utf8.decode(response.bodyBytes);
     var notifications = <NotificationModel>[];
     for (var u in jsonDecode(data)) {
@@ -71,7 +70,7 @@ class _NotificationsState extends State<Notifications> {
       body: SafeArea(
         child: Column(
           children: [
-            _top(),
+            //  _top(),
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 30),
@@ -106,7 +105,7 @@ class _NotificationsState extends State<Notifications> {
                                   Avatar(
                                     margin: EdgeInsets.only(right: 20),
                                     size: 60,
-                                    image: 'images/notification1.jpg',
+                                    image: notification.image,
                                   ),
                                   Expanded(
                                     child: Column(
