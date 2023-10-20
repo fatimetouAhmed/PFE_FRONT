@@ -153,7 +153,7 @@ class _ListSemestre_MatiereState extends State<ListSemestre_Matiere> {
                                           height: 136,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(22),
-                                            color: Colors.blue,
+                                            color: Colors.blueAccent,
                                             boxShadow: [kDefaultShadow],
                                           ),
                                           child: Container(
@@ -169,7 +169,7 @@ class _ListSemestre_MatiereState extends State<ListSemestre_Matiere> {
                                           left: 0,
                                           child: SizedBox(
                                             height: 136,
-                                            width: size.width - 200,
+                                            width: size.width - 100,
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
@@ -202,7 +202,7 @@ class _ListSemestre_MatiereState extends State<ListSemestre_Matiere> {
                                                         },
                                                         child: Icon(
                                                           Icons.edit,
-                                                          color: Colors.blue,
+                                                          color: Colors.blueAccent,
                                                           size: 24.0,
                                                           semanticLabel: 'Edit',
                                                         ),
@@ -245,7 +245,7 @@ class _ListSemestre_MatiereState extends State<ListSemestre_Matiere> {
                                                                     ),
                                                                   );
                                                                 },
-                                                                color: Colors.blue,
+                                                                color: Colors.blueAccent,
                                                                 radius: BorderRadius.circular(20.0),
                                                               ),
                                                             ],
@@ -268,7 +268,7 @@ class _ListSemestre_MatiereState extends State<ListSemestre_Matiere> {
                                                     vertical: kDefaultPadding / 4,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    color: Colors.blue,
+                                                    color: Colors.blueAccent,
                                                     borderRadius: BorderRadius.only(
                                                       bottomLeft: Radius.circular(22),
                                                       topRight: Radius.circular(22),
@@ -285,7 +285,7 @@ class _ListSemestre_MatiereState extends State<ListSemestre_Matiere> {
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                          builder: (context) => MasterPage2(
+                                                          builder: (context) => MasterPage(
                                                             index: 0,  accessToken: widget.accessToken,
                                                             child:
                                                             ViewSemestreMatiere(  accessToken: widget.accessToken, id: semestre_matiere.id,
@@ -332,7 +332,7 @@ Widget _head() {
             width: double.infinity,
             height: 240,
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.blueAccent,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
@@ -380,10 +380,10 @@ Widget _head() {
       ),
       Positioned(
         top: 140,
-        left: 37,
+        left: 37    ,
         child: Container(
-          height: 170,
-          width: 320,
+          height: 140,
+          width: 340,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -393,7 +393,7 @@ Widget _head() {
                 spreadRadius: 6,
               ),
             ],
-            color: Colors.blue,
+            color: Colors.blueAccent,
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
@@ -445,7 +445,7 @@ Widget _head() {
                       children: [
                         CircleAvatar(
                           radius: 13,
-                          backgroundColor: Colors.blue,
+                          backgroundColor: Colors.blueAccent,
                           child: Icon(
                             Icons.arrow_downward,
                             color: Colors.white,
@@ -459,7 +459,7 @@ Widget _head() {
                       children: [
                         CircleAvatar(
                           radius: 13,
-                          backgroundColor: Colors.blue,
+                          backgroundColor: Colors.blueAccent,
                           child: Icon(
                             Icons.arrow_upward,
                             color: Colors.white,

@@ -234,7 +234,7 @@ class _UserFormState extends State<UserForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                               ),
                             ),
@@ -257,7 +257,7 @@ class _UserFormState extends State<UserForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                               ),
                             ),
@@ -285,7 +285,7 @@ class _UserFormState extends State<UserForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                               ),
                             ),
@@ -308,7 +308,7 @@ class _UserFormState extends State<UserForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                               ),
                             ),
@@ -525,7 +525,7 @@ class _UserFormState extends State<UserForm> {
                             context: context,
                             type: QuickAlertType.success,
                             text: 'Operation Completed Successfully!',
-                            confirmBtnColor: Colors.blue,
+                            confirmBtnColor: Colors.blueAccent,
                           ).then((value) async {
                             if (value == null) {
                               int? id = int.tryParse(idController.text);
@@ -618,7 +618,7 @@ class _UserFormState extends State<UserForm> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Colors.blue,
+                            color: Colors.blueAccent,
                           ),
                           width: 120,
                           height: 50,

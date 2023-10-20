@@ -14,6 +14,8 @@ import '../constants.dart';
 import '../widgets/rounded_button.dart';
 import '../widgets/rounded_input_field.dart';
 import '../widgets/rounded_password_field.dart';
+import 'admin/dashbordAnne.dart';
+import 'admin/dashord.dart';
 import 'admin/stats.dart';
 import 'lists/notifications.dart';
 import 'package:pfe_front_flutter/consturl.dart';
@@ -137,6 +139,7 @@ class LoginScreen extends StatelessWidget {
                   ,
             ),
           );} else if (surveillantInfo['typecompte'] == 'salle') {
+          print(accessToken);
           // Redirigez vers l'écran du surveillant de salle
           Navigator.push(
             context,
@@ -166,7 +169,7 @@ class LoginScreen extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => MasterPage(
                 index: 0,
-                child: BarChartAPI(),accessToken: accessToken
+                child: DashBoardAnnee(),accessToken: accessToken
             ),
           ),
         );

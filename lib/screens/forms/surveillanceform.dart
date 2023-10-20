@@ -227,7 +227,7 @@ int id=0;
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                 ),
-                height: 400,
+                height: 450,
                 width: 370,
                 child: Form(
                   child: Column(
@@ -358,7 +358,7 @@ int id=0;
                                 borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                           ),
                           readOnly: true,  //set it true, so that user will not able to edit text
                           onTap: () async {
@@ -400,7 +400,7 @@ int id=0;
                                 borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                           ),
                           readOnly: true,  //set it true, so that user will not able to edit text
                           onTap: () async {
@@ -432,7 +432,7 @@ int id=0;
                             context: context,
                             type: QuickAlertType.success,
                             text: 'Operation Completed Successfully!',
-                            confirmBtnColor: Colors.blue,
+                            confirmBtnColor: Colors.blueAccent,
                           ).then((value) async {
                             if (value == null) {
                               int? id = int.tryParse(idController.text);
@@ -454,7 +454,7 @@ int id=0;
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>MasterPage( index: 0,  accessToken: widget.accessToken
-                                        ,child:  ListSurveillance(  accessToken: widget.accessToken
+                                        ,child:  ListSurveillance(  accessToken: widget.accessToken, nomDep: '', nomNiv: '',
                                         ),)
                                   ),
                                 );
@@ -488,7 +488,7 @@ int id=0;
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Colors.blue,
+                            color: Colors.blueAccent,
                           ),
                           width: 120,
                           height: 50,
@@ -514,240 +514,7 @@ int id=0;
         ),
       ),
     );
-      Scaffold(
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                child: Form(
-                  child: Column(
-                    children: [
-                      Visibility(
-                        visible: false,
-                        child: TextFormField(
-                          decoration: InputDecoration(hintText: 'Enter ID'),
-                          controller: idController,
-                        ),
-                      ),
 
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                      FractionallySizedBox(
-                        widthFactor: 0.8,
-                        child: DropdownButtonFormField<String>(
-                          // print(selectedOption),
-                          value: selectedOption1,
-                          items: surveillantList.map((String option) {
-                            return DropdownMenuItem<String>(
-                              value: option,
-                              child: Text(option),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) async {
-                            selectedOption1 = newValue;
-                            //  print(selectedOption1);
-                            if (selectedOption1 != null) {
-                              int? id = await fetchSurveillanceId(selectedOption1!);
-                              print('hhh');
-                              surveillant_idController.text = id.toString();
-                              print(surveillant_idController.text);
-                            }
-                          },
-
-                          decoration: InputDecoration(
-                            labelText: 'Surveillaces',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                      FractionallySizedBox(
-                        widthFactor: 0.8,
-                        child: DropdownButtonFormField<String>(
-                          // print(selectedOption),
-                          value: selectedOption2,
-                          items: salleList.map((String option) {
-                            return DropdownMenuItem<String>(
-                              value: option,
-                              child: Text(option),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) async {
-                            selectedOption2 = newValue;
-                            // print(selectedOption2);
-                            if (selectedOption2 != null) {
-                              int? id = await fetchSallesId(selectedOption2!);
-                              salle_idController.text = id.toString();
-                              print(salle_idController.text);
-                              print("Salle");
-                            }
-                          },
-
-                          decoration: InputDecoration(
-                            labelText: 'Salles',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                      Visibility(
-                        visible: false,
-                        child: TextFormField(
-                          decoration: InputDecoration(hintText: 'Enter ID'),
-                          controller: surveillant_idController,
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                      Visibility(
-                        visible: false,
-                        child: TextFormField(
-                          decoration: InputDecoration(hintText: 'Enter ID'),
-                          controller: salle_idController,
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                      FractionallySizedBox(
-                        widthFactor: 0.8,
-                        child: TextFormField(
-                          controller: date_finController, //editing controller of this TextField
-                          decoration: InputDecoration(
-                              icon: Icon(Icons.calendar_today), //icon of text field
-                              labelText: "Enter Date fn" //label text of field
-                          ),
-                          readOnly: true,  //set it true, so that user will not able to edit text
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                                context: context, initialDate: DateTime.now(),
-                                firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
-                                lastDate: DateTime(2101)
-                            );
-
-                            if(pickedDate != null ){
-                              print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
-                              String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                              print(formattedDate); //formatted date output using intl package =>  2021-03-16
-                              //you can implement different kind of Date Format here according to your requirement
-
-                              setState(() {
-                                date_debController.text = formattedDate; //set output date to TextField value.
-                              });
-                            }else{
-                              print("Date is not selected");
-                            }
-                          },
-                        ),
-                        // TextFormField(
-                        //   decoration: InputDecoration(hintText: 'Enter Description'),
-                        //   controller: heure_debController,
-                        // ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                      FractionallySizedBox(
-                        widthFactor: 0.8,
-                        child: TextField(
-                          controller: date_finController, //editing controller of this TextField
-                          decoration: InputDecoration(
-                              icon: Icon(Icons.calendar_today), //icon of text field
-                              labelText: "Enter Date fin" //label text of field
-                          ),
-                          readOnly: true,  //set it true, so that user will not able to edit text
-                          onTap: () async {
-                            DateTime? pickedDate = await showDatePicker(
-                                context: context, initialDate: DateTime.now(),
-                                firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
-                                lastDate: DateTime(2101)
-                            );
-
-                            if(pickedDate != null ){
-                              print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
-                              String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                              print(formattedDate); //formatted date output using intl package =>  2021-03-16
-                              //you can implement different kind of Date Format here according to your requirement
-
-                              setState(() {
-                                date_finController.text = formattedDate; //set output date to TextField value.
-                              });
-                            }else{
-                              print("Date is not selected");
-                            }
-                          },
-                        ),
-                      ),
-                      SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                        ),
-                        child: Text("Submit"),
-                        onPressed: ()  async {
-                          await QuickAlert.show(
-                            context: context,
-                            type: QuickAlertType.success,
-                            text: 'Operation Completed Successfully!',
-                            confirmBtnColor: Colors.blue,
-                          ).then((value) async {
-                            if (value == null) {
-                              int? id = int.tryParse(idController.text);
-                              int? idSur = int.tryParse(surveillant_idController.text);
-                              int? idSal = int.tryParse(salle_idController.text);
-
-                              if (id != null && idSur != null && idSal != null) {
-                                await save(
-                                  Surveillance(
-                                    id,
-                                    DateTime.parse(date_debController.text),
-                                    DateTime.parse(date_finController.text),
-                                    idSur,
-                                    idSal,
-                                    '',
-                                    ''
-                                  ),
-                                );
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>MasterPageSupeurviseur(child:
-                                      ListSurveillance(accessToken: widget.accessToken,),accessToken: widget.accessToken, index: 1,)
-                                  ),
-                                );
-
-                              } else {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text("Error"),
-                                      content: Text("Invalid ID or Surveillance ID or Salle ID"),
-                                      actions: [
-                                        TextButton(
-                                          child: Text("OK"),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            }
-                          });
-
-
-                        },
-
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
   }
 
 
@@ -759,7 +526,7 @@ int id=0;
           width: double.infinity,
           height: 240,
           decoration: BoxDecoration(
-            color: Colors.blue,
+            color: Colors.blueAccent,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20),

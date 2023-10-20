@@ -7,7 +7,8 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../consturl.dart';
 import 'gender_model.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'network/network_helper.dart';
 class BarChartAPI extends StatefulWidget {
   BarChartAPI({Key? key}) : super(key: key);
@@ -23,13 +24,275 @@ class _BarChartAPIState extends State<BarChartAPI> {
   bool loading = true;
   int touchedIndex = -1;
   NetworkHelper _networkHelper = NetworkHelper();
-
+  bool showEvaluations = true;
+  bool showMatieres = false;
+  bool showFilieres = false;
+  bool showSemestres = false;
+  bool showEtudiants = false;
+  bool showAnnees = false;
+  bool showSalles = false;
+  List<_SalesData> data = [];
+  List<_SalesData> dataMatieres = [];
+  List<_SalesData> dataFilieres = [];
+  List<_SalesData> dataSemestres = [];
+  List<_SalesData> dataEtudiants = [];
+  List<_SalesData> dataAnnees = [];
+  List<_SalesData> dataSalles = [];
   @override
   void initState() {
     super.initState();
     getData();
+    fetch2();
     fetch();
+    fetchMatieres();
+    fetchFilieres();
+    fetchSemestres();
+    fetchEtudiants();
+    fetchAnnees();
+    fetchSalles();
   }
+
+  Future<void> fetch() async {
+    try {
+      final response = await http.get(Uri.parse(baseUrl+'statis/examun/nom'));
+      var jsonResponse = jsonDecode(response.body);
+      List<_SalesData> tempList = [];
+
+      for (var u in jsonResponse) {
+        var id = u['id'];
+        var nom = u['type'];
+        final historiqueResponse = await http.get(Uri.parse(baseUrl+'statis/historique/'+id.toString()));
+
+        if (historiqueResponse.statusCode == 200) {
+          dynamic jsonData = json.decode(historiqueResponse.body);
+
+          if (jsonData != null) {
+            try {
+              tempList.add(
+                _SalesData(nom, jsonData),
+              );
+            } catch (e) {
+              print("Erreur lors de la conversion de la chaîne en entier : $e");
+            }
+          }
+        }
+      }
+
+      setState(() {
+        data = tempList;
+      });
+
+    } catch (e) {
+      print("Erreur lors de la récupération des données : $e");
+    }
+  }
+
+  Future<void> fetchMatieres() async {
+    try {
+      final response = await http.get(Uri.parse(baseUrl+'statis/matieres/nom'));
+      var jsonResponse = jsonDecode(response.body);
+      List<_SalesData> tempList = [];
+
+      for (var u in jsonResponse) {
+        var id = u['id'];
+        var nom = u['libelle'];
+        final historiqueResponse = await http.get(Uri.parse(baseUrl+'statis/historique/matieres/'+id.toString()));
+
+        if (historiqueResponse.statusCode == 200) {
+          dynamic jsonData = json.decode(historiqueResponse.body);
+
+          if (jsonData != null) {
+            try {
+              tempList.add(
+                _SalesData(nom, jsonData),
+              );
+            } catch (e) {
+              print("Erreur lors de la conversion de la chaîne en entier : $e");
+            }
+          }
+        }
+      }
+
+      setState(() {
+        dataMatieres = tempList;
+      });
+
+    } catch (e) {
+      print("Erreur lors de la récupération des données : $e");
+    }
+  }
+  Future<void> fetchFilieres() async {
+    try {
+      final response = await http.get(Uri.parse(baseUrl+'statis/filieres/nom'));
+      var jsonResponse = jsonDecode(response.body);
+      List<_SalesData> tempList = [];
+
+      for (var u in jsonResponse) {
+        var id = u['id'];
+        var nom = u['libelle'];
+        final historiqueResponse = await http.get(Uri.parse(baseUrl+'statis/historique/filieres/'+id.toString()));
+
+        if (historiqueResponse.statusCode == 200) {
+          dynamic jsonData = json.decode(historiqueResponse.body);
+
+          if (jsonData != null) {
+            try {
+              tempList.add(
+                _SalesData(nom, jsonData),
+              );
+            } catch (e) {
+              print("Erreur lors de la conversion de la chaîne en entier : $e");
+            }
+          }
+        }
+      }
+
+      setState(() {
+        dataFilieres = tempList;
+      });
+
+    } catch (e) {
+      print("Erreur lors de la récupération des données : $e");
+    }
+  }
+  Future<void> fetchSemestres() async {
+    try {
+      final response = await http.get(Uri.parse(baseUrl+'statis/semestres/nom'));
+      var jsonResponse = jsonDecode(response.body);
+      List<_SalesData> tempList = [];
+
+      for (var u in jsonResponse) {
+        var id = u['id'];
+        var nom = u['libelle'];
+        final historiqueResponse = await http.get(Uri.parse(baseUrl+'statis/historique/semestres/'+id.toString()));
+
+        if (historiqueResponse.statusCode == 200) {
+          dynamic jsonData = json.decode(historiqueResponse.body);
+
+          if (jsonData != null) {
+            try {
+              tempList.add(
+                _SalesData(nom, jsonData),
+              );
+            } catch (e) {
+              print("Erreur lors de la conversion de la chaîne en entier : $e");
+            }
+          }
+        }
+      }
+
+      setState(() {
+        dataSemestres = tempList;
+      });
+
+    } catch (e) {
+      print("Erreur lors de la récupération des données : $e");
+    }
+  }
+  Future<void> fetchEtudiants() async {
+    try {
+      final response = await http.get(Uri.parse(baseUrl+'statis/etudiants/nom'));
+      var jsonResponse = jsonDecode(response.body);
+      List<_SalesData> tempList = [];
+
+      for (var u in jsonResponse) {
+        var id = u['id'];
+        var nom = u['prenom'];
+        final historiqueResponse = await http.get(Uri.parse(baseUrl+'statis/historique/etudiants/'+id.toString()));
+
+        if (historiqueResponse.statusCode == 200) {
+          dynamic jsonData = json.decode(historiqueResponse.body);
+
+          if (jsonData != null) {
+            try {
+              tempList.add(
+                _SalesData(nom, jsonData),
+              );
+            } catch (e) {
+              print("Erreur lors de la conversion de la chaîne en entier : $e");
+            }
+          }
+        }
+      }
+
+      setState(() {
+        dataEtudiants = tempList;
+      });
+
+    } catch (e) {
+      print("Erreur lors de la récupération des données : $e");
+    }
+  }
+  Future<void> fetchAnnees() async {
+    try {
+      final response = await http.get(Uri.parse(baseUrl+'statis/annees/nom'));
+      var jsonResponse = jsonDecode(response.body);
+      List<_SalesData> tempList = [];
+
+      for (var u in jsonResponse) {
+        var id = u['id'];
+        var nom = u['annee'];
+        final historiqueResponse = await http.get(Uri.parse(baseUrl+'statis/historique/annees/'+id.toString()));
+
+        if (historiqueResponse.statusCode == 200) {
+          dynamic jsonData = json.decode(historiqueResponse.body);
+
+          if (jsonData != null) {
+            try {
+              tempList.add(
+                _SalesData(nom, jsonData),
+              );
+            } catch (e) {
+              print("Erreur lors de la conversion de la chaîne en entier : $e");
+            }
+          }
+        }
+      }
+
+      setState(() {
+        dataAnnees = tempList;
+      });
+
+    } catch (e) {
+      print("Erreur lors de la récupération des données : $e");
+    }
+  }
+  Future<void> fetchSalles() async {
+    try {
+      final response = await http.get(Uri.parse(baseUrl+'statis/salles/nom'));
+      var jsonResponse = jsonDecode(response.body);
+      List<_SalesData> tempList = [];
+
+      for (var u in jsonResponse) {
+        var id = u['id'];
+        var nom = u['nom'];
+        final historiqueResponse = await http.get(Uri.parse(baseUrl+'statis/historique/salles/'+id.toString()));
+
+        if (historiqueResponse.statusCode == 200) {
+          dynamic jsonData = json.decode(historiqueResponse.body);
+
+          if (jsonData != null) {
+            try {
+              tempList.add(
+                _SalesData(nom, jsonData),
+              );
+            } catch (e) {
+              print("Erreur lors de la conversion de la chaîne en entier : $e");
+            }
+          }
+        }
+      }
+
+      setState(() {
+        dataSalles = tempList;
+      });
+
+    } catch (e) {
+      print("Erreur lors de la récupération des données : $e");
+    }
+  }
+
+
   Widget bottomTitles(double value, TitleMeta meta) {
     const style = TextStyle(fontSize: 10);
     String text;
@@ -85,16 +348,16 @@ class _BarChartAPIState extends State<BarChartAPI> {
   }
 
   List<OrdinalData> ordinalList = [];
-  Future<void> fetch() async {
+  Future<void> fetch2() async {
     try {
-      final response = await http.get(Uri.parse(baseUrl+'examuns/examun/nom'));
+      final response = await http.get(Uri.parse(baseUrl+'statis/examun/nom'));
       var jsonResponse = jsonDecode(response.body);
       List<OrdinalData> tempList = []; // Créer une liste temporaire
 
       for (var u in jsonResponse) {
         var id = u['id'];
         var nom = u['type'];
-        final historiqueResponse = await http.get(Uri.parse(baseUrl+'historiques/historique/'+id.toString()));
+        final historiqueResponse = await http.get(Uri.parse(baseUrl+'statis/historique/'+id.toString()));
 
         if (historiqueResponse.statusCode == 200) {
           dynamic jsonData = json.decode(historiqueResponse.body);
@@ -141,6 +404,277 @@ class _BarChartAPIState extends State<BarChartAPI> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Card(
+                  color: Colors.white,
+
+                  child: SfCartesianChart(
+                    primaryXAxis: CategoryAxis(),
+                    title: ChartTitle(text: 'Nombre des tricheurs'),
+                    legend: Legend(isVisible: true),
+                    tooltipBehavior: TooltipBehavior(enable: true),
+                    series: <ChartSeries<_SalesData, String>>[
+                      LineSeries<_SalesData, String>(
+                        dataSource: showMatieres
+                            ? dataMatieres
+                            : (showEtudiants
+                            ? dataEtudiants
+                            : (showSalles
+                            ? dataSalles
+                            : (showFilieres
+                            ? dataFilieres
+                            : (showSemestres
+                            ? dataSemestres
+                            : (showAnnees ? dataAnnees : data))))),
+
+
+                        xValueMapper: (_SalesData sales, _) => sales.year,
+                        yValueMapper: (_SalesData sales, _) =>
+                        (showEvaluations || showMatieres ||showEtudiants||showFilieres||showSemestres||showSalles||showAnnees) ? sales.sales : 0,
+                        name: 'Tricheurs',
+                        dataLabelSettings: DataLabelSettings(isVisible: true),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Card(
+                  color: Colors.white,
+
+                  child:Row(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: showEvaluations,
+                                onChanged: (value) {
+                                  setState(() {
+                                    showEvaluations = value!;
+                                    showMatieres = false;
+                                    showFilieres = false;
+                                    showSemestres = false;
+                                    showEtudiants = false;
+                                    showAnnees = false;
+                                    showSalles = false;
+                                  });
+                                },
+                              ),
+                              Text('Evaluation'),
+                            ],
+                          ),
+                          SizedBox(width: 5,),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: showMatieres,
+                                onChanged: (value) {
+                                  setState(() {
+                                    showMatieres = value!;
+                                    showEvaluations = false;
+                                    showFilieres = false;
+                                    showSemestres = false;
+                                    showEtudiants = false;
+                                    showAnnees = false;
+                                    showSalles = false;
+                                  });
+                                },
+                              ),
+
+                              Text('Matieres'),
+                            ],
+                          ),
+                          SizedBox(width: 5,),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: showFilieres,
+                                onChanged: (value) {
+                                  setState(() {
+                                    showFilieres = value!;
+                                    showEvaluations = false;
+                                    showMatieres = false;
+                                    showSemestres = false;
+                                    showEtudiants = false;
+                                    showAnnees = false;
+                                    showSalles = false;
+                                  });
+                                },
+                              ),
+                              Text('Filieres'),
+                            ],
+                          ),
+                          SizedBox(width: 5,),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: showSemestres,
+                                onChanged: (value) {
+                                  setState(() {
+                                    showSemestres = value!;
+                                    showEvaluations = false;
+                                    showFilieres = false;
+                                    showMatieres = false;
+                                    showEtudiants = false;
+                                    showAnnees = false;
+                                    showSalles = false;
+                                  });
+                                },
+                              ),
+
+                              Text('Semestres'),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(width:70,),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: showEtudiants,
+                                onChanged: (value) {
+                                  setState(() {
+                                    showEtudiants = value!;
+                                    showEvaluations = false;
+                                    showFilieres = false;
+                                    showSemestres = false;
+                                    showMatieres = false;
+                                    showAnnees = false;
+                                    showSalles = false;
+                                  });
+                                },
+                              ),
+                              Text('Etudiants'),
+                            ],
+                          ),
+                          SizedBox(width: 5,),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: showSalles,
+                                onChanged: (value) {
+                                  setState(() {
+                                    showSalles = value!;
+                                    showEvaluations = false;
+                                    showFilieres = false;
+                                    showSemestres = false;
+                                    showEtudiants = false;
+                                    showAnnees = false;
+                                    showMatieres = false;
+                                  });
+                                },
+                              ),
+
+                              Text('Salles'),
+                            ],
+                          ),
+                          SizedBox(width: 5,),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: showAnnees,
+                                onChanged: (value) {
+                                  setState(() {
+                                    showAnnees = value!;
+                                    showEvaluations = false;
+                                    showFilieres = false;
+                                    showSemestres = false;
+                                    showEtudiants = false;
+                                    showMatieres = false;
+                                    showSalles = false;
+                                  });
+                                },
+                              ),
+                              Text('Annees'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Card(
+                  color: Colors.white,
+
+                  child:  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SfSparkLineChart.custom(
+                        trackball: SparkChartTrackball(
+                            activationMode: SparkChartActivationMode.tap
+                        ),
+                        marker: SparkChartMarker(
+                            displayMode: SparkChartMarkerDisplayMode.all
+                        ),
+                        labelDisplayMode: SparkChartLabelDisplayMode.all,
+                        xValueMapper: (int index) =>
+                        showMatieres==true
+                            ? dataMatieres[index].year
+                            : (showEtudiants==true
+                            ? dataEtudiants[index].year
+                            : (showSalles==true
+                            ? dataSalles[index].year
+                            : (showFilieres==true
+                            ? dataFilieres[index].year
+                            : (showSemestres==true
+                            ? dataSemestres[index].year
+                            : (showAnnees==true ? dataAnnees[index].year : data[index].year))))),
+                        yValueMapper: (int index) {
+                          if (showMatieres) {
+                            if (!showEvaluations) {
+                              return dataMatieres[index].sales;
+                            } else {
+                              return 0;
+                            }
+                          } else {
+                            if (showEvaluations) {
+                              return data[index].sales;
+                            } else if (showEtudiants) {
+                              return dataEtudiants[index].sales;
+                            } else if (showSalles) {
+                              return dataSalles[index].sales;
+                            } else if (showFilieres) {
+                              return dataFilieres[index].sales;
+                            } else if (showSemestres) {
+                              return dataSemestres[index].sales;
+                            } else if (showAnnees) {
+                              return dataAnnees[index].sales;
+                            } else {
+                              return 0;
+                            }
+                          }
+                        },
+
+                        dataCount: showMatieres ? dataMatieres.length
+                            : (showEtudiants
+                            ? dataEtudiants.length
+                            : (showSalles
+                            ? dataSalles.length
+                            : (showFilieres
+                            ? dataFilieres.length
+                            : (showSemestres
+                            ? dataSemestres.length
+                            : (showAnnees ? dataAnnees.length : data.length))))),
+                        //showMatieres==true ? dataMatieres.length : data.length,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               Container(
                 height: 300,
                 child: charts.BarChart(
@@ -232,84 +766,10 @@ class _BarChartAPIState extends State<BarChartAPI> {
                   ),
                 ),
               ),
-              AspectRatio(
-                aspectRatio: 1.66,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      final barsSpace =
-                          4.0 * constraints.maxWidth / 400;
-                      final barsWidth =
-                          8.0 * constraints.maxWidth / 400;
-                      return BarChart(
-                        BarChartData(
-                          alignment: BarChartAlignment.center,
-                          barTouchData: BarTouchData(
-                            enabled: false,
-                          ),
-                          titlesData: FlTitlesData(
-                            show: true,
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                reservedSize: 28,
-                                getTitlesWidget: bottomTitles,
-                              ),
-                            ),
-                            leftTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                reservedSize: 40,
-                                getTitlesWidget: leftTitles,
-                              ),
-                            ),
-                            topTitles: const AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
-                            ),
-                            rightTitles: const AxisTitles(
-                              sideTitles: SideTitles(showTitles: false),
-                            ),
-                          ),
-                          gridData: FlGridData(
-                            show: true,
-                            checkToShowHorizontalLine: (value) =>
-                            value % 10 == 0,
-                            getDrawingHorizontalLine: (value) =>
-                                FlLine(
-                                  color: Colors.transparent,
-                                  strokeWidth: 1,
-                                ),
-                            drawVerticalLine: false,
-                          ),
-                          borderData: FlBorderData(
-                            show: false,
-                          ),
-                          groupsSpace: barsSpace,
-                          barGroups: getData2(barsWidth, barsSpace),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
+
               // Container(
               //   child:
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: Card(
-                  color: Colors.white,
 
-                  child: DChartBarO(
-                    groupList: [
-                      OrdinalGroup(
-                        id: '1',
-                        data: ordinalList,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ],
           ),
         ),
@@ -633,4 +1093,11 @@ class Indicator extends StatelessWidget {
       ],
     );
   }
+}
+
+class _SalesData {
+  _SalesData(this.year, this.sales);
+
+  final String year;
+  final int sales;
 }

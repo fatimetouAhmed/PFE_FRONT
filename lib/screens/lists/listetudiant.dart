@@ -16,8 +16,8 @@ import 'package:http_parser/http_parser.dart'; // Import MediaType class
 import '../forms/etudiantform.dart';
 class EtudiantHome extends StatefulWidget {
   final String accessToken;
-
-  EtudiantHome({Key? key, required this.accessToken}) : super(key: key);
+  final String nom;
+  EtudiantHome({Key? key, required this.accessToken, required this.nom}) : super(key: key);
 
 
   @override
@@ -28,28 +28,31 @@ class _EtudiantHomeState extends State<EtudiantHome> {
 
   List<Etudiant> etudiantsList = [];
 
-  Future<List<Etudiant>> fetchEtudiants() async {
-    var headers = {
-      "Authorization": "Bearer ${widget.accessToken}",
-    };
-    var response = await http.get(Uri.parse(baseUrl+'etudiants/'),headers: headers);
+  Future<List<Etudiant>> fetchEtudiants(String nom) async {
+    var response = await http.get(Uri.parse(baseUrl+'annees/etudiants/$nom'),);
     var etudiants = <Etudiant>[];
     var jsonResponse = jsonDecode(response.body);
 
-    for (var u in jsonResponse) {
-      var id = u['id'];
-      var nom = u['nom'];
-      var prenom = u['prenom'];
-      var photo = u['photo'];
-      var genre= u['genre'];
-      var date_N = DateFormat('yyyy-MM-dd').parse(u['date_N']);
-      var lieu_n = u['lieu_n'];
-      var email = u['email'];
-      var telephone = u['telephone'];
-      var nationalite = u['nationalite'];
-      var date_insecription = DateFormat('yyyy-MM-dd').parse(u['date_insecription']);
-      etudiants.add(Etudiant(id, nom, prenom,photo,genre, date_N,lieu_n,email,telephone,nationalite,date_insecription));
+    if (jsonResponse is List) {
+      for (var u in jsonResponse) {
+        var id = u['id'];
+        var nom = u['nom'];
+        var prenom = u['prenom'];
+        var photo = u['photo'];
+        var genre= u['genre'];
+        var date_N = DateFormat('yyyy-MM-dd').parse(u['date_N']);
+        var lieu_n = u['lieu_n'];
+        var email = u['email'];
+        var telephone = u['telephone'];
+        var nationalite = u['nationalite'];
+        var date_insecription = DateFormat('yyyy-MM-dd').parse(u['date_insecription']);
+        var id_fil=u['id_fil'];
+        etudiants.add(Etudiant(id, nom, prenom,photo,genre, date_N,lieu_n,email,telephone,nationalite,date_insecription,id_fil));
+      }
+    } else {
+      print("La réponse JSON ne contient pas une liste d'étudiants.");
     }
+
     return etudiants;
   }
 
@@ -62,14 +65,15 @@ class _EtudiantHomeState extends State<EtudiantHome> {
   @override
   void initState() {
     super.initState();
-    fetchEtudiants().then((matieres) {
-      setState(() {
-        this.etudiantsList = matieres;
-      });
-    });
+    loadEtudiants();
 
   }
-
+  Future<void> loadEtudiants() async {
+    List<Etudiant> matieres = await fetchEtudiants(widget.nom);
+    setState(() {
+      this.etudiantsList = matieres;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -80,7 +84,7 @@ class _EtudiantHomeState extends State<EtudiantHome> {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: SizedBox(height: 340, child: _head()),
+              child: SizedBox(height: 190, child: _head()),
             ),
             SliverToBoxAdapter(
               child: Padding(
@@ -138,7 +142,7 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                             vertical: kDefaultPadding / 2,
                           ),
                           child: FutureBuilder<List<Etudiant>>(
-                            future: fetchEtudiants(),
+                            future: fetchEtudiants(widget.nom),
                             builder: (BuildContext context, AsyncSnapshot<List<Etudiant>> snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
                                 return Center(child: CircularProgressIndicator());
@@ -160,7 +164,7 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                             height: 136,
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(22),
-                                              color: Colors.blue,
+                                              color: Colors.blueAccent,
                                               boxShadow: [kDefaultShadow],
                                             ),
                                             child: Container(
@@ -176,7 +180,7 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                             left: 0,
                                             child: SizedBox(
                                               height: 136,
-                                              width: size.width - 200,
+                                              width: size.width - 100,
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: <Widget>[
@@ -188,21 +192,23 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                                       children: [
                                                         Avatar(
                                                           margin: EdgeInsets.only(right: 20),
-                                                          size: 30,
+                                                          size: 40,
                                                           image: 'images/etudiants/'+etudiant.photo,
                                                         ),
-                                                        // Text(
-                                                        //   etudiant.prenom,
-                                                        //   style: Theme.of(context).textTheme.button,
-                                                        // ),
+                                                        SizedBox(width: 5,),
                                                         Text(
                                                           etudiant.prenom,
-                                                          style: Theme.of(context).textTheme.button?.copyWith(
-                                                            fontSize: 9,
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
+                                                          style: Theme.of(context).textTheme.button,
                                                         ),
-
+                                                        // SizedBox(width: 5,),
+                                                        // Text(
+                                                        //  etudiant.nom,
+                                                        //   style: Theme.of(context).textTheme.button?.copyWith(
+                                                        //     fontSize: 15,
+                                                        //     fontWeight: FontWeight.bold,
+                                                        //   ),
+                                                        // ),
+                                                        // SizedBox(width: 5,),
 
 
                                                         // SizedBox(width: 8),
@@ -235,7 +241,7 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                                           },
                                                           child: Icon(
                                                             Icons.edit,
-                                                            color: Colors.blue,
+                                                            color: Colors.blueAccent,
                                                             size: 24.0,
                                                             semanticLabel: 'Edit',
                                                           ),
@@ -274,13 +280,13 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                                                         builder: (context) => MasterPage(
                                                                           index: 0,  accessToken: widget.accessToken,
 
-                                                                          child: EtudiantHome(  accessToken: widget.accessToken
+                                                                          child: EtudiantHome(  accessToken: widget.accessToken, nom: widget.nom,
                                                                           ),
                                                                         ),
                                                                       ),
                                                                     );
                                                                   },
-                                                                  color: Colors.blue,
+                                                                  color: Colors.blueAccent,
                                                                   radius: BorderRadius.circular(20.0),
                                                                 ),
                                                               ],
@@ -304,7 +310,7 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                                       vertical: kDefaultPadding / 4,
                                                     ),
                                                     decoration: BoxDecoration(
-                                                      color: Colors.blue,
+                                                      color: Colors.blueAccent,
                                                       borderRadius: BorderRadius.only(
                                                         bottomLeft: Radius.circular(22),
                                                         topRight: Radius.circular(22),
@@ -321,10 +327,12 @@ class _EtudiantHomeState extends State<EtudiantHome> {
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                            builder: (context) =>
+                                                            builder: (context) =>  MasterPage(
+                                                          index: 0,  accessToken: widget.accessToken,
+                                                          child:
                                                             ViewEtudiant(  accessToken: widget.accessToken, id: etudiant.id,
                                                               ),
-                                                          ),
+                                                          ),),
                                                         );
                                                       },
                                                     )
@@ -364,60 +372,24 @@ Widget _head() {
         children: [
           Container(
             width: double.infinity,
-            height: 240,
+            height: 80,
+
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.blueAccent,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
               ),
             ),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 35,
-                  left: 340,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(7),
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      color: Color.fromRGBO(250, 250, 250, 0.1),
-                      child: Icon(
-                        Icons.notification_add_outlined,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 35, left: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Gestion des Etudiants',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
           ),
         ],
       ),
       Positioned(
-        top: 140,
-        left: 37,
+        top: 10,
+        left: 37    ,
         child: Container(
-          height: 170,
-          width: 320,
+          height: 140,
+          width: 340,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -427,12 +399,12 @@ Widget _head() {
                 spreadRadius: 6,
               ),
             ],
-            color: Colors.blue,
+            color: Colors.blueAccent,
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
             children: [
-              SizedBox(height: 10),
+              SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
@@ -469,68 +441,7 @@ Widget _head() {
                   ],
                 ),
               ),
-              SizedBox(height: 25),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.blue,
-                          child: Icon(
-                            Icons.arrow_downward,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
 
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.blue,
-                          child: Icon(
-                            Icons.arrow_upward,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
-
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 6),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '15',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      '50',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
         ),

@@ -115,8 +115,9 @@ class _EtudiantFormState extends State<EtudiantForm> {
       var telephone = u['telephone'];
       var nationalite = u['nationalite'];
       var date_insecription = DateFormat('yyyy-MM-dd').parse(u['date_insecription']);
+      var id_fil=u['id_fil'];
       if (id != null && nom != null &&  prenom != null && photo != null && genre != null && date_N != null) {
-        etudiants.add(Etudiant(id, nom, prenom,photo,genre, date_N,lieu_n,email,telephone,nationalite,date_insecription));
+        etudiants.add(Etudiant(id, nom, prenom,photo,genre, date_N,lieu_n,email,telephone,nationalite,date_insecription,id_fil));
       } else {
         print('Incomplete data for Etudiant object');
       }
@@ -218,7 +219,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                               ),
                             ),
@@ -240,7 +241,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                               ),
                             ),
@@ -267,7 +268,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                               ),
                             ),
@@ -291,7 +292,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                                 readOnly: true,  //set it true, so that user will not able to edit text
                                 onTap: () async {
@@ -341,7 +342,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                               ),
                             ),
@@ -363,7 +364,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                               ),
                             ),
@@ -390,7 +391,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                               ),
                             ),
@@ -412,7 +413,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                               ),
                             ),
@@ -461,7 +462,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
                                       borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
-                                      borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                      borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                                 ),
                                 readOnly: true,  //set it true, so that user will not able to edit text
                                 onTap: () async {
@@ -496,7 +497,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
                             context: context,
                             type: QuickAlertType.success,
                             text: 'Operation Completed Successfully!',
-                            confirmBtnColor: Colors.blue,
+                            confirmBtnColor: Colors.blueAccent,
                           ).then((value) async {
                             if (value == null) {
                               int? id = int.tryParse(idController.text);
@@ -526,7 +527,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>MasterPage( index: 0,  accessToken: widget.accessToken
-                                        ,child:  EtudiantHome(  accessToken: widget.accessToken
+                                        ,child:  EtudiantHome(  accessToken: widget.accessToken, nom: '',
                                         ),)
                                   ),
                                 );
@@ -560,7 +561,7 @@ class _EtudiantFormState extends State<EtudiantForm> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Colors.blue,
+                            color: Colors.blueAccent,
                           ),
                           width: 120,
                           height: 50,

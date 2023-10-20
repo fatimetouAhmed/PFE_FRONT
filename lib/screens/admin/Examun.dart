@@ -95,7 +95,7 @@ class _GridViewWidgetExamunState extends State<GridViewWidgetExamun> {
                             ),
                           ),
                           Text(
-                            DateFormat('MM-dd HH:mm').format(examuns[index].heure_deb),
+                            DateFormat('MM-dd HH:mm').format(examuns[index].date_deb),
                             style: TextStyle(fontSize: 12),
                           ),
                         ],

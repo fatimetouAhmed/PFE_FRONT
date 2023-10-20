@@ -10,6 +10,7 @@ class Etudiant {
   final int telephone;
   final String nationalite;
   final DateTime date_insecription;
+  final int id_fil;
 Etudiant(
     this.id,
     this.nom,
@@ -21,7 +22,7 @@ Etudiant(
     this.email,
     this.telephone,
     this.nationalite,
-    this.date_insecription
+    this.date_insecription, this.id_fil
     );
 
 }

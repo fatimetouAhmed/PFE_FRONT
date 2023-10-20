@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+
+import '../screens/login_screen.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({Key? key}) : super(key: key);
 
@@ -9,27 +11,47 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: TextField(
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
-            borderSide: BorderSide(width: 0.8),
-          ),
-          fillColor: Colors.white,
-          filled: true,
-          hintText: 'search',
-          prefixIcon: Icon(
-            Icons.search,
-            size: 30.0,
-          ),
-          suffixIcon: IconButton(
-            icon: Icon(Icons.clear),
-            onPressed: () {},
-          ),
+
+      title: Container(
+        decoration: BoxDecoration(
+          // borderRadius: BorderRadius.circular(30),
+          // color: Colors.blueAccent,
+        ),
+        height: 200,
+        child:
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage('images/image2.jpg'),
+                ),
+                SizedBox(width: 5,),
+                Text('Hello Ahad!', style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: Colors.white,
+                  fontSize: 20
+                )),
+              ],
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(accessToken: ''),
+                  ),
+                );
+              },
+              child: Icon(Icons.logout),
+            ),
+          ],
         ),
       ),
-      backgroundColor: Colors.blue,
+      elevation: 0,
+      backgroundColor: Colors.blueAccent,
+      automaticallyImplyLeading: false,
     );
   }
 }

@@ -11,8 +11,8 @@ import '../../models/matiere.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 class MatiereHome extends StatefulWidget {
   final String accessToken;
-
-  MatiereHome({Key? key, required this.accessToken}) : super(key: key);
+final String nom;
+  MatiereHome({Key? key, required this.accessToken, required this.nom}) : super(key: key);
 
 
   @override
@@ -23,18 +23,29 @@ class _MatiereHomeState extends State<MatiereHome> {
 
   List<Matiere> matieresList = [];
 
-  Future<List<Matiere>> fetchMatieres() async {
-    var headers = {
-      "Authorization": "Bearer ${widget.accessToken}",
-    };
-    var response = await http.get(Uri.parse(baseUrl+'matieres/'),headers: headers);
-    var matieres = <Matiere>[];
-    for (var u in jsonDecode(response.body)) {
-      matieres.add(Matiere(u['id'], u['libelle'],u['nbre_heure'],u['credit']));
+  Future<List<Matiere>> fetchMatieres(String nom) async {
+    var response = await http.get(Uri.parse(baseUrl+'annees/matieres/$nom'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = json.decode(response.body);
+      List<Matiere> matieres = [];
+
+      for (var matiere in jsonResponse) {
+        matieres.add(Matiere(
+          matiere['id'],
+          matiere['libelle'],
+          matiere['nbr_heure'],
+          matiere['credit'],
+          matiere['filiere'],
+        ));
+      }
+
+      return matieres;
+    } else {
+      throw Exception('Failed to load data from API');
     }
-    print(matieres);
-    return matieres;
   }
+
 
   Future delete(id) async {
     var headers = {
@@ -43,22 +54,10 @@ class _MatiereHomeState extends State<MatiereHome> {
     await http.delete(Uri.parse(baseUrl+'matieres/' + id),headers: headers);
   }
 
-  // List<Matiere> matieres = []; // Liste des départements
-  // Future fetchMatieres() async {
-  //
-  //   var response = await http.get(Uri.parse(baseUrl+'matieres/'));
-  //   var matieres = <Matiere>[];
-  //   for (var u in jsonDecode(response.body)) {
-  //     print('Parsed JSON object: $u');
-  //     matieres.add(Matiere(u['id'], u['libelle'],u['nbre_heure'],u['credit']));
-  //   }
-  //   print(matieres);
-  //   return matieres;
-  // }
   @override
   void initState() {
     super.initState();
-    fetchMatieres().then((matieres) {
+    fetchMatieres(widget.nom).then((matieres) {
       setState(() {
         this.matieresList = matieres;
       });
@@ -76,7 +75,7 @@ class _MatiereHomeState extends State<MatiereHome> {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: SizedBox(height: 340, child: _head()),
+              child: SizedBox(height: 190, child: _head()),
             ),
             SliverToBoxAdapter(
               child: Padding(
@@ -107,7 +106,7 @@ class _MatiereHomeState extends State<MatiereHome> {
                                     index: 0,  accessToken: widget.accessToken,
 
                                       child:
-                                  AddMatiereForm(matiere: Matiere(0, '',0,0),  accessToken: widget.accessToken
+                                  AddMatiereForm(matiere: Matiere(0, '',0,0,'',),  accessToken: widget.accessToken, nom: widget.nom,
                                   ),
                                ),
                                  ),
@@ -135,7 +134,7 @@ class _MatiereHomeState extends State<MatiereHome> {
                             vertical: kDefaultPadding / 2,
                           ),
                           child: FutureBuilder<List<Matiere>>(
-                            future: fetchMatieres(),
+                            future: fetchMatieres(widget.nom),
                             builder: (BuildContext context, AsyncSnapshot<List<Matiere>> snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
                                 return Center(child: CircularProgressIndicator());
@@ -157,7 +156,7 @@ class _MatiereHomeState extends State<MatiereHome> {
                                             height: 136,
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(22),
-                                              color: Colors.blue,
+                                              color: Colors.blueAccent,
                                               boxShadow: [kDefaultShadow],
                                             ),
                                             child: Container(
@@ -173,7 +172,7 @@ class _MatiereHomeState extends State<MatiereHome> {
                                             left: 0,
                                             child: SizedBox(
                                               height: 136,
-                                              width: size.width - 200,
+                                              width: size.width - 100,
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: <Widget>[
@@ -199,7 +198,7 @@ class _MatiereHomeState extends State<MatiereHome> {
                                                                   ,
                                                                   child:
                                                                     AddMatiereForm(
-                                                                  matiere: matiere,  accessToken: widget.accessToken
+                                                                  matiere: matiere,  accessToken: widget.accessToken, nom: widget.nom,
 
                                                                     ),
                                                               ),),
@@ -207,7 +206,7 @@ class _MatiereHomeState extends State<MatiereHome> {
                                                           },
                                                           child: Icon(
                                                             Icons.edit,
-                                                            color: Colors.blue,
+                                                            color: Colors.blueAccent,
                                                             size: 24.0,
                                                             semanticLabel: 'Edit',
                                                           ),
@@ -246,13 +245,13 @@ class _MatiereHomeState extends State<MatiereHome> {
                                                                         builder: (context) => MasterPage(
                                                                           index: 0,  accessToken: widget.accessToken,
 
-                                                                            child: MatiereHome(  accessToken: widget.accessToken
+                                                                            child: MatiereHome(  accessToken: widget.accessToken, nom: widget.nom,
                                                                         ),
                                                                         ),
                                                                       ),
                                                                     );
                                                                   },
-                                                                  color: Colors.blue,
+                                                                  color: Colors.blueAccent,
                                                                   radius: BorderRadius.circular(20.0),
                                                                 ),
                                                               ],
@@ -276,7 +275,7 @@ class _MatiereHomeState extends State<MatiereHome> {
                                                       vertical: kDefaultPadding / 4,
                                                     ),
                                                     decoration: BoxDecoration(
-                                                      color: Colors.blue,
+                                                      color: Colors.blueAccent,
                                                       borderRadius: BorderRadius.only(
                                                         bottomLeft: Radius.circular(22),
                                                         topRight: Radius.circular(22),
@@ -292,7 +291,7 @@ class _MatiereHomeState extends State<MatiereHome> {
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                            builder: (context) => MasterPage2(
+                                                            builder: (context) => MasterPage(
                                                               index: 0,  accessToken: widget.accessToken,
                                                               child:
                                                               ViewMatiere(  accessToken: widget.accessToken, id: matiere.id,
@@ -338,60 +337,24 @@ Widget _head() {
         children: [
           Container(
             width: double.infinity,
-            height: 240,
+            height: 80,
+
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.blueAccent,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
               ),
             ),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 35,
-                  left: 340,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(7),
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      color: Color.fromRGBO(250, 250, 250, 0.1),
-                      child: Icon(
-                        Icons.notification_add_outlined,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 35, left: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Gestion des Matieres',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
           ),
         ],
       ),
       Positioned(
-        top: 140,
-        left: 37,
+        top: 10,
+        left: 37    ,
         child: Container(
-          height: 170,
-          width: 320,
+          height: 140,
+          width: 340,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -401,12 +364,12 @@ Widget _head() {
                 spreadRadius: 6,
               ),
             ],
-            color: Colors.blue,
+            color: Colors.blueAccent,
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
             children: [
-              SizedBox(height: 10),
+              SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
@@ -443,68 +406,7 @@ Widget _head() {
                   ],
                 ),
               ),
-              SizedBox(height: 25),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.blue,
-                          child: Icon(
-                            Icons.arrow_downward,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
 
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.blue,
-                          child: Icon(
-                            Icons.arrow_upward,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
-
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 6),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '15',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      '50',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
         ),

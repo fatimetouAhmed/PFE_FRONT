@@ -30,16 +30,16 @@ class ViewMatiere extends StatefulWidget {
 
 class _ViewMatiereState extends State<ViewMatiere> {
 
-  List<Matiere> matieresList = [Matiere(0, '', 0, 0,)];
+  List<Matiere> matieresList = [Matiere(0, '', 0, 0,'')];
 
   Future<List<Matiere>> fetchMatieres(id) async {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse(baseUrl+'matieres/'+id),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'annees/matieres/'+id),headers: headers);
     var matieres = <Matiere>[];
     for (var u in jsonDecode(response.body)) {
-      matieres.add(Matiere(u['id'], u['libelle'],u['nbre_heure'],u['credit']));
+      matieres.add(Matiere(u['id'], u['libelle'],u['nbre_heure'],u['credit'],u['id_fil']));
     }
     print(matieres);
     return matieres;
@@ -58,17 +58,6 @@ class _ViewMatiereState extends State<ViewMatiere> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        title: Row(
-          children: [
-            SizedBox(width: 40), // Réduire l'espace entre l'icône et le texte
-            Text('Matiere details',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
-            Container(height: 24,width: 24,)
-          ],
-        ),
-      ),
       body:
       SafeArea(
         child: Stack(
@@ -83,7 +72,7 @@ class _ViewMatiereState extends State<ViewMatiere> {
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                 ),
-                height: 250,
+                height: 300,
                 width: 340,
                 child:
                 Column(

@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:pfe_front_flutter/consturl.dart';
 
+import '../notification_manager/notification_manager.dart';
+
 
 
 class SurveillantSalleScreen extends StatefulWidget {
@@ -36,12 +38,12 @@ class _SurveillantSalleScreenState extends State<SurveillantSalleScreen> {
     request.headers['Authorization'] = 'Bearer ${widget.accessToken}';
     request.files.add(await http.MultipartFile.fromPath('file', imageFile.path));
     print("photo: ${imageFile.path}");
-
     print(imageFile.path);
     var response = await request.send();
     if (response.statusCode == 200) {
       String result = await response.stream.bytesToString();
-      showAlertDialog(context, 'Prediction result', result);
+      //NotificationManager().simpleNotificationShow(result);
+      NotificationManager().bigPictureNotificationShow(result);
     }
   }
 

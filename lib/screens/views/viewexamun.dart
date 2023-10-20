@@ -64,17 +64,6 @@ class _ViewExamunState extends State<ViewExamun> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        title: Row(
-          children: [
-            SizedBox(width: 40), // Réduire l'espace entre l'icône et le texte
-            Text('Examun details',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
-            Container(height: 24,width: 24,)
-          ],
-        ),
-      ),
       body:
       SafeArea(
         child: Stack(
@@ -89,7 +78,7 @@ class _ViewExamunState extends State<ViewExamun> {
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                 ),
-                height: 400,
+                height: 450,
                 width: 340,
                 child:
                 Column(
@@ -106,12 +95,12 @@ class _ViewExamunState extends State<ViewExamun> {
                         SettingsItem(
                           onTap: () {},
                           // icons: CupertinoIcons.repeat,
-                          title:'Date Debut   :    '+DateFormat('yyyy-MM-dd').format(examunsList[0].heure_deb),
+                          title:'Date Debut   :    '+DateFormat('yyyy-MM-dd').format(examunsList[0].date_deb),
                         ),
                         SettingsItem(
                           onTap: () {},
                           // icons: CupertinoIcons.repeat,
-                          title:'Date fin   :    '+DateFormat('yyyy-MM-dd').format(examunsList[0].heure_fin),
+                          title:'Date fin   :    '+DateFormat('yyyy-MM-dd').format(examunsList[0].date_fin),
                         ),
                         SettingsItem(
                           onTap: () {},

@@ -29,7 +29,7 @@ class _ListUserState extends State<ListUser> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse(baseUrl+'user_data/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'scolarites/user_data/'),headers: headers);
     var users = <User>[];
     for (var u in jsonDecode(response.body)) {
       users.add(User(u['id'], u['nom'], u['prenom'],u['email'],'', u['role'], u['photo'],0,''));
@@ -62,7 +62,7 @@ class _ListUserState extends State<ListUser> {
       child: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: SizedBox(height: 340, child: _head()),
+            child: SizedBox(height: 190, child: _head()),
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -75,7 +75,7 @@ class _ListUserState extends State<ListUser> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Utilisateurs',
+                          'Superviseurrs',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 19,
@@ -141,7 +141,7 @@ class _ListUserState extends State<ListUser> {
                                           height: 136,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(22),
-                                            color: Colors.blue,
+                                            color: Colors.blueAccent,
                                             boxShadow: [kDefaultShadow],
                                           ),
                                           child: Container(
@@ -157,7 +157,7 @@ class _ListUserState extends State<ListUser> {
                                           left: 0,
                                           child: SizedBox(
                                             height: 136,
-                                            width: size.width - 200,
+                                            width: size.width - 100,
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
@@ -169,13 +169,13 @@ class _ListUserState extends State<ListUser> {
                                                     children: [
                                                       Avatar(
                                                         margin: EdgeInsets.only(right: 20),
-                                                        size: 30,
+                                                        size: 40,
                                                         image: 'images/users/'+user.photo,
                                                       ),
                                                       Text(
                                                         user.prenom,
                                                         style: Theme.of(context).textTheme.button?.copyWith(
-                                                          fontSize: 9,
+                                                          fontSize: 15,
                                                           fontWeight: FontWeight.bold,
                                                         ),
                                                       ),
@@ -204,7 +204,7 @@ class _ListUserState extends State<ListUser> {
                                                         },
                                                         child: Icon(
                                                           Icons.edit,
-                                                          color: Colors.blue,
+                                                          color: Colors.blueAccent,
                                                           size: 24.0,
                                                           semanticLabel: 'Edit',
                                                         ),
@@ -250,7 +250,7 @@ class _ListUserState extends State<ListUser> {
                                                                     ),
                                                                   );
                                                                 },
-                                                                color: Colors.blue,
+                                                                color: Colors.blueAccent,
                                                                 radius: BorderRadius.circular(20.0),
                                                               ),
                                                             ],
@@ -274,7 +274,7 @@ class _ListUserState extends State<ListUser> {
                                                       vertical: kDefaultPadding / 4,
                                                     ),
                                                     decoration: BoxDecoration(
-                                                      color: Colors.blue,
+                                                      color: Colors.blueAccent,
                                                       borderRadius: BorderRadius.only(
                                                         bottomLeft: Radius.circular(22),
                                                         topRight: Radius.circular(22),
@@ -290,10 +290,12 @@ class _ListUserState extends State<ListUser> {
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                            builder: (context) =>
+                                                            builder: (context) =>MasterPage(
+                                                          index: 0,  accessToken: widget.accessToken,
+                                                          child:
                                                                 ViewUser(  accessToken: widget.accessToken, id: user.id,
                                                                 ),
-                                                          ),
+                                                          ),),
                                                         );
                                                       },
                                                     )
@@ -332,60 +334,24 @@ Widget _head() {
         children: [
           Container(
             width: double.infinity,
-            height: 240,
+            height: 80,
+
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.blueAccent,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
               ),
             ),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 35,
-                  left: 340,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(7),
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      color: Color.fromRGBO(250, 250, 250, 0.1),
-                      child: Icon(
-                        Icons.notification_add_outlined,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 35, left: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Gestion des Utilisateurs',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
           ),
         ],
       ),
       Positioned(
-        top: 140,
-        left: 37,
+        top: 10,
+        left: 37    ,
         child: Container(
-          height: 170,
-          width: 320,
+          height: 140,
+          width: 340,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -395,19 +361,19 @@ Widget _head() {
                 spreadRadius: 6,
               ),
             ],
-            color: Colors.blue,
+            color: Colors.blueAccent,
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
             children: [
-              SizedBox(height: 10),
+              SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Total des Utilisateurs',
+                      'Total des Superviseurs',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
@@ -437,68 +403,7 @@ Widget _head() {
                   ],
                 ),
               ),
-              SizedBox(height: 25),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.blue,
-                          child: Icon(
-                            Icons.arrow_downward,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
 
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.blue,
-                          child: Icon(
-                            Icons.arrow_upward,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
-
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 6),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '15',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      '50',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
         ),
@@ -506,7 +411,6 @@ Widget _head() {
     ],
   );
 }
-
 class Avatar extends StatelessWidget {
   final double size;
   final image;

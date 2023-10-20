@@ -100,7 +100,7 @@ class _DepartementFormState extends State<DepartementForm> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(width: 2, color: Colors.blue),
+                              borderSide: BorderSide(width: 2, color: Colors.blueAccent),
                             ),
                           ),
                         ),
@@ -112,7 +112,7 @@ class _DepartementFormState extends State<DepartementForm> {
                             context: context,
                             type: QuickAlertType.success,
                             text: 'Operation Completed Successfully!',
-                            confirmBtnColor: Colors.blue,
+                            confirmBtnColor: Colors.blueAccent,
                           ).then((value) async {
                             if (value == null) {
                               await save(
@@ -134,7 +134,7 @@ class _DepartementFormState extends State<DepartementForm> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Colors.blue,
+                            color: Colors.blueAccent,
                           ),
                           width: 120,
                           height: 50,
@@ -168,7 +168,7 @@ class _DepartementFormState extends State<DepartementForm> {
           width: double.infinity,
           height: 240,
           decoration: BoxDecoration(
-            color: Colors.blue,
+            color: Colors.blueAccent,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20),

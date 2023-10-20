@@ -10,9 +10,9 @@ import 'package:intl/intl.dart';
 class ExamunForm extends StatefulWidget {
   final Examun examun;
   final String accessToken;
-
-
-  ExamunForm({Key? key, required this.examun,required this.accessToken}) : super(key: key);
+  final String nomDep;
+  final String nomNiv;
+  ExamunForm({Key? key, required this.examun,required this.accessToken, required this.nomDep, required this.nomNiv}) : super(key: key);
 
   @override
   _ExamunFormState createState() => _ExamunFormState();
@@ -38,12 +38,12 @@ class _ExamunFormState extends State<ExamunForm> {
   @override
   void initState() {
     super.initState();
-    fetchMatieres().then((_) {
+    fetchMatieres(widget.nomDep,widget.nomNiv).then((_) {
       setState(() {
         idController.text = this.widget.examun.id.toString();
         typeController.text = this.widget.examun.type.toString();
-        heure_debController.text = this.widget.examun.heure_deb.toString();
-        heure_finController.text = this.widget.examun.heure_fin.toString();
+        heure_debController.text = this.widget.examun.date_deb.toString();
+        heure_finController.text = this.widget.examun.date_fin.toString();
         id_salController.text = this.widget.examun.id_sal.toString();
       });
     });
@@ -51,8 +51,8 @@ class _ExamunFormState extends State<ExamunForm> {
       setState(() {
         idController.text = this.widget.examun.id.toString();
         typeController.text = this.widget.examun.type.toString();
-        heure_debController.text = this.widget.examun.heure_deb.toString();
-        heure_finController.text = this.widget.examun.heure_fin.toString();
+        heure_debController.text = this.widget.examun.date_deb.toString();
+        heure_finController.text = this.widget.examun.date_fin.toString();
         id_salController.text = this.widget.examun.id_sal.toString();
       });
     });
@@ -68,9 +68,9 @@ class _ExamunFormState extends State<ExamunForm> {
 
     for (var u in jsonResponse) {
       var id = u['id'];
-      var type= u['id'];
-      var heure_deb= u['heure_deb'];
-      var heure_fin = u['heure_fin'];
+      var type= u['type'];
+      var heure_deb= u['date_deb'];
+      var heure_fin = u['date_fin'];
       var id_mat = u['id_mat'];
       var id_sal = u['id_sal'];
       var matiere = u['matiere'];
@@ -86,12 +86,12 @@ class _ExamunFormState extends State<ExamunForm> {
     return examuns;
   }
 
-  Future<void> fetchMatieres() async {
+  Future<void> fetchMatieres(String dep,String niv) async {
 
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse(baseUrl+'matieres/nom/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'scolarites/matieres/$dep/$niv'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -105,7 +105,7 @@ class _ExamunFormState extends State<ExamunForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse(baseUrl+'salles/nom/'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'scolarites/salles/'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic data = jsonDecode(response.body);
@@ -119,7 +119,7 @@ class _ExamunFormState extends State<ExamunForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse(baseUrl+'examuns/matiere/$nom'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'scolarites/matiere/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -133,7 +133,7 @@ class _ExamunFormState extends State<ExamunForm> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse(baseUrl+'examuns/salle/$nom'),headers: headers);
+    var response = await http.get(Uri.parse(baseUrl+'scolarites/salle/$nom'),headers: headers);
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(response.body);
@@ -153,24 +153,24 @@ class _ExamunFormState extends State<ExamunForm> {
     if (examun.id == 0) {
 
       await http.post(
-        Uri.parse(baseUrl+'examuns/'),
+        Uri.parse(baseUrl+'scolarites/'),
         headers: headers,
         body: jsonEncode(<String, dynamic>{
           'type': examun.type,
-          'heure_deb': examun.heure_deb.toIso8601String(),
-          'heure_fin': examun.heure_fin.toIso8601String(),
+          'date_deb': examun.date_deb.toIso8601String(),
+          'date_fin': examun.date_fin.toIso8601String(),
           'id_mat': examun.id_mat.toString(),
           'id_sal': examun.id_sal.toString(),
         }),
       );
     } else {
       await http.put(
-        Uri.parse(baseUrl+'examuns/' + examun.id.toString()),
+        Uri.parse(baseUrl+'scolarites/' + examun.id.toString()),
         headers: headers,
         body: jsonEncode(<String, dynamic>{
           'type': examun.type,
-          'heure_deb': examun.heure_deb.toIso8601String(),
-          'heure_fin': examun.heure_fin.toIso8601String(),
+          'date_deb': examun.date_deb.toIso8601String(),
+          'date_fin': examun.date_fin.toIso8601String(),
           'id_mat': examun.id_mat.toString(),
           'id_sal': examun.id_sal.toString(),
         }),
@@ -195,7 +195,7 @@ class _ExamunFormState extends State<ExamunForm> {
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                 ),
-                height: 560,
+                height: 460,
                 width: 340,
                 child: Form(
                   child: Column(
@@ -223,7 +223,7 @@ class _ExamunFormState extends State<ExamunForm> {
                                 borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                           ),
                         ),
                       ),
@@ -244,7 +244,7 @@ class _ExamunFormState extends State<ExamunForm> {
                                 borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                           ),
                           readOnly: true,  //set it true, so that user will not able to edit text
                           onTap: () async {
@@ -286,7 +286,7 @@ class _ExamunFormState extends State<ExamunForm> {
                                 borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                           ),
                           readOnly: true,  //set it true, so that user will not able to edit text
                           onTap: () async {
@@ -422,7 +422,7 @@ class _ExamunFormState extends State<ExamunForm> {
                             context: context,
                             type: QuickAlertType.success,
                             text: 'Operation Completed Successfully!',
-                            confirmBtnColor: Colors.blue,
+                            confirmBtnColor: Colors.blueAccent,
                           ).then((value) async {
                             if (value == null) {
                               int? id = int.tryParse(idController.text);
@@ -446,7 +446,7 @@ class _ExamunFormState extends State<ExamunForm> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>MasterPage( index: 0,  accessToken: widget.accessToken
-                                        ,child:  ListExamun(  accessToken: widget.accessToken
+                                        ,child:  ListExamun(  accessToken: widget.accessToken, nomDep: widget.nomDep, nomNiv: widget.nomNiv,
                                         ),)
                                   ),
                                 );
@@ -478,7 +478,7 @@ class _ExamunFormState extends State<ExamunForm> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: Colors.blue,
+                            color: Colors.blueAccent,
                           ),
                           width: 120,
                           height: 50,
@@ -513,7 +513,7 @@ class _ExamunFormState extends State<ExamunForm> {
           width: double.infinity,
           height: 240,
           decoration: BoxDecoration(
-            color: Colors.blue,
+            color: Colors.blueAccent,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20),

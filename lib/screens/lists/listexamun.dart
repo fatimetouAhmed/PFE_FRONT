@@ -13,8 +13,9 @@ import '../forms/examunform.dart';
 
 class ListExamun extends StatefulWidget {
   final String accessToken;
-
-  ListExamun({Key? key,required this.accessToken}) : super(key: key);
+  final String nomDep;
+  final String nomNiv;
+  ListExamun({Key? key,required this.accessToken, required this.nomDep, required this.nomNiv}) : super(key: key);
 
   @override
   _ListExamunState createState() => _ListExamunState();
@@ -23,20 +24,33 @@ class ListExamun extends StatefulWidget {
 class _ListExamunState extends State<ListExamun> {
   List<Examun> examunList = [];
 
-  Future<List<Examun>> fetchExamuns() async {
-    var headers = {
-      "Authorization": "Bearer ${widget.accessToken}",
-    };
-    var response = await http.get(Uri.parse(baseUrl+'examuns/'),headers: headers);
+  Future<List<Examun>> fetchExamuns(String dep,String niv) async {
+
+    var response = await http.get(Uri.parse(baseUrl+'scolarites/evaluations/$dep/$niv'));
     var examuns = <Examun>[];
-    for (var u in jsonDecode(response.body)) {
-      // print(u['heure_deb']);
-      // print(u['heure_fin']);
+    var jsonResponse = jsonDecode(response.body);
 
-      var heureDeb = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['heure_deb']);
-      var heureFin = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['heure_fin']);
+    if (jsonResponse is List) {
+      for (var u in jsonResponse) {
+        // print(u['heure_deb']);
+        // print(u['heure_fin']);
 
-      examuns.add(Examun(u['id'],u['type'],heureDeb,heureFin, u['id_mat'], u['id_sal'], u['matiere'], u['salle']));
+        var heureDeb = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['heure_deb']);
+        var heureFin = DateFormat('yyyy-MM-ddTHH:mm:ss').parse(u['heure_fin']);
+
+        examuns.add(Examun(
+            u['id'],
+            u['type'],
+            heureDeb,
+            heureFin,
+            u['id_mat'],
+            u['id_sal'],
+            u['matiere'],
+            u['salle']));
+      }
+    }
+    else {
+      print("La réponse JSON ne contient pas une liste d'examuns.");
     }
     print(examuns);
     return examuns;
@@ -46,13 +60,13 @@ class _ListExamunState extends State<ListExamun> {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    await http.delete(Uri.parse(baseUrl+'examuns/' + id),headers: headers);
+    await http.delete(Uri.parse(baseUrl+'scolarites/' + id),headers: headers);
   }
 
   @override
   void initState() {
     super.initState();
-    fetchExamuns().then((examun) {
+    fetchExamuns(widget.nomDep,widget.nomNiv).then((examun) {
       setState(() {
         examunList = examun;
       });
@@ -66,7 +80,7 @@ class _ListExamunState extends State<ListExamun> {
       child: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: SizedBox(height: 340, child: _head()),
+            child: SizedBox(height: 190, child: _head()),
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -97,7 +111,7 @@ class _ListExamunState extends State<ListExamun> {
                                       index: 0,  accessToken: widget.accessToken,
 
                                         child:
-                                      ExamunForm(examun: Examun(0, '', DateTime.parse('0000-00-00 00:00:00'),DateTime.parse('0000-00-00 00:00:00'), 0, 0,'',''),  accessToken: widget.accessToken
+                                      ExamunForm(examun: Examun(0, '', DateTime.parse('0000-00-00 00:00:00'),DateTime.parse('0000-00-00 00:00:00'), 0, 0,'',''),  accessToken: widget.accessToken, nomDep: widget.nomDep, nomNiv: widget.nomNiv,
                                       ),
 
                                     ),
@@ -126,7 +140,7 @@ class _ListExamunState extends State<ListExamun> {
                           vertical: kDefaultPadding / 2,
                         ),
                         child: FutureBuilder<List<Examun>>(
-                          future: fetchExamuns(),
+                          future: fetchExamuns(widget.nomDep,widget.nomNiv),
                           builder: (BuildContext context, AsyncSnapshot<List<Examun>> snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return Center(child: CircularProgressIndicator());
@@ -148,7 +162,7 @@ class _ListExamunState extends State<ListExamun> {
                                           height: 136,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(22),
-                                            color: Colors.blue,
+                                            color: Colors.blueAccent,
                                             boxShadow: [kDefaultShadow],
                                           ),
                                           child: Container(
@@ -164,7 +178,7 @@ class _ListExamunState extends State<ListExamun> {
                                           left: 0,
                                           child: SizedBox(
                                             height: 136,
-                                            width: size.width - 200,
+                                            width: size.width - 100,
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
@@ -200,7 +214,7 @@ class _ListExamunState extends State<ListExamun> {
                                                                 index: 0,accessToken: widget.accessToken,
                                                                 child:
                                                               ExamunForm(
-                                                                examun: examun,  accessToken: widget.accessToken
+                                                                examun: examun,  accessToken: widget.accessToken, nomDep: widget.nomDep, nomNiv: widget.nomNiv,
 
                                                               ),),
 
@@ -209,7 +223,7 @@ class _ListExamunState extends State<ListExamun> {
                                                         },
                                                         child: Icon(
                                                           Icons.edit,
-                                                          color: Colors.blue,
+                                                          color: Colors.blueAccent,
                                                           size: 24.0,
                                                           semanticLabel: 'Edit',
                                                         ),
@@ -246,12 +260,12 @@ class _ListExamunState extends State<ListExamun> {
                                                                     MaterialPageRoute(
                                                                       builder: (context) => MasterPage(
                                                                         index: 0,accessToken: widget.accessToken,
-                                                                        child: ListExamun(accessToken: widget.accessToken,),
+                                                                        child: ListExamun(accessToken: widget.accessToken, nomDep: widget.nomDep, nomNiv: widget.nomNiv,),
                                                                       ),
                                                                     ),
                                                                   );
                                                                 },
-                                                                color: Colors.blue,
+                                                                color: Colors.blueAccent,
                                                                 radius: BorderRadius.circular(20.0),
                                                               ),
                                                             ],
@@ -275,7 +289,7 @@ class _ListExamunState extends State<ListExamun> {
                                                     vertical: kDefaultPadding / 4,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    color: Colors.blue,
+                                                    color: Colors.blueAccent,
                                                     borderRadius: BorderRadius.only(
                                                       bottomLeft: Radius.circular(22),
                                                       topRight: Radius.circular(22),
@@ -291,7 +305,7 @@ class _ListExamunState extends State<ListExamun> {
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                          builder: (context) => MasterPage2(
+                                                          builder: (context) => MasterPage(
                                                             index: 0,  accessToken: widget.accessToken,
                                                             child:
                                                             ViewExamun(  accessToken: widget.accessToken, id: examun.id,
@@ -336,60 +350,24 @@ Widget _head() {
         children: [
           Container(
             width: double.infinity,
-            height: 240,
+            height: 80,
+
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.blueAccent,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
               ),
             ),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 35,
-                  left: 340,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(7),
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      color: Color.fromRGBO(250, 250, 250, 0.1),
-                      child: Icon(
-                        Icons.notification_add_outlined,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 35, left: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Gestion des Examuns',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
           ),
         ],
       ),
       Positioned(
-        top: 140,
-        left: 37,
+        top: 10,
+        left: 37    ,
         child: Container(
-          height: 170,
-          width: 320,
+          height: 140,
+          width: 340,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -399,12 +377,12 @@ Widget _head() {
                 spreadRadius: 6,
               ),
             ],
-            color: Colors.blue,
+            color: Colors.blueAccent,
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
             children: [
-              SizedBox(height: 10),
+              SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
@@ -441,68 +419,7 @@ Widget _head() {
                   ],
                 ),
               ),
-              SizedBox(height: 25),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.blue,
-                          child: Icon(
-                            Icons.arrow_downward,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
 
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.blue,
-                          child: Icon(
-                            Icons.arrow_upward,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
-
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 6),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '15',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      '50',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
         ),

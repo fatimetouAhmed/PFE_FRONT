@@ -65,7 +65,7 @@ class _ListDepartementSuperviseurState extends State<ListDepartementSuperviseur>
       child: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: SizedBox(height: 340, child: _head()),
+            child: SizedBox(height: 190, child: _head()),
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -146,7 +146,7 @@ class _ListDepartementSuperviseurState extends State<ListDepartementSuperviseur>
                                           height: 136,
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(22),
-                                            color: Colors.blue,
+                                            color: Colors.blueAccent,
                                             boxShadow: [kDefaultShadow],
                                           ),
                                           child: Container(
@@ -162,7 +162,7 @@ class _ListDepartementSuperviseurState extends State<ListDepartementSuperviseur>
                                           left: 0,
                                           child: SizedBox(
                                             height: 136,
-                                            width: size.width - 200,
+                                            width: size.width - 100,
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
@@ -194,7 +194,7 @@ class _ListDepartementSuperviseurState extends State<ListDepartementSuperviseur>
                                                         },
                                                         child: Icon(
                                                           Icons.edit,
-                                                          color: Colors.blue,
+                                                          color: Colors.blueAccent,
                                                           size: 24.0,
                                                           semanticLabel: 'Edit',
                                                         ),
@@ -237,7 +237,7 @@ class _ListDepartementSuperviseurState extends State<ListDepartementSuperviseur>
                                                                     ),
                                                                   );
                                                                 },
-                                                                color: Colors.blue,
+                                                                color: Colors.blueAccent,
                                                                 radius: BorderRadius.circular(20.0),
                                                               ),
                                                             ],
@@ -260,7 +260,7 @@ class _ListDepartementSuperviseurState extends State<ListDepartementSuperviseur>
                                                     vertical: kDefaultPadding / 4,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    color: Colors.blue,
+                                                    color: Colors.blueAccent,
                                                     borderRadius: BorderRadius.only(
                                                       bottomLeft: Radius.circular(22),
                                                       topRight: Radius.circular(22),
@@ -276,7 +276,7 @@ class _ListDepartementSuperviseurState extends State<ListDepartementSuperviseur>
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                          builder: (context) => MasterPage2(
+                                                          builder: (context) => MasterPage(
                                                             index: 0,  accessToken: widget.accessToken,
                                                             child:
                                                             ViewDepartementSuperviseur(  accessToken: widget.accessToken, id: departementsuperviseur.id,
@@ -321,60 +321,24 @@ Widget _head() {
         children: [
           Container(
             width: double.infinity,
-            height: 240,
+            height: 80,
+
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.blueAccent,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
               ),
             ),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 35,
-                  left: 340,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(7),
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      color: Color.fromRGBO(250, 250, 250, 0.1),
-                      child: Icon(
-                        Icons.notification_add_outlined,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 35, left: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Departements  Superviseur',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
           ),
         ],
       ),
       Positioned(
-        top: 140,
-        left: 37,
+        top: 10,
+        left: 37    ,
         child: Container(
-          height: 170,
-          width: 320,
+          height: 140,
+          width: 340,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -384,19 +348,19 @@ Widget _head() {
                 spreadRadius: 6,
               ),
             ],
-            color: Colors.blue,
+            color: Colors.blueAccent,
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
             children: [
-              SizedBox(height: 10),
+              SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Departements Superviseur',
+                      'Total des Departements Superviseurs',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
@@ -426,68 +390,7 @@ Widget _head() {
                   ],
                 ),
               ),
-              SizedBox(height: 25),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.blue,
-                          child: Icon(
-                            Icons.arrow_downward,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
 
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.blue,
-                          child: Icon(
-                            Icons.arrow_upward,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
-
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 6),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '15',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      '50',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
         ),

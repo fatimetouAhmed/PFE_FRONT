@@ -66,7 +66,7 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
     double textSize = 14;
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.blueAccent,
       body: SafeArea(
         child: Column(
           children: [

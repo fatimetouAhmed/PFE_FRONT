@@ -57,17 +57,7 @@ class _ViewFiliereState extends State<ViewFiliere> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-        appBar: AppBar(
-          backgroundColor: Colors.blueAccent,
-          title: Row(
-            children: [
-              SizedBox(width: 40), // Réduire l'espace entre l'icône et le texte
-              Text('Filiere details',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
-              Container(height: 24,width: 24,)
-            ],
-          ),
-        ),
+
       body:
       SafeArea(
         child: Stack(
@@ -82,7 +72,7 @@ class _ViewFiliereState extends State<ViewFiliere> {
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                 ),
-                height: 250,
+                height: 300,
                 width: 340,
                 child:
                 Column(

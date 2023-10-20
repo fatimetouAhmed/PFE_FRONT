@@ -26,32 +26,38 @@ final int id;
 
 class _ViewEtudiantState extends State<ViewEtudiant> {
 
-  List<Etudiant> etudiantsList = [Etudiant(0, '', '', '', '', DateTime.parse('0000-00-00 00:00:00'), '', '',0,'', DateTime.parse('0000-00-00 00:00:00'))];
+  List<Etudiant> etudiantsList = [Etudiant(0, '', '', '', '', DateTime.parse('0000-00-00 00:00:00'), '', '',0,'', DateTime.parse('0000-00-00 00:00:00'),0)];
 
   Future<List<Etudiant>> fetchEtudiants(id) async {
     var headers = {
       "Authorization": "Bearer ${widget.accessToken}",
     };
-    var response = await http.get(Uri.parse(baseUrl+'etudiants/'+id),
+    var response = await http.get(Uri.parse(baseUrl+'annees/etudiants/'+id),
         headers: headers
     );
     var etudiants = <Etudiant>[];
     var jsonResponse = jsonDecode(response.body);
 
-    for (var u in jsonResponse) {
-      var id = u['id'];
-      var nom = u['nom'];
-      var prenom = u['prenom'];
-      var photo = u['photo'];
-      var genre= u['genre'];
-      var date_N = DateFormat('yyyy-MM-dd').parse(u['date_N']);
-      var lieu_n = u['lieu_n'];
-      var email = u['email'];
-      var telephone = u['telephone'];
-      var nationalite = u['nationalite'];
-      var date_insecription = DateFormat('yyyy-MM-dd').parse(u['date_insecription']);
-      etudiants.add(Etudiant(id, nom, prenom,photo,genre, date_N,lieu_n,email,telephone,nationalite,date_insecription));
+    if (jsonResponse is List) {
+      for (var u in jsonResponse) {
+        var id = u['id'];
+        var nom = u['nom'];
+        var prenom = u['prenom'];
+        var photo = u['photo'];
+        var genre= u['genre'];
+        var date_N = DateFormat('yyyy-MM-dd').parse(u['date_N']);
+        var lieu_n = u['lieu_n'];
+        var email = u['email'];
+        var telephone = u['telephone'];
+        var nationalite = u['nationalite'];
+        var date_insecription = DateFormat('yyyy-MM-dd').parse(u['date_insecription']);
+        var id_fil=u['id_fil'];
+        etudiants.add(Etudiant(id, nom, prenom,photo,genre, date_N,lieu_n,email,telephone,nationalite,date_insecription,id_fil));
+      }
+    } else {
+      print("La réponse JSON ne contient pas une liste d'étudiants.");
     }
+
     return etudiants;
   }
   //
@@ -77,16 +83,7 @@ class _ViewEtudiantState extends State<ViewEtudiant> {
     return
       Scaffold(
         //  backgroundColor: Colors.white.withOpacity(.94),
-        appBar: AppBar(
-             backgroundColor: Colors.blueAccent,
-              title: Row(
-                children: [
-                  SizedBox(width: 40), // Réduire l'espace entre l'icône et le texte
-                  Text('Etudiant details',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
-                  Container(height: 24,width: 24,)
-                ],
-              ),
-        ),
+
         body:
         Padding(
           padding: const EdgeInsets.all(10),

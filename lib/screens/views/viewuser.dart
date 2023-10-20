@@ -57,16 +57,7 @@ class _ViewUserState extends State<ViewUser> {
     return
       Scaffold(
         //  backgroundColor: Colors.white.withOpacity(.94),
-        appBar: AppBar(
-          backgroundColor: Colors.blueAccent,
-          title: Row(
-            children: [
-              SizedBox(width: 40), // Réduire l'espace entre l'icône et le texte
-              Text('Utilisateur details',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
-              Container(height: 24,width: 24,)
-            ],
-          ),
-        ),
+
         body:
         Padding(
           padding: const EdgeInsets.all(10),

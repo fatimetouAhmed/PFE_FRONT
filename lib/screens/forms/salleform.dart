@@ -104,7 +104,7 @@ class _SalleFormState extends State<SalleForm> {
                                   borderSide: BorderSide(width: 2, color: Color(0xffC5C5C5))),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(width: 2, color: Colors.blue,)),
+                                  borderSide: BorderSide(width: 2, color: Colors.blueAccent,)),
                             ),
                           ),
                         ),
@@ -115,7 +115,7 @@ class _SalleFormState extends State<SalleForm> {
                               context: context,
                               type: QuickAlertType.success,
                               text: 'Operation Completed Successfully!',
-                              confirmBtnColor: Colors.blue,
+                              confirmBtnColor: Colors.blueAccent,
                             ).then((value) async {
                               if (value == null) {
                                 await save(
@@ -144,7 +144,7 @@ class _SalleFormState extends State<SalleForm> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
-                              color: Colors.blue,
+                              color: Colors.blueAccent,
                             ),
                             width: 120,
                             height: 50,
@@ -179,7 +179,7 @@ class _SalleFormState extends State<SalleForm> {
           width: double.infinity,
           height: 240,
           decoration: BoxDecoration(
-            color: Colors.blue,
+            color: Colors.blueAccent,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20),

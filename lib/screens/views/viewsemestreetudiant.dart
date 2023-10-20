@@ -51,17 +51,6 @@ class _ViewSemestreEtudiantState extends State<ViewSemestreEtudiant> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
-        title: Row(
-          children: [
-            SizedBox(width: 40), // Réduire l'espace entre l'icône et le texte
-            Text('Etudier Matiere details',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
-            Container(height: 24,width: 24,)
-          ],
-        ),
-      ),
       body:
       SafeArea(
         child: Stack(

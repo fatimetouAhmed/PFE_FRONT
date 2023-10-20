@@ -160,7 +160,6 @@ class _MasterPageSupeurviseurState extends State<MasterPageSupeurviseur> {
                   Icon(Icons.dangerous, size: 30),
                   Icon(Icons.logout, size: 30),
                 ],
-
       color: Colors.white,
       buttonBackgroundColor: Colors.white,
       backgroundColor: Colors.blueAccent,

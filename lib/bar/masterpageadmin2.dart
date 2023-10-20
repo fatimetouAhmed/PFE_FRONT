@@ -57,7 +57,7 @@ class _MasterPage2State extends State<MasterPage2> {
     // Widget selectedChild = widget.child; // Default widget is the passed child
 
     return Scaffold(
-      drawer:NavBar(accessToken:widget.accessToken,),
+
      // appBar: CustomAppBar(),
       body:  _currentWidget,
       bottomNavigationBar: CurvedNavigationBar(

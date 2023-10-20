@@ -50,7 +50,7 @@ class _HistoriquesState extends State<Historiques> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.blueAccent,
       body: SafeArea(
         child: Column(
           children: [
