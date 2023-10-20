@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:pfe_front_flutter/consturl.dart';
 
 import '../notification_manager/notification_manager.dart';
+import 'login/login_page.dart';
 
 
 
@@ -61,7 +62,7 @@ class _SurveillantSalleScreenState extends State<SurveillantSalleScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => LoginScreen(accessToken: widget.accessToken),
+                  builder: (context) => LoginPage(accessToken: widget.accessToken),
                 ),
               );
             },

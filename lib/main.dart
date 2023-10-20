@@ -15,6 +15,7 @@ void main() {
   runApp(MyApp(accessToken:''));
 }
 
+
 class MyApp extends StatelessWidget {
   final String accessToken;
   MyApp({Key? key,required this.accessToken}) : super(key: key);
@@ -25,11 +26,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       home:
-      // BarChartAPI(),
-      MasterPage(
-          index: 0,
-          child: BarChartAPI(),accessToken: accessToken
-      ),
+      LoginPage(accessToken:accessToken),
     );
   }
 }
+

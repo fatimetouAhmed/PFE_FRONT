@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:pfe_front_flutter/screens/login/login_page.dart';
 import 'package:pfe_front_flutter/screens/login_screen.dart';
 import 'package:pfe_front_flutter/consturl.dart';
 
@@ -72,7 +73,7 @@ class _CameraScreenState extends State<CameraScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => LoginScreen(accessToken: widget.accessToken),
+                  builder: (context) => LoginPage(accessToken: widget.accessToken),
                 ),
               );
             },
